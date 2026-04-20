@@ -1,0 +1,69 @@
+# Ezee Fiber Internal Tools
+
+Internal web app for Ezee Fiber technical support agents.
+
+## Features
+- **Note Generator** — Truck Roll Approval, Hard Down, Dispatch, CECR
+- **Email Templates** — Equipment Return, Refer a Friend, Requesting Pictures, WiFi Security Key (Tachus & EzeeFiber)
+- **Sticky Notes Panel** — persistent side panel, auto-saves to browser
+- **Tech Region selector** — on Dispatch notes
+
+## Project Structure
+
+```
+ezeefiber-tools/
+├── index.html              ← Main HTML shell (~300 lines, no inline JS or CSS)
+│
+├── assets/
+│   ├── css/
+│   │   └── styles.css      ← All styling
+│   │
+│   ├── js/
+│   │   ├── helpers.js      ← Shared utility functions (line, lineFlat, lineYN, etc.)
+│   │   ├── app.js          ← Login, tab switching, UPS PDF download
+│   │   ├── truckroll.js    ← Truck Roll Approval form + generate/copy/reset
+│   │   ├── harddown.js     ← Hard Down form + generate/copy/reset
+│   │   ├── dispatch.js     ← Dispatch form + generate/copy/reset
+│   │   ├── cecr.js         ← CECR form + generate/copy/reset
+│   │   ├── email.js        ← All email template functions
+│   │   ├── notes.js        ← Sticky notes panel functions
+│   │   └── init.js         ← Runs last: populates dropdowns, builds grids, restores state
+│   │
+│   └── img/
+│       ├── EzeeFiberLogo.png
+│       ├── EzeeIcon.jpg
+│       ├── RAF1.png
+│       └── RAF2.png
+│
+├── data/
+│   ├── oui-db.js           ← MAC address manufacturer database
+│   └── tech-regions.js     ← Tech region codes + labels
+│
+└── pdf/
+    └── EzeeFiber_UPS_Label.pdf
+```
+
+## Script Load Order
+Scripts must load in this order (defined at bottom of index.html):
+1. `data/oui-db.js` — data, no dependencies
+2. `data/tech-regions.js` — data + populateTechRegionSelects()
+3. `assets/js/helpers.js` — shared functions used by all note generators
+4. `assets/js/app.js` — login, tabs (no feature dependencies)
+5. `assets/js/truckroll.js` — depends on helpers.js
+6. `assets/js/harddown.js` — depends on helpers.js
+7. `assets/js/dispatch.js` — depends on helpers.js
+8. `assets/js/cecr.js`
+9. `assets/js/email.js`
+10. `assets/js/notes.js`
+11. `assets/js/init.js` — runs last, everything must be defined before this
+
+## Deployment
+This is a fully static site — no server or build step needed.
+Host on GitHub Pages, Netlify, or any static file server.
+Just make sure all files and folders are uploaded together.
+
+## Adding a New Note Template
+1. Add the HTML form to `index.html` inside a new `<div id="note-sub-yourname">` 
+2. Add a nav button to the note sub-nav
+3. Create `assets/js/yourname.js` with generate/copy/reset functions
+4. Add `<script src="assets/js/yourname.js"></script>` before `init.js` in index.html
