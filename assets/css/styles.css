@@ -1410,3 +1410,268 @@ textarea {
     .header-title { font-size: 1.5rem; }
     .email-sub-btn { padding: 0.65rem 1rem; font-size: 0.8rem; }
 }
+
+/* ══════════════════════════════════════════════
+   HOME PAGE — TWO-COLUMN LAYOUT
+   ══════════════════════════════════════════════ */
+.home-body {
+    display: flex;
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
+.home-right {
+    flex: 1;
+    min-width: 0;
+}
+
+.home-right .home-grid {
+    margin: 0;
+    max-width: 100%;
+}
+
+/* ── UPDATE LOG ── */
+.update-log {
+    width: 280px;
+    flex-shrink: 0;
+    background: #1a1a1a;
+    border: 2px solid #3a3a3a;
+    border-radius: 12px;
+    overflow: hidden;
+    position: sticky;
+    top: 1rem;
+}
+
+.update-log-header {
+    background: #FB612F;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.update-log-icon {
+    font-size: 1rem;
+}
+
+.update-log-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.update-log-list {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+.update-log-list::-webkit-scrollbar {
+    width: 4px;
+}
+.update-log-list::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+.update-log-list::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 2px;
+}
+
+.update-entry {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.update-entry:last-child {
+    border-bottom: none;
+}
+
+.update-entry-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+}
+
+.update-version {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #FB612F;
+    background: rgba(251, 97, 47, 0.12);
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+    font-family: 'Courier New', monospace;
+}
+
+.update-date {
+    font-size: 0.7rem;
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.update-entry-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #d1d5db;
+    margin-bottom: 0.4rem;
+}
+
+.update-entry-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.update-entry-items li {
+    font-size: 0.72rem;
+    color: #6b7280;
+    line-height: 1.4;
+    padding-left: 0.75rem;
+    position: relative;
+}
+
+.update-entry-items li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: #4b5563;
+    font-weight: 700;
+}
+
+/* ══════════════════════════════════════════════
+   NOTE PAGE — SIDEBAR LAYOUT (Dispatch & CECR)
+   ══════════════════════════════════════════════ */
+.note-with-sidebar {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.note-info-panel {
+    width: 240px;
+    flex-shrink: 0;
+    background: #1a1a1a;
+    border-right: 3px solid #FB612F;
+    min-height: 100%;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+}
+
+/* CECR panel uses a different accent color */
+.note-info-panel.cecr-panel {
+    border-right-color: #3b82f6;
+}
+
+.info-panel-header {
+    background: #FB612F;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.note-info-panel.cecr-panel .info-panel-header {
+    background: #3b82f6;
+}
+
+.info-panel-icon {
+    font-size: 1rem;
+}
+
+.info-panel-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.info-panel-section {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.info-panel-section:last-child {
+    border-bottom: none;
+}
+
+.info-panel-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #FB612F;
+    margin-bottom: 0.5rem;
+}
+
+.note-info-panel.cecr-panel .info-panel-section-title {
+    color: #3b82f6;
+}
+
+.info-panel-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.info-panel-list li {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    line-height: 1.45;
+    padding-left: 0.85rem;
+    position: relative;
+}
+
+.info-panel-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #4b5563;
+    font-size: 0.65rem;
+    top: 0.1rem;
+}
+
+.note-with-sidebar > .container {
+    flex: 1;
+    min-width: 0;
+    border-radius: 0;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+    .home-body {
+        flex-direction: column-reverse;
+    }
+    .update-log {
+        width: 100%;
+        position: static;
+    }
+    .note-with-sidebar {
+        flex-direction: column;
+    }
+    .note-info-panel {
+        width: 100%;
+        border-right: none;
+        border-bottom: 3px solid #FB612F;
+        position: static;
+    }
+    .note-info-panel.cecr-panel {
+        border-bottom-color: #3b82f6;
+    }
+}
