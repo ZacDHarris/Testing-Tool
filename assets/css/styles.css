@@ -1128,10 +1128,11 @@ textarea {
     transition: all 0.2s;
     text-decoration: none;
     display: block;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+
 }
 
 .home-card:hover {
-    border-color: #FB612F;
     transform: translateY(-3px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
@@ -1173,10 +1174,10 @@ textarea {
     letter-spacing: 0.3px;
 }
 
-.home-card.card-orange { border-color: rgba(251,97,47,0.3); }
-.home-card.card-orange:hover { border-color: #FB612F; }
-.home-card.card-green { border-color: rgba(97,187,70,0.3); }
-.home-card.card-green:hover { border-color: #61bb46; }
+.home-card.card-orange { border-color: rgba(251,97,47,0.4); }
+.home-card.card-orange:hover { border-color: #FB612F; box-shadow: 0 8px 24px rgba(251,97,47,0.25); }
+.home-card.card-green { border-color: rgba(97,187,70,0.4); }
+.home-card.card-green:hover { border-color: #61bb46; box-shadow: 0 8px 24px rgba(97,187,70,0.25); }
 
 /* ── OUI LOOKUP ── */
 .oui-section {
@@ -1425,6 +1426,9 @@ textarea {
 .home-right {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
 .home-right .home-grid {
@@ -1555,24 +1559,31 @@ textarea {
 .note-with-sidebar {
     display: flex;
     align-items: flex-start;
-    gap: 0;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: #2d2d2d;
 }
 
 .note-info-panel {
     width: 240px;
     flex-shrink: 0;
     background: #1a1a1a;
-    border-right: 3px solid #FB612F;
-    min-height: 100%;
+    border: 2px solid #FB612F;
+    border-radius: 12px;
     padding: 0;
     position: sticky;
-    top: 0;
+    top: 1.5rem;
     align-self: flex-start;
+    box-shadow: 0 4px 16px rgba(251,97,47,0.15), 0 2px 8px rgba(0,0,0,0.35);
+    overflow: hidden;
+    cursor: default;
+    user-select: none;
 }
 
 /* CECR panel uses a different accent color */
 .note-info-panel.cecr-panel {
-    border-right-color: #3b82f6;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.15), 0 2px 8px rgba(0,0,0,0.35);
 }
 
 .info-panel-header {
@@ -1650,7 +1661,9 @@ textarea {
 .note-with-sidebar > .container {
     flex: 1;
     min-width: 0;
-    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 /* ── RESPONSIVE ── */
@@ -1664,14 +1677,13 @@ textarea {
     }
     .note-with-sidebar {
         flex-direction: column;
+        padding: 1rem;
     }
     .note-info-panel {
         width: 100%;
-        border-right: none;
-        border-bottom: 3px solid #FB612F;
         position: static;
     }
     .note-info-panel.cecr-panel {
-        border-bottom-color: #3b82f6;
+        border-color: #3b82f6;
     }
 }
