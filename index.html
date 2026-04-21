@@ -3,9 +3,1423 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/jpg" href="assets/img/EzeeIcon.jpg">
+    <link rel="icon" type="image/jpg" href="EzeeIcon.jpg">
+    <script src="oui.js"></script>
     <title>Ezee Fiber Technical Support Note Generator</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #2d2d2d;
+            padding: 0;
+            line-height: 1.6;
+            color: #e5e7eb;
+        }
+
+        /* ── TECH REGION SELECT ── */
+        .tech-region-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #6b7280;
+            border-radius: 0.375rem;
+            font-size: 0.95rem;
+            background-color: #4b5563;
+            color: #f9fafb;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            padding-right: 2rem;
+        }
+
+        .tech-region-select:focus {
+            outline: none;
+            border-color: #FB612F;
+            box-shadow: 0 0 0 3px rgba(251, 97, 47, 0.2);
+        }
+
+        .tech-region-select option {
+            background-color: #3a3a3a;
+            color: #f9fafb;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tech-region-select option:first-child {
+            color: #9ca3af;
+            font-family: inherit;
+        }
+
+        /* ── STICKY NOTES PANEL ── */
+        .sticky-notes-tab {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 500;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+        }
+
+        .sticky-notes-toggle {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            background: #FB612F;
+            color: white;
+            border: none;
+            padding: 1rem 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 6px 0 0 6px;
+            box-shadow: -2px 0 12px rgba(0,0,0,0.4);
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .sticky-notes-toggle:hover { background: #e5511a; }
+
+        .sticky-notes-panel {
+            width: 0;
+            overflow: hidden;
+            background: #1a1a1a;
+            border-left: 3px solid #FB612F;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+
+        .sticky-notes-panel.open {
+            width: 300px;
+        }
+
+        .sticky-notes-inner {
+            width: 300px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 0.75rem;
+            gap: 0.5rem;
+            min-height: 400px;
+            max-height: 80vh;
+        }
+
+        .sticky-notes-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #3a3a3a;
+            padding-bottom: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .sticky-notes-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #FB612F;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sticky-notes-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .sticky-notes-clear {
+            background: transparent;
+            border: 1px solid #4b5563;
+            color: #9ca3af;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sticky-notes-clear:hover { border-color: #ef4444; color: #ef4444; }
+
+        .sticky-notes-copy {
+            background: transparent;
+            border: 1px solid #4b5563;
+            color: #9ca3af;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sticky-notes-copy:hover { border-color: #16a34a; color: #4ade80; }
+
+        .sticky-notes-textarea {
+            flex: 1;
+            width: 100%;
+            background: #2d2d2d;
+            border: 1px solid #3a3a3a;
+            border-radius: 0.375rem;
+            color: #f9fafb;
+            font-size: 0.82rem;
+            line-height: 1.55;
+            padding: 0.65rem;
+            resize: none;
+            min-height: 320px;
+            max-height: calc(80vh - 80px);
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.2s;
+        }
+
+        .sticky-notes-textarea:focus {
+            outline: none;
+            border-color: #FB612F;
+        }
+
+        .sticky-notes-textarea::placeholder { color: #4b5563; }
+
+        .sticky-notes-footer {
+            font-size: 0.65rem;
+            color: #4b5563;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ── TAB NAV ── */
+        .tab-nav {
+            background-color: #1a1a1a;
+            border-bottom: 2px solid #FB612F;
+            display: flex;
+            padding: 0 1rem;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color 0.2s, border-color 0.2s;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn:hover { color: #f9fafb; }
+
+        .tab-btn.active {
+            color: #FB612F;
+            border-bottom-color: #FB612F;
+        }
+
+        /* ── PAGES ── */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* ── HEADER ── */
+        .header-wrapper {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border-bottom: 3px solid #FB612F;
+        }
+
+        .header-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-container { flex-shrink: 0; }
+
+        .logo-container img {
+            max-width: 250px;
+            height: auto;
+            filter: drop-shadow(0 2px 8px rgba(251, 97, 47, 0.3));
+        }
+
+        .header-text { text-align: center; }
+
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #f9fafb;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .header-subtitle {
+            font-size: 1rem;
+            color: #FB612F;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── MAIN CONTAINER ── */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #3a3a3a;
+            border-radius: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #6b7280;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #4b5563;
+            color: #f9fafb;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #FB612F;
+            box-shadow: 0 0 0 3px rgba(251, 97, 47, 0.2);
+        }
+
+        input[type="text"]::placeholder,
+        textarea::placeholder { color: #9ca3af; }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .yes-no-buttons { display: flex; gap: 0.5rem; }
+
+        .yes-no-buttons button {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: #4b5563;
+            color: #d1d5db;
+        }
+
+        .yes-no-buttons button:hover { background-color: #6b7280; }
+
+        .yes-no-buttons button.active-yes {
+            background-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+        }
+
+        .yes-no-buttons button.active-no {
+            background-color: #6b7280;
+            color: white;
+        }
+
+        .troubleshooting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .troubleshooting-item {
+            padding: 0.75rem;
+            border: 2px solid #6b7280;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: #4b5563;
+            font-size: 0.875rem;
+            text-align: left;
+            user-select: none;
+            color: #d1d5db;
+        }
+
+        .troubleshooting-item:hover {
+            background-color: #6b7280;
+            border-color: #9ca3af;
+        }
+
+        .troubleshooting-item.selected {
+            background-color: #FB612F;
+            border-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 8px rgba(251, 97, 47, 0.3);
+        }
+
+        /* ── CUSTOM TROUBLESHOOTING STEP ── */
+        .custom-step-wrapper {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
+
+        .custom-step-prefix {
+            background: #4b5563;
+            border: 2px solid #6b7280;
+            border-radius: 0.375rem 0 0 0.375rem;
+            padding: 0 0.75rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #FB612F;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .custom-step-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #6b7280;
+            border-left: none;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.875rem;
+            background-color: #4b5563;
+            color: #f9fafb;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .custom-step-input:focus {
+            outline: none;
+            border-color: #FB612F;
+            box-shadow: 0 0 0 3px rgba(251, 97, 47, 0.2);
+        }
+
+        .custom-step-input::placeholder { color: #9ca3af; }
+
+        .custom-step-add-btn {
+            padding: 0.75rem 1.25rem;
+            background: #FB612F;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .custom-step-add-btn:hover {
+            background: #e5511a;
+            transform: translateY(-1px);
+        }
+
+        .custom-steps-list {
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .custom-step-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #FB612F;
+            color: white;
+            padding: 0.4rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            width: fit-content;
+        }
+
+        .custom-step-remove {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .custom-step-remove:hover { color: white; }
+
+        .action-buttons {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #4b5563;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary { background-color: #FB612F; color: white; }
+        .btn-primary:hover {
+            background-color: #e5511a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(251, 97, 47, 0.4);
+        }
+
+        .btn-secondary { background-color: #6b7280; color: white; }
+        .btn-secondary:hover { background-color: #4b5563; }
+
+        .btn-success {
+            background-color: #16a34a;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-success:hover {
+            background-color: #15803d;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(22, 163, 74, 0.4);
+        }
+
+        .output-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #4b5563;
+            display: none;
+        }
+
+        .output-section.show { display: block; }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .output-header h3 { font-size: 1.25rem; color: #f9fafb; }
+
+        .output-box {
+            background-color: #4b5563;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #6b7280;
+        }
+
+        .output-box textarea {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: #f9fafb;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: vertical;
+            min-height: 300px;
+            line-height: 1.6;
+        }
+
+        /* ── NOTE SUB-TAB NAV ── */
+        .note-sub-nav {
+            background-color: #222222;
+            border-bottom: 2px solid #3a3a3a;
+            display: flex;
+            padding: 0 1rem;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .note-sub-btn {
+            padding: 0.6rem 1.25rem;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color 0.2s, border-color 0.2s;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+
+        .note-sub-btn:hover { color: #f9fafb; }
+
+        .note-sub-btn.active {
+            color: #FB612F;
+            border-bottom-color: #FB612F;
+        }
+
+        /* ── NOTE SUB-PAGES ── */
+        .note-sub-page { display: none; }
+        .note-sub-page.active { display: block; }
+
+        /* ── SECTION DIVIDER ── */
+        .section-divider {
+            grid-column: 1 / -1;
+            border: none;
+            border-top: 1px solid #4b5563;
+            margin: 0.25rem 0;
+        }
+
+        .section-label {
+            grid-column: 1 / -1;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #FB612F;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid rgba(251,97,47,0.3);
+        }
+
+        /* ── PROVIDER BUTTONS ── */
+        .provider-btn-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .provider-btn {
+            padding: 0.6rem 1.4rem;
+            border: 2px solid #6b7280;
+            border-radius: 0.375rem;
+            background: #4b5563;
+            color: #d1d5db;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .provider-btn:hover { background: #6b7280; color: #f9fafb; }
+
+        .provider-btn.active-tachus {
+            background: #61bb46;
+            border-color: #61bb46;
+            color: white;
+            box-shadow: 0 2px 8px rgba(97, 187, 70, 0.4);
+        }
+
+        .provider-btn.active-ezee {
+            background: #FB612F;
+            border-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+        }
+
+        /* ── EQUIPMENT BUTTONS ── */
+        .equip-btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .equip-btn {
+            padding: 0.4rem 0.9rem;
+            border: 2px solid #6b7280;
+            border-radius: 0.375rem;
+            background: #4b5563;
+            color: #d1d5db;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .equip-btn:hover { background: #6b7280; color: #f9fafb; }
+
+        .equip-btn.active {
+            background: #FB612F;
+            border-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 6px rgba(251,97,47,0.35);
+        }
+
+        /* ── REFER A FRIEND ── */
+        .raf-form .etf-output-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .raf-img-preview {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 0.375rem;
+            display: block;
+            opacity: 0.85;
+        }
+
+        .raf-img-preview:first-of-type { margin-bottom: 0.5rem; }
+        .raf-img-preview:last-of-type  { margin-top: 0.5rem; }
+
+        /* ── UPS LABEL SECTION ── */
+        .ups-label-section {
+            margin-top: 1rem;
+            border: 2px solid #4b5563;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .ups-label-header {
+            background: #1a1a1a;
+            padding: 0.6rem 1rem;
+            border-bottom: 2px solid #FB612F;
+        }
+
+        .ups-label-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #f9fafb;
+            letter-spacing: 0.3px;
+        }
+
+        .ups-label-fields {
+            padding: 1rem;
+            background: #3a3a3a;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .ups-field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .ups-field-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #d1d5db;
+            margin: 0;
+        }
+
+        .ups-field-group input {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .ups-download-btn {
+            background: #1a5276;
+            color: white;
+            padding: 0.55rem 1.2rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .ups-download-btn:hover {
+            background: #154360;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(26,82,118,0.5);
+        }
+
+        /* ── ROUTER TYPE BUTTONS ── */
+        .router-type-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.25rem;
+        }
+
+        .router-type-btn {
+            padding: 0.4rem 0.75rem;
+            border: 2px solid #6b7280;
+            border-radius: 0.375rem;
+            background: #4b5563;
+            color: #d1d5db;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .router-type-btn:hover { background: #6b7280; color: #f9fafb; }
+
+        .router-type-btn.active {
+            background: #FB612F;
+            border-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 6px rgba(251,97,47,0.35);
+        }
+
+        .router-type-display {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #FB612F;
+        }
+
+        /* ── CECR PRIORITY BUTTONS ── */
+        .priority-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-top: 0.25rem;
+        }
+
+        .priority-btn {
+            width: 2.75rem;
+            height: 2.75rem;
+            border: 2px solid #6b7280;
+            border-radius: 0.375rem;
+            background: #4b5563;
+            color: #d1d5db;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .priority-btn:hover { background: #6b7280; color: #f9fafb; }
+
+        .priority-btn.active {
+            background: #FB612F;
+            border-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+        }
+
+        .cecr-priority-display {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #FB612F;
+            margin-left: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── DISPATCH BRAND SELECTOR ── */
+        .dispatch-brand-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 0 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .dispatch-brand-label {
+            font-weight: 600;
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+
+        .dispatch-brand-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid #6b7280;
+            border-radius: 0.375rem;
+            background: #4b5563;
+            color: #d1d5db;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dispatch-brand-btn:hover { background: #6b7280; color: #f9fafb; }
+
+        .dispatch-brand-btn.active-tachus {
+            background: #61bb46;
+            border-color: #61bb46;
+            color: white;
+            box-shadow: 0 2px 8px rgba(97, 187, 70, 0.4);
+        }
+
+        .dispatch-brand-btn.active-ezee {
+            background: #FB612F;
+            border-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+        }
+
+        .dispatch-brand-display {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-left: 0.5rem;
+        }
+
+        .dispatch-brand-display.brand-tachus { color: #61bb46; }
+        .dispatch-brand-display.brand-ezee   { color: #FB612F; }
+
+        /* ── COMING SOON PLACEHOLDER ── */
+        .coming-soon-placeholder {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+        }
+
+        .coming-soon-placeholder .placeholder-mark {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #FB612F;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .coming-soon-placeholder .placeholder-sub {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #6b7280;
+        }
+
+        /* ── EMAIL TEMPLATE FORM LAYOUT ── */
+        .email-template-form {
+            display: flex;
+            gap: 2rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .etf-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-width: 220px;
+            flex: 0 0 260px;
+        }
+
+        .etf-generate-btn {
+            margin-top: 0.5rem;
+            background: #61bb46;
+        }
+
+        .etf-output-wrap {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .etf-output-wrap .output-box textarea {
+            min-height: 220px;
+        }
+
+        /* ── EMAIL MINI TABS ── */
+        .email-mini-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            padding: 1rem 1.5rem 0 1.5rem;
+            background: #252525;
+            border-bottom: 2px solid #3a3a3a;
+        }
+
+        .email-mini-btn {
+            padding: 0.45rem 1rem;
+            border: 2px solid #4b5563;
+            border-radius: 2rem;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s;
+            margin-bottom: 0.6rem;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+
+        .email-mini-btn:hover { color: #f9fafb; border-color: #6b7280; }
+
+        .email-mini-nav-tachus .email-mini-btn-active {
+            background: #61bb46;
+            border-color: #61bb46;
+            color: white;
+            box-shadow: 0 2px 8px rgba(97,187,70,0.35);
+        }
+
+        .email-mini-nav-ezee .email-mini-btn-active {
+            background: #FB612F;
+            border-color: #FB612F;
+            color: white;
+            box-shadow: 0 2px 8px rgba(251,97,47,0.35);
+        }
+
+        .email-mini-content { flex: 1; }
+
+        .email-mini-page { display: none; }
+        .email-mini-page.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 55vh;
+            padding-top: 0.5rem;
+        }
+
+        .email-template-placeholder { width: 100%; text-align: center; }
+
+        /* ── EMAIL TEMPLATES PAGE ── */
+        .email-page {
+            min-height: 80vh;
+            background: #2d2d2d;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── EMAIL SUB-TAB NAV ── */
+        .email-sub-nav {
+            background-color: #222222;
+            border-bottom: 2px solid #3a3a3a;
+            display: flex;
+            padding: 0 1rem;
+            gap: 0.25rem;
+        }
+
+        .email-sub-btn {
+            padding: 0.65rem 1.4rem;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color 0.2s, border-color 0.2s;
+            letter-spacing: 0.4px;
+        }
+
+        .email-sub-btn:hover { color: #f9fafb; }
+
+        .email-sub-btn.active-tachus {
+            color: #61bb46;
+            border-bottom-color: #61bb46;
+        }
+
+        .email-sub-btn.active-ezee {
+            color: #FB612F;
+            border-bottom-color: #FB612F;
+        }
+
+        /* ── EMAIL SUB-PAGES ── */
+        .email-sub-page { display: none; }
+        .email-sub-page.active { display: flex; flex-direction: column; min-height: 70vh; }
+
+        .tachus-mark {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #61bb46;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .ezee-mark {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #FB612F;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-sub {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #6b7280;
+        }
+
+        .sub-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .dot-tachus { background-color: #61bb46; }
+        .dot-ezee   { background-color: #FB612F; }
+
+        /* ── HOME PAGE ── */
+        .home-page {
+            min-height: 80vh;
+            background: #2d2d2d;
+            padding: 2rem 1.5rem;
+        }
+
+        .home-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .home-header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #f9fafb;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+        }
+
+        .home-header p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            max-width: 1000px;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .home-card {
+            background: #3a3a3a;
+            border: 2px solid #4b5563;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .home-card:hover {
+            border-color: #FB612F;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .home-card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .home-card-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #f9fafb;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        .home-card-desc {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+
+        .home-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.85rem;
+        }
+
+        .home-card-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            background: #4b5563;
+            color: #d1d5db;
+            letter-spacing: 0.3px;
+        }
+
+        .home-card.card-orange { border-color: rgba(251,97,47,0.3); }
+        .home-card.card-orange:hover { border-color: #FB612F; }
+        .home-card.card-green { border-color: rgba(97,187,70,0.3); }
+        .home-card.card-green:hover { border-color: #61bb46; }
+
+        /* ── OUI LOOKUP ── */
+        .oui-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #3a3a3a;
+            border: 2px solid #4b5563;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .oui-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #f9fafb;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .oui-subtitle {
+            font-size: 0.78rem;
+            color: #9ca3af;
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.3px;
+        }
+
+        .oui-input-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .oui-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.7rem 1rem;
+            background: #4b5563;
+            border: 1px solid #6b7280;
+            border-radius: 0.375rem;
+            color: #f9fafb;
+            font-size: 0.95rem;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .oui-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .oui-btn {
+            padding: 0.7rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .oui-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(59,130,246,0.35);
+        }
+
+        .oui-result {
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .oui-result.success {
+            background: #052e16;
+            border: 1px solid #16a34a;
+            color: #4ade80;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .oui-result.error {
+            background: #2d1515;
+            border: 1px solid #dc2626;
+            color: #f87171;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .oui-mac-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.4rem;
+        }
+
+        /* ── LOGIN PAGE ── */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-card {
+            background: #2d2d2d;
+            border: 2px solid #FB612F;
+            border-radius: 12px;
+            padding: 2.5rem 3rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #FB612F;
+            letter-spacing: 2px;
+            margin-bottom: 0.25rem;
+        }
+
+        .login-subtitle {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .login-label {
+            display: block;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #d1d5db;
+            margin-bottom: 0.4rem;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #3a3a3a;
+            border: 1px solid #6b7280;
+            border-radius: 0.375rem;
+            color: #f9fafb;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #FB612F;
+            box-shadow: 0 0 0 3px rgba(251,97,47,0.2);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #FB612F;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+        }
+
+        .login-btn:hover {
+            background: #e5511a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(251,97,47,0.4);
+        }
+
+        .login-error {
+            margin-top: 1rem;
+            color: #f87171;
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-height: 1.2rem;
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%      { transform: translateX(-8px); }
+            40%      { transform: translateX(8px); }
+            60%      { transform: translateX(-6px); }
+            80%      { transform: translateX(6px); }
+        }
+        .login-card.shake { animation: shake 0.4s ease; }
+
+        .signout-btn {
+            position: fixed;
+            top: 0.6rem;
+            right: 1rem;
+            background: transparent;
+            border: 1px solid #6b7280;
+            color: #9ca3af;
+            padding: 0.3rem 0.85rem;
+            border-radius: 0.375rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.2s;
+        }
+        .signout-btn:hover { border-color: #FB612F; color: #FB612F; }
+
+        @media (max-width: 768px) {
+            .header-container { flex-direction: column; gap: 1rem; }
+            .logo-container img { max-width: 200px; }
+            .header-title { font-size: 1.5rem; }
+            .email-sub-btn { padding: 0.65rem 1rem; font-size: 0.8rem; }
+        }
+    </style>
 </head>
 <body>
 
@@ -33,51 +1447,108 @@
         <button class="tab-btn" onclick="switchTab('email', this)">Email Templates</button>
     </nav>
 
-    <!-- ══════════════════════════════════════════════
-         PAGE: HOME
-         ══════════════════════════════════════════════ -->
+    <!-- ── PAGE: HOME ── -->
     <div id="page-home" class="page active">
         <div class="home-page">
             <div class="home-header">
                 <h1>Ezee Fiber Internal Tools</h1>
                 <p>Select a tool below to get started</p>
             </div>
-            <div class="home-grid">
-                <div class="home-card card-orange" onclick="goToTab('support')">
-                    <span class="home-card-icon">📋</span>
-                    <div class="home-card-title">Note Generator</div>
-                    <div class="home-card-desc">Generate formatted tech support notes for truck rolls, hard downs, cancellations, dispatches, and CECR tickets.</div>
-                    <div class="home-card-tags">
-                        <span class="home-card-tag">Truck Roll</span>
-                        <span class="home-card-tag">Hard Down</span>
-                        <span class="home-card-tag">Cancellation</span>
-                        <span class="home-card-tag">Dispatch</span>
-                        <span class="home-card-tag">CECR</span>
+
+            <!-- ── TWO-COLUMN LAYOUT: Update Log + Tool Cards ── -->
+            <div class="home-body">
+
+                <!-- LEFT: Update Log -->
+                <div class="update-log">
+                    <div class="update-log-header">
+                        <span class="update-log-icon">📣</span>
+                        <span class="update-log-title">Update Log</span>
+                    </div>
+                    <div class="update-log-list">
+
+                        <div class="update-entry">
+                            <div class="update-entry-top">
+                                <span class="update-version">v2.0.0</span>
+                                <span class="update-date">Apr 2026</span>
+                            </div>
+                            <div class="update-entry-title">Modular Refactor</div>
+                            <ul class="update-entry-items">
+                                <li>Split single-file HTML into modular CSS, JS, and data files</li>
+                                <li>Added sticky notes panel (persistent across all pages)</li>
+                                <li>Empty fields no longer appear in generated notes</li>
+                                <li>Tech Region dropdown added to Dispatch</li>
+                            </ul>
+                        </div>
+
+                        <div class="update-entry">
+                            <div class="update-entry-top">
+                                <span class="update-version">v1.5.0</span>
+                                <span class="update-date">Mar 2026</span>
+                            </div>
+                            <div class="update-entry-title">Note Generator Improvements</div>
+                            <ul class="update-entry-items">
+                                <li>Split Light Levels into ONT and OLT inputs</li>
+                                <li>Added Construction in Area Yes/No to Truck Roll</li>
+                                <li>Removed deprecated troubleshooting step buttons</li>
+                                <li>Custom troubleshooting step input added</li>
+                            </ul>
+                        </div>
+
+                        <div class="update-entry">
+                            <div class="update-entry-top">
+                                <span class="update-version">v1.0.0</span>
+                                <span class="update-date">Jan 2026</span>
+                            </div>
+                            <div class="update-entry-title">Initial Release</div>
+                            <ul class="update-entry-items">
+                                <li>Truck Roll, Hard Down, Dispatch, CECR note generators</li>
+                                <li>Email templates for Tachus and EzeeFiber</li>
+                                <li>Login gate with session management</li>
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
-                <div class="home-card card-green" onclick="goToTab('email')">
-                    <span class="home-card-icon">📧</span>
-                    <div class="home-card-title">Email Templates</div>
-                    <div class="home-card-desc">Pre-built email templates for both Tachus and EzeeFiber — equipment returns, referrals, WiFi help, and more.</div>
-                    <div class="home-card-tags">
-                        <span class="home-card-tag">Equipment Return</span>
-                        <span class="home-card-tag">Refer a Friend</span>
-                        <span class="home-card-tag">WiFi Key</span>
-                        <span class="home-card-tag">Requesting Pics</span>
+
+                <!-- RIGHT: Tool Cards -->
+                <div class="home-right">
+                    <div class="home-grid">
+                        <div class="home-card card-orange" onclick="goToTab('support')">
+                            <span class="home-card-icon">📋</span>
+                            <div class="home-card-title">Note Generator</div>
+                            <div class="home-card-desc">Generate formatted tech support notes for truck rolls, hard downs, cancellations, dispatches, and CECR tickets.</div>
+                            <div class="home-card-tags">
+                                <span class="home-card-tag">Truck Roll</span>
+                                <span class="home-card-tag">Hard Down</span>
+                                <span class="home-card-tag">Cancellation</span>
+                                <span class="home-card-tag">Dispatch</span>
+                                <span class="home-card-tag">CECR</span>
+                            </div>
+                        </div>
+                        <div class="home-card card-green" onclick="goToTab('email')">
+                            <span class="home-card-icon">📧</span>
+                            <div class="home-card-title">Email Templates</div>
+                            <div class="home-card-desc">Pre-built email templates for both Tachus and EzeeFiber — equipment returns, referrals, WiFi help, and more.</div>
+                            <div class="home-card-tags">
+                                <span class="home-card-tag">Equipment Return</span>
+                                <span class="home-card-tag">Refer a Friend</span>
+                                <span class="home-card-tag">WiFi Key</span>
+                                <span class="home-card-tag">Requesting Pics</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+
+            </div><!-- end .home-body -->
         </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════
-         PAGE: NOTE GENERATOR
-         ══════════════════════════════════════════════ -->
+    <!-- ── PAGE: NOTE GENERATOR ── -->
     <div id="page-support" class="page">
         <div class="header-wrapper">
             <div class="header-container">
                 <div class="logo-container">
-                    <img src="assets/img/EzeeFiberLogo.png" alt="Ezee Fiber Logo">
+                    <img src="EzeeFiberLogo.png" alt="Ezee Fiber Logo">
                 </div>
                 <div class="header-text">
                     <div class="header-title">Technical Support</div>
@@ -95,7 +1566,9 @@
             <button class="note-sub-btn" id="note-btn-cecr" onclick="switchNoteTab('cecr', this)">CECR</button>
         </nav>
 
-        <!-- ── NOTE SUB-PAGE: Truck Roll Approval ── -->
+        <!-- ══════════════════════════════════════════════
+             NOTE SUB-PAGE: Truck Roll Approval (NEW TEMPLATE)
+             ══════════════════════════════════════════════ -->
         <div id="note-sub-truckroll" class="note-sub-page active">
             <div class="container">
                 <form id="supportForm">
@@ -235,6 +1708,8 @@
                         </div>
                         <div class="form-group full-width">
                             <div class="troubleshooting-grid" id="troubleshootingGrid"></div>
+
+                            <!-- Custom Step Input -->
                             <div style="margin-top:1rem;">
                                 <label style="margin-bottom:0.4rem; font-size:0.8rem; color:#9ca3af;">Add Custom Step</label>
                                 <div class="custom-step-wrapper">
@@ -402,122 +1877,217 @@
 
         <!-- ── NOTE SUB-PAGE: Dispatch ── -->
         <div id="note-sub-dispatch" class="note-sub-page">
-            <div class="container">
-                <div class="dispatch-brand-row">
-                    <span class="dispatch-brand-label">Customer Type:</span>
-                    <button type="button" class="dispatch-brand-btn" id="dispatch-btn-tachus" onclick="setDispatchBrand('Tachus')">Tachus</button>
-                    <button type="button" class="dispatch-brand-btn" id="dispatch-btn-ezee" onclick="setDispatchBrand('Ezee')">EzeeFiber</button>
-                    <span id="dispatch-brand-display" class="dispatch-brand-display"></span>
-                </div>
-                <form id="dispatchForm">
-                    <div class="form-grid">
-                        <div class="form-group full-width">
-                            <label for="dp-techRegion">Tech Region</label>
-                            <select id="dp-techRegion" class="tech-region-select">
-                                <option value="">— Select Tech Region —</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="dp-customerName">Customer Name</label>
-                            <input type="text" id="dp-customerName" placeholder="Enter customer name">
-                        </div>
-                        <div class="form-group">
-                            <label for="dp-address">Address</label>
-                            <input type="text" id="dp-address" placeholder="Enter address">
-                        </div>
-                        <div class="form-group">
-                            <label for="dp-accountNumber">Account #</label>
-                            <input type="text" id="dp-accountNumber" placeholder="Enter account #" style="max-width: 220px;">
-                        </div>
-                        <div class="form-group">
-                            <label for="dp-woNumber">WO #</label>
-                            <input type="text" id="dp-woNumber" placeholder="Enter WO #" style="max-width: 220px;">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="dp-customerReporting">Customer Reporting</label>
-                            <textarea id="dp-customerReporting" placeholder="Enter customer report"></textarea>
-                        </div>
+            <div class="note-with-sidebar">
+
+                <!-- LEFT: Dispatch Info Panel -->
+                <div class="note-info-panel">
+                    <div class="info-panel-header">
+                        <span class="info-panel-icon">📌</span>
+                        <span class="info-panel-title">Dispatch Reference</span>
                     </div>
-                </form>
-                <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="generateDispatch()">Generate Note</button>
-                    <button class="btn btn-secondary" onclick="resetDispatch()">Reset Form</button>
-                </div>
-                <div id="dpOutputSection" class="output-section">
-                    <div class="output-header">
-                        <h3>Generated Note</h3>
-                        <button class="btn btn-success" onclick="copyDispatch()">
-                            <span id="dpCopyIcon">📋</span>
-                            <span id="dpCopyText">Copy to Dashboard</span>
-                        </button>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Placeholder Section A</div>
+                        <ul class="info-panel-list">
+                            <li>Edit this in index.html → Dispatch info panel</li>
+                            <li>Placeholder item two</li>
+                            <li>Placeholder item three</li>
+                        </ul>
                     </div>
-                    <div class="output-box">
-                        <textarea id="dpGeneratedNote" spellcheck="false"></textarea>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Placeholder Section B</div>
+                        <ul class="info-panel-list">
+                            <li>Placeholder item one</li>
+                            <li>Placeholder item two</li>
+                            <li>Placeholder item three</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Placeholder Section C</div>
+                        <ul class="info-panel-list">
+                            <li>Placeholder item one</li>
+                            <li>Placeholder item two</li>
+                        </ul>
                     </div>
                 </div>
+
+                <!-- RIGHT: Dispatch Form -->
+                <div class="container">
+                    <div class="dispatch-brand-row">
+                        <span class="dispatch-brand-label">Customer Type:</span>
+                        <button type="button" class="dispatch-brand-btn" id="dispatch-btn-tachus" onclick="setDispatchBrand('Tachus')">Tachus</button>
+                        <button type="button" class="dispatch-brand-btn" id="dispatch-btn-ezee" onclick="setDispatchBrand('Ezee')">EzeeFiber</button>
+                        <span id="dispatch-brand-display" class="dispatch-brand-display"></span>
+                    </div>
+                    <form id="dispatchForm">
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="dp-techRegion">Tech Region</label>
+                                <select id="dp-techRegion" class="tech-region-select">
+                                    <option value="">— Select Tech Region —</option>
+                                    <option value="ABQ">ABQ — Albuquerque</option>
+                                    <option value="CAT">CAT — Commercial Activation Tachus</option>
+                                    <option value="CHI">CHI — Chicago Illinois</option>
+                                    <option value="CHO">CHO — Commercial Houston</option>
+                                    <option value="CNM">CNM — Commercial New Mexico</option>
+                                    <option value="COM">COM — Commercial</option>
+                                    <option value="CW1">CW1 — Carlton Woods Jun1</option>
+                                    <option value="DAY">DAY — Daynet</option>
+                                    <option value="DEL">DEL — Deleted Addresses</option>
+                                    <option value="DET">DET — Detroit Michigan</option>
+                                    <option value="EST">EST — East</option>
+                                    <option value="GEM">GEM — GEM</option>
+                                    <option value="INT">INT — Instant On No Tech Needed</option>
+                                    <option value="KNT">KNT — Kent Washington</option>
+                                    <option value="MID">MID — Mid</option>
+                                    <option value="NET">NET — North East Tachus</option>
+                                    <option value="NOR">NOR — North</option>
+                                    <option value="PRE">PRE — Pre-Order</option>
+                                    <option value="SAL">SAL — Salem Oregon</option>
+                                    <option value="SFE">SFE — Santa Fe NM</option>
+                                    <option value="SOU">SOU — South</option>
+                                    <option value="TAM">TAM — SMB TAM Legacy Build Areas</option>
+                                    <option value="VAN">VAN — Minnehaha Vancouver WA</option>
+                                    <option value="WHS">WHS — Wholesale</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dp-customerName">Customer Name</label>
+                                <input type="text" id="dp-customerName" placeholder="Enter customer name">
+                            </div>
+                            <div class="form-group">
+                                <label for="dp-address">Address</label>
+                                <input type="text" id="dp-address" placeholder="Enter address">
+                            </div>
+                            <div class="form-group">
+                                <label for="dp-accountNumber">Account #</label>
+                                <input type="text" id="dp-accountNumber" placeholder="Enter account #" style="max-width: 220px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="dp-woNumber">WO #</label>
+                                <input type="text" id="dp-woNumber" placeholder="Enter WO #" style="max-width: 220px;">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="dp-customerReporting">Customer Reporting</label>
+                                <textarea id="dp-customerReporting" placeholder="Enter customer report"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="generateDispatch()">Generate Note</button>
+                        <button class="btn btn-secondary" onclick="resetDispatch()">Reset Form</button>
+                    </div>
+                    <div id="dpOutputSection" class="output-section">
+                        <div class="output-header">
+                            <h3>Generated Note</h3>
+                            <button class="btn btn-success" onclick="copyDispatch()">
+                                <span id="dpCopyIcon">📋</span>
+                                <span id="dpCopyText">Copy to Dashboard</span>
+                            </button>
+                        </div>
+                        <div class="output-box">
+                            <textarea id="dpGeneratedNote" spellcheck="false"></textarea>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
         <!-- ── NOTE SUB-PAGE: CECR ── -->
         <div id="note-sub-cecr" class="note-sub-page">
-            <div class="container">
-                <form id="cecrForm">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="cecr-phone">Phone</label>
-                            <input type="text" id="cecr-phone" placeholder="Enter phone" style="max-width: 220px;">
-                        </div>
-                        <div class="form-group">
-                            <label for="cecr-address">Address</label>
-                            <input type="text" id="cecr-address" placeholder="Enter address">
-                        </div>
-                        <div class="form-group">
-                            <label for="cecr-ticketId">Ticket ID</label>
-                            <input type="text" id="cecr-ticketId" placeholder="Enter ticket ID">
-                        </div>
-                        <div class="form-group">
-                            <label for="cecr-customerName">Customer Name</label>
-                            <input type="text" id="cecr-customerName" placeholder="Enter customer name">
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Priority Level</label>
-                            <div class="priority-row">
-                                <button type="button" class="priority-btn" id="priority-btn-1" onclick="setCecrPriority(1)">1</button>
-                                <button type="button" class="priority-btn" id="priority-btn-2" onclick="setCecrPriority(2)">2</button>
-                                <button type="button" class="priority-btn" id="priority-btn-3" onclick="setCecrPriority(3)">3</button>
-                                <button type="button" class="priority-btn" id="priority-btn-4" onclick="setCecrPriority(4)">4</button>
-                                <span id="cecr-priority-display" class="cecr-priority-display"></span>
+            <div class="note-with-sidebar">
+
+                <!-- LEFT: CECR Info Panel -->
+                <div class="note-info-panel cecr-panel">
+                    <div class="info-panel-header">
+                        <span class="info-panel-icon">🎫</span>
+                        <span class="info-panel-title">CECR Reference</span>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Priority Levels</div>
+                        <ul class="info-panel-list">
+                            <li>Edit this in index.html → CECR info panel</li>
+                            <li>Placeholder priority info 2</li>
+                            <li>Placeholder priority info 3</li>
+                            <li>Placeholder priority info 4</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Escalation Guidelines</div>
+                        <ul class="info-panel-list">
+                            <li>Placeholder guideline one</li>
+                            <li>Placeholder guideline two</li>
+                            <li>Placeholder guideline three</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">SLA Targets</div>
+                        <ul class="info-panel-list">
+                            <li>Placeholder SLA item one</li>
+                            <li>Placeholder SLA item two</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RIGHT: CECR Form -->
+                <div class="container">
+                    <form id="cecrForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="cecr-phone">Phone</label>
+                                <input type="text" id="cecr-phone" placeholder="Enter phone" style="max-width: 220px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cecr-address">Address</label>
+                                <input type="text" id="cecr-address" placeholder="Enter address">
+                            </div>
+                            <div class="form-group">
+                                <label for="cecr-ticketId">Ticket ID</label>
+                                <input type="text" id="cecr-ticketId" placeholder="Enter ticket ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="cecr-customerName">Customer Name</label>
+                                <input type="text" id="cecr-customerName" placeholder="Enter customer name">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Priority Level</label>
+                                <div class="priority-row">
+                                    <button type="button" class="priority-btn" id="priority-btn-1" onclick="setCecrPriority(1)">1</button>
+                                    <button type="button" class="priority-btn" id="priority-btn-2" onclick="setCecrPriority(2)">2</button>
+                                    <button type="button" class="priority-btn" id="priority-btn-3" onclick="setCecrPriority(3)">3</button>
+                                    <button type="button" class="priority-btn" id="priority-btn-4" onclick="setCecrPriority(4)">4</button>
+                                    <span id="cecr-priority-display" class="cecr-priority-display"></span>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="cecr-customerReport">Customer Report</label>
+                                <textarea id="cecr-customerReport" placeholder="Enter customer report" style="min-height: 140px;"></textarea>
                             </div>
                         </div>
-                        <div class="form-group full-width">
-                            <label for="cecr-customerReport">Customer Report</label>
-                            <textarea id="cecr-customerReport" placeholder="Enter customer report" style="min-height: 140px;"></textarea>
+                    </form>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="generateCecr()">Generate Note</button>
+                        <button class="btn btn-secondary" onclick="resetCecr()">Reset Form</button>
+                    </div>
+                    <div id="cecrOutputSection" class="output-section">
+                        <div class="output-header">
+                            <h3>Generated Note</h3>
+                            <button class="btn btn-success" onclick="copyCecr()">
+                                <span id="cecrCopyIcon">&#128203;</span>
+                                <span id="cecrCopyText">Copy to Dashboard</span>
+                            </button>
+                        </div>
+                        <div class="output-box">
+                            <textarea id="cecrGeneratedNote" spellcheck="false"></textarea>
                         </div>
                     </div>
-                </form>
-                <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="generateCecr()">Generate Note</button>
-                    <button class="btn btn-secondary" onclick="resetCecr()">Reset Form</button>
                 </div>
-                <div id="cecrOutputSection" class="output-section">
-                    <div class="output-header">
-                        <h3>Generated Note</h3>
-                        <button class="btn btn-success" onclick="copyCecr()">
-                            <span id="cecrCopyIcon">&#128203;</span>
-                            <span id="cecrCopyText">Copy to Dashboard</span>
-                        </button>
-                    </div>
-                    <div class="output-box">
-                        <textarea id="cecrGeneratedNote" spellcheck="false"></textarea>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════
-         PAGE: EMAIL TEMPLATES
-         ══════════════════════════════════════════════ -->
+    <!-- ── PAGE: EMAIL TEMPLATES ── -->
     <div id="page-email" class="page">
         <div class="email-page">
             <nav class="email-sub-nav">
@@ -624,11 +2194,11 @@
                                     </button>
                                     <button class="btn btn-secondary" onclick="resetEmailTemplate('traf-output', ['traf-name','traf-link'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
                                 </div>
-                                <img src="assets/img/RAF1.png" class="raf-img-preview" alt="Refer a Friend header">
+                                <img src="RAF1.png" class="raf-img-preview" alt="Refer a Friend header">
                                 <div class="output-box">
                                     <textarea id="traf-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
                                 </div>
-                                <img src="assets/img/RAF2.png" class="raf-img-preview" alt="Refer a Friend footer">
+                                <img src="RAF2.png" class="raf-img-preview" alt="Refer a Friend footer">
                             </div>
                         </div>
                     </div>
@@ -814,11 +2384,11 @@
                                     </button>
                                     <button class="btn btn-secondary" onclick="resetEmailTemplate('eraf-output', ['eraf-name','eraf-link'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
                                 </div>
-                                <img src="assets/img/RAF1.png" class="raf-img-preview" alt="Refer a Friend header">
+                                <img src="RAF1.png" class="raf-img-preview" alt="Refer a Friend header">
                                 <div class="output-box">
                                     <textarea id="eraf-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
                                 </div>
-                                <img src="assets/img/RAF2.png" class="raf-img-preview" alt="Refer a Friend footer">
+                                <img src="RAF2.png" class="raf-img-preview" alt="Refer a Friend footer">
                             </div>
                         </div>
                     </div>
@@ -911,6 +2481,879 @@
         </div>
     </div>
 
+    <script>
+        // ── OUI DATABASE ──
+        const OUI_DB = {
+  "001451": "Apple Inc.", "0050E4": "Apple Inc.", "3C0754": "Apple Inc.", "A4C361": "Apple Inc.",
+  "F0B479": "Apple Inc.", "D83062": "Apple Inc.", "000A27": "Apple Inc.", "001124": "Motorola Solutions",
+  "001F5B": "Sony Corporation", "001FF3": "Apple Inc.", "002312": "Apple Inc.", "002500": "Apple Inc.",
+  "0026B9": "ASUSTek Computer", "0030A8": "Apple Inc.", "A45E60": "Apple Inc.", "7C6D62": "Apple Inc.",
+  "38F9D3": "Apple Inc.", "8866A5": "Apple Inc.", "001599": "Samsung Electronics",
+  "002454": "Samsung Electronics", "002339": "Samsung Electronics", "0024E9": "Samsung Electronics",
+  "002566": "Samsung Electronics", "0026E2": "LG Electronics", "F4428F": "Samsung Electronics",
+  "CC07AB": "Samsung Electronics", "8C771D": "Samsung Electronics", "000142": "Cisco Systems",
+  "0001C7": "Cisco Systems", "000216": "Cisco Systems", "000268": "Cisco Systems",
+  "0002B9": "Cisco Systems", "001201": "Cisco Systems", "001A2B": "Cisco Systems",
+  "001B54": "Cisco Systems", "001CA3": "Cisco Systems", "001D45": "Cisco Systems",
+  "001E13": "Cisco Systems", "001E7A": "Cisco Systems", "001F27": "Cisco Systems",
+  "001F9E": "Cisco Systems", "002022": "Cisco Systems", "0021A0": "Cisco Systems",
+  "0022BD": "Cisco Systems", "002390": "Cisco Systems", "0024C4": "Cisco Systems",
+  "0025B4": "Cisco Systems", "0026CB": "Cisco Systems", "5C5015": "Cisco Systems",
+  "E09D31": "Cisco Systems", "002722": "Ubiquiti Networks", "0418D6": "Ubiquiti Networks",
+  "24A43C": "Ubiquiti Networks", "44D9E7": "Ubiquiti Networks", "68727B": "Ubiquiti Networks",
+  "788A20": "Ubiquiti Networks", "B4FBE4": "Ubiquiti Networks", "DC9FDB": "Ubiquiti Networks",
+  "F09FC2": "Ubiquiti Networks", "FCECDA": "Ubiquiti Networks", "0014BF": "Linksys (Belkin)",
+  "001B2F": "NETGEAR", "001E2A": "NETGEAR", "001F33": "NETGEAR", "002096": "NETGEAR",
+  "00224B": "NETGEAR", "0023F8": "NETGEAR", "0024B2": "Linksys (Belkin)", "0026F2": "NETGEAR",
+  "200BC7": "NETGEAR", "30469A": "NETGEAR", "4CEDFB": "NETGEAR", "6CB0CE": "NETGEAR",
+  "A021B7": "NETGEAR", "C03F0E": "NETGEAR", "00253C": "TP-LINK Technologies",
+  "001427": "TP-LINK Technologies", "14CC20": "TP-LINK Technologies", "1C3BF3": "TP-LINK Technologies",
+  "1C61B4": "TP-LINK Technologies", "2008ED": "TP-LINK Technologies", "3C4671": "TP-LINK Technologies",
+  "50BD5F": "TP-LINK Technologies", "54E6FC": "TP-LINK Technologies", "5C89AD": "TP-LINK Technologies",
+  "60E327": "TP-LINK Technologies", "64701A": "TP-LINK Technologies", "6C5C14": "TP-LINK Technologies",
+  "708BCD": "TP-LINK Technologies", "74DADA": "TP-LINK Technologies", "A0F3C1": "TP-LINK Technologies",
+  "B0487A": "TP-LINK Technologies", "C025E9": "TP-LINK Technologies", "D8EB97": "TP-LINK Technologies",
+  "E8DE27": "TP-LINK Technologies", "F4F26D": "TP-LINK Technologies", "EC086B": "TP-LINK Technologies",
+  "F81A67": "eero Inc. (Amazon)", "8CDD0B": "eero Inc. (Amazon)", "E89F80": "eero Inc. (Amazon)",
+  "AC393D": "eero Inc. (Amazon)", "3C22FB": "eero Inc. (Amazon)", "A499A8": "eero Inc. (Amazon)",
+  "A4ED43": "eero Inc. (Amazon)", "B44FBC": "eero Inc. (Amazon)", "001799": "ARRIS / CommScope",
+  "001E46": "ARRIS / CommScope", "002268": "ARRIS / CommScope", "0024A0": "ARRIS / CommScope",
+  "001A5B": "ARRIS / CommScope", "001CF0": "D-Link Corporation", "744D28": "ARRIS / CommScope",
+  "BC1401": "ARRIS / CommScope", "CC3A61": "ARRIS / CommScope", "000E0E": "Calix Networks",
+  "001A11": "Calix Networks", "0026B8": "Calix Networks", "001CDD": "Calix Networks",
+  "002191": "Calix Networks", "00242B": "Calix Networks", "6C3B6B": "MikroTik",
+  "7C4CAD": "Calix Networks", "D49A20": "Calix Networks", "001BEA": "Nokia", "002165": "Nokia",
+  "002760": "Alcatel-Lucent", "000F1F": "Alcatel-Lucent", "001372": "Alcatel-Lucent",
+  "741547": "Nokia", "887556": "Nokia", "001E10": "Huawei Technologies",
+  "0021CC": "Huawei Technologies", "002278": "Huawei Technologies", "00259E": "Huawei Technologies",
+  "0026C6": "Huawei Technologies", "286ED4": "Huawei Technologies", "2C9D65": "Huawei Technologies",
+  "34DB7B": "Huawei Technologies", "3C47C9": "Huawei Technologies", "48AD08": "Huawei Technologies",
+  "507B9D": "Huawei Technologies", "54895A": "Huawei Technologies", "58605F": "Huawei Technologies",
+  "5C4CA9": "Huawei Technologies", "606BAD": "Huawei Technologies", "70A8E3": "Huawei Technologies",
+  "788F69": "Huawei Technologies", "7CAE57": "Huawei Technologies", "84742A": "Huawei Technologies",
+  "8C34FD": "Huawei Technologies", "90E7C4": "Huawei Technologies", "98F5A3": "Huawei Technologies",
+  "9CBEA8": "Huawei Technologies", "A01872": "Huawei Technologies", "A0F479": "Huawei Technologies",
+  "AC853D": "Huawei Technologies", "B80800": "Huawei Technologies", "BC3EA7": "Huawei Technologies",
+  "C4072F": "Huawei Technologies", "C4F081": "Huawei Technologies", "C86195": "Huawei Technologies",
+  "CC53B5": "Huawei Technologies", "D065CA": "Huawei Technologies", "D4F9A1": "Huawei Technologies",
+  "D8490B": "Huawei Technologies", "E82979": "Huawei Technologies", "EC233D": "Huawei Technologies",
+  "F04347": "Huawei Technologies", "F48E92": "Huawei Technologies", "F8BF09": "Huawei Technologies",
+  "FCE33C": "Huawei Technologies", "001E73": "ZTE Corporation", "001F8D": "ZTE Corporation",
+  "002293": "ZTE Corporation", "0024E8": "ZTE Corporation", "0026ED": "ZTE Corporation",
+  "3090AB": "ZTE Corporation", "3448ED": "ZTE Corporation", "54A51B": "ZTE Corporation",
+  "6476BA": "ZTE Corporation", "74A78E": "ZTE Corporation", "844FCA": "ZTE Corporation",
+  "8CE081": "ZTE Corporation", "981333": "ZTE Corporation", "C864C7": "ZTE Corporation",
+  "E89A8F": "ZTE Corporation", "F46BE8": "ZTE Corporation", "001A92": "ASUSTek Computer",
+  "001D60": "ASUSTek Computer", "001E8C": "Linksys (Belkin)", "002215": "ASUSTek Computer",
+  "00237C": "ASUSTek Computer", "0024EE": "ASUSTek Computer", "10BF48": "ASUSTek Computer",
+  "1C87F4": "ASUSTek Computer", "2C4D54": "ASUSTek Computer", "30B49E": "ASUSTek Computer",
+  "40167E": "ASUSTek Computer", "50465D": "ASUSTek Computer", "5404A6": "ASUSTek Computer",
+  "60A44C": "ASUSTek Computer", "74D02B": "ASUSTek Computer", "AC220B": "ASUSTek Computer",
+  "BC9746": "ASUSTek Computer", "D850E6": "ASUSTek Computer", "E03F49": "ASUSTek Computer",
+  "F832E4": "ASUSTek Computer", "0005CD": "D-Link Corporation", "000D88": "D-Link Corporation",
+  "0011C5": "D-Link Corporation", "0013E8": "D-Link Corporation", "0015E9": "D-Link Corporation",
+  "001740": "D-Link Corporation", "001849": "D-Link Corporation", "001E58": "D-Link Corporation",
+  "00215D": "D-Link Corporation", "0022B0": "D-Link Corporation", "002401": "D-Link Corporation",
+  "00265A": "D-Link Corporation", "1C7EE5": "D-Link Corporation", "28107B": "D-Link Corporation",
+  "34088A": "D-Link Corporation", "3C1E04": "D-Link Corporation", "5CD998": "D-Link Corporation",
+  "744401": "D-Link Corporation", "78542E": "LG Electronics", "90F652": "D-Link Corporation",
+  "A0AB1B": "D-Link Corporation", "B0C554": "D-Link Corporation", "BC0F9A": "D-Link Corporation",
+  "C4A81D": "D-Link Corporation", "CCB255": "D-Link Corporation", "3C5A37": "Google Inc.",
+  "6C5AB0": "Google Inc.", "A47733": "Google Inc.", "D83C69": "Google Inc.", "F88FCA": "Google Inc.",
+  "000F60": "Google Inc.", "18B430": "Google Inc. (Nest)", "64169D": "Google Inc. (Nest)",
+  "B8AD3E": "Google Inc. (Nest)", "0C9D92": "Amazon Technologies", "10AE60": "Amazon Technologies",
+  "34D270": "Amazon Technologies", "40B4CD": "Amazon Technologies", "44650D": "Amazon Technologies",
+  "6CF373": "Amazon Technologies", "74C246": "Amazon Technologies", "8871E5": "Amazon Technologies",
+  "A002DC": "Amazon Technologies", "AC63BE": "Amazon Technologies", "B47C9C": "Amazon Technologies",
+  "F0272D": "Amazon Technologies", "F0D2F1": "Amazon Technologies", "FC65DE": "Amazon Technologies",
+  "086286": "Roku Inc.", "0C6CBD": "Roku Inc.", "205124": "Roku Inc.", "4C3486": "Roku Inc.",
+  "6C9B02": "Roku Inc.", "8C227B": "Roku Inc.", "AC3A7A": "Roku Inc.", "B09E0A": "Roku Inc.",
+  "C83A35": "Roku Inc.", "D00A1F": "Roku Inc.", "DC3A5E": "Roku Inc.",
+  "B827EB": "Raspberry Pi Foundation", "DCA632": "Raspberry Pi Foundation",
+  "E45F01": "Raspberry Pi Foundation", "004E08": "MikroTik", "18FD74": "MikroTik",
+  "2CC8D2": "MikroTik", "484B7B": "MikroTik", "4C5E0C": "MikroTik", "74EC35": "MikroTik",
+  "8C4AEF": "MikroTik", "B8069F": "MikroTik", "C4AD34": "MikroTik", "CC2DE0": "MikroTik",
+  "D4CA6D": "MikroTik", "DC2C6E": "MikroTik", "E4CE8F": "MikroTik"
+        };
+
+        function lookupOUI() {
+            const raw = document.getElementById('oui-input').value.trim();
+            const result = document.getElementById('oui-result');
+            const macDisp = document.getElementById('oui-mac-display');
+            if (!raw) return;
+            const clean = raw.replace(/[^a-fA-F0-9]/g, '').toUpperCase();
+            if (clean.length < 6) {
+                result.className = 'oui-result error';
+                result.innerHTML = '⚠️ Please enter at least 6 hex characters.';
+                macDisp.textContent = '';
+                return;
+            }
+            const oui = clean.substring(0, 6);
+            const formatted = oui.match(/.{1,2}/g).join(':');
+            const vendor = OUI_DB[oui] || null;
+            if (vendor) {
+                result.className = 'oui-result success';
+                result.innerHTML = '✅ <span><strong>Manufacturer:</strong> ' + vendor + '</span>';
+                macDisp.textContent = 'MAC OUI: ' + formatted;
+            } else {
+                result.className = 'oui-result error';
+                result.innerHTML = '❌ No match found for OUI: ' + formatted;
+                macDisp.textContent = 'MAC OUI: ' + formatted;
+            }
+        }
+
+        function clearOUI() {
+            document.getElementById('oui-input').value = '';
+            const result = document.getElementById('oui-result');
+            result.className = 'oui-result';
+            result.innerHTML = '';
+            document.getElementById('oui-mac-display').textContent = '';
+        }
+
+        // ── LOGIN ──
+        const SITE_PASSWORD = 'Ezeefiber#1';
+
+        function goToTab(tabId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('page-' + tabId).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + tabId + "'")) {
+                    b.classList.add('active');
+                }
+            });
+        }
+
+        function checkLogin() {
+            const input = document.getElementById('login-password').value;
+            const card = document.getElementById('login-card');
+            if (input === SITE_PASSWORD) {
+                sessionStorage.setItem('ef_auth', '1');
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('signout-btn').style.display = 'block';
+                goToTab('home');
+            } else {
+                document.getElementById('login-error').textContent = 'Incorrect password. Please try again.';
+                card.classList.remove('shake');
+                void card.offsetWidth;
+                card.classList.add('shake');
+                document.getElementById('login-password').value = '';
+                setTimeout(() => card.classList.remove('shake'), 400);
+            }
+        }
+
+        function signOut() {
+            sessionStorage.removeItem('ef_auth');
+            document.getElementById('login-overlay').style.display = 'flex';
+            document.getElementById('signout-btn').style.display = 'none';
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').textContent = '';
+        }
+
+        if (sessionStorage.getItem('ef_auth') === '1') {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('signout-btn').style.display = 'block';
+        }
+
+        // ── UPS PDF DOWNLOAD ──
+        async function downloadFilledPDF(brand) {
+            const isTachus = brand === 'tachus';
+            const acct = document.getElementById(isTachus ? 'ter-t-acct' : 'ter-e-acct').value.trim();
+            const wo   = document.getElementById(isTachus ? 'ter-t-wo'   : 'ter-e-wo').value.trim();
+            if (!acct && !wo) {
+                alert('Please enter at least the Customer Account Number or Work Order Number.');
+                return;
+            }
+            try {
+                if (!window.PDFLib) {
+                    await new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js';
+                        s.onload = resolve; s.onerror = reject;
+                        document.head.appendChild(s);
+                    });
+                }
+                const response = await fetch('EzeeFiber_UPS_Label.pdf');
+                if (!response.ok) throw new Error('Could not load EzeeFiber_UPS_Label.pdf');
+                const existingPdfBytes = await response.arrayBuffer();
+                const { PDFDocument, rgb, StandardFonts } = window.PDFLib;
+                const pdfDoc = await PDFDocument.load(existingPdfBytes);
+                const page = pdfDoc.getPages()[0];
+                const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+                const fontSize = 11;
+                const textColor = rgb(0, 0, 0);
+                if (acct) page.drawText(acct, { x: 68.7, y: 178.5, size: fontSize, font, color: textColor });
+                if (wo)   page.drawText(wo,   { x: 390.4, y: 178.5, size: fontSize, font, color: textColor });
+                const pdfBytes = await pdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'EzeeFiber_Return_Label.pdf'; a.click();
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+            } catch (err) {
+                alert('Could not generate PDF: ' + err.message);
+            }
+        }
+
+        // ── TAB SWITCHING ──
+        function switchNoteTab(tab, btnEl) {
+            document.querySelectorAll('.note-sub-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.note-sub-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('note-sub-' + tab).classList.add('active');
+            btnEl.classList.add('active');
+        }
+
+        function switchTab(tab, btnEl) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('page-' + tab).classList.add('active');
+            btnEl.classList.add('active');
+        }
+
+        function switchEmailTab(tab) {
+            document.querySelectorAll('.email-sub-page').forEach(p => p.classList.remove('active'));
+            document.getElementById('sub-btn-tachus').classList.remove('active-tachus');
+            document.getElementById('sub-btn-ezee').classList.remove('active-ezee');
+            document.getElementById('email-sub-' + tab).classList.add('active');
+            if (tab === 'tachus') {
+                document.getElementById('sub-btn-tachus').classList.add('active-tachus');
+                switchEmailMiniTab('tachus', 'cancellation', document.getElementById('email-tachus-btn-cancellation'));
+            } else {
+                document.getElementById('sub-btn-ezee').classList.add('active-ezee');
+                switchEmailMiniTab('ezee', 'cancellation', document.getElementById('email-ezee-btn-cancellation'));
+            }
+        }
+
+        function switchEmailMiniTab(brand, slug, btnEl) {
+            document.querySelectorAll(`#email-sub-${brand} .email-mini-page`).forEach(p => p.classList.remove('active'));
+            document.querySelectorAll(`#email-sub-${brand} .email-mini-btn`).forEach(b => b.classList.remove('email-mini-btn-active'));
+            document.getElementById(`email-${brand}-${slug}`).classList.add('active');
+            btnEl.classList.add('email-mini-btn-active');
+        }
+
+        // ══════════════════════════════════════════════
+        //  TRUCK ROLL STATE
+        // ══════════════════════════════════════════════
+        let trProvider = '';
+        const trEquip = { ont: '', router: '' };
+        const trYesNo = {
+            tr_devicesDisconnecting: null,
+            tr_networkStable: null,
+            tr_wifiInterference: null,
+            tr_constructionInArea: null
+        };
+        const selectedTroubleshooting = new Set();
+        const customTrSteps = [];
+
+        function setTrProvider(val) {
+            trProvider = val;
+            document.getElementById('tr-provider-tachus').classList.remove('active-tachus','active-ezee');
+            document.getElementById('tr-provider-ezee').classList.remove('active-tachus','active-ezee');
+            if (val === 'Tachus') {
+                document.getElementById('tr-provider-tachus').classList.add('active-tachus');
+            } else {
+                document.getElementById('tr-provider-ezee').classList.add('active-ezee');
+            }
+        }
+
+        function setEquip(type, val, btnEl) {
+            trEquip[type] = val;
+            const groupId = type === 'ont' ? 'tr-ont-btns' : 'tr-router-btns';
+            document.getElementById(groupId).querySelectorAll('.equip-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+            const otherId = type === 'ont' ? 'tr-ont-other' : 'tr-router-other';
+            document.getElementById(otherId).style.display = val === 'Other' ? 'block' : 'none';
+            if (val !== 'Other') document.getElementById(otherId).value = '';
+        }
+
+        const troubleshootingOptions = [
+            "•Power Cycled Modem","•Defaulted Modem","•Reboot Modem",
+            "•Activated OLT Bridge","•Flushed Bridge","•Bounce WAN Port",
+            "•Checked Fiber Patch Cable","•Ascending Bip8Errors","•Factory Reset Modem",
+            "•Cleared Counters","•Checked Cx Power","•Power Cycled Router","•Firmware Update",
+            "•Swapped gateway router","•Temporarily Disable 5GHz","•Enabled Guest SSID",
+            "•Disabled IPv6","•Factory Reset Routers","•Optimization on Network","•Changed DNS Server to:"
+        ];
+
+        function initTroubleshootingGrid() {
+            const grid = document.getElementById('troubleshootingGrid');
+            troubleshootingOptions.forEach(option => {
+                const item = document.createElement('div');
+                item.className = 'troubleshooting-item';
+                item.textContent = option;
+                item.onclick = () => toggleTroubleshooting(option, item);
+                grid.appendChild(item);
+            });
+        }
+
+        function toggleTroubleshooting(option, element) {
+            if (selectedTroubleshooting.has(option)) {
+                selectedTroubleshooting.delete(option);
+                element.classList.remove('selected');
+            } else {
+                selectedTroubleshooting.add(option);
+                element.classList.add('selected');
+            }
+        }
+
+        function addCustomStep() {
+            const input = document.getElementById('tr-custom-step-input');
+            const text = input.value.trim();
+            if (!text) return;
+            const step = '•' + text;
+            customTrSteps.push(step);
+            renderCustomSteps();
+            input.value = '';
+            input.focus();
+        }
+
+        function removeCustomStep(idx) {
+            customTrSteps.splice(idx, 1);
+            renderCustomSteps();
+        }
+
+        function renderCustomSteps() {
+            const list = document.getElementById('tr-custom-steps-list');
+            list.innerHTML = '';
+            customTrSteps.forEach((step, idx) => {
+                const tag = document.createElement('div');
+                tag.className = 'custom-step-tag';
+                tag.innerHTML = `<span>${step}</span><button class="custom-step-remove" onclick="removeCustomStep(${idx})" title="Remove">×</button>`;
+                list.appendChild(tag);
+            });
+        }
+
+        function setYesNo(field, value, e) {
+            trYesNo[field] = value;
+            const buttons = e.target.parentElement.querySelectorAll('button');
+            buttons.forEach(btn => btn.classList.remove('active-yes', 'active-no'));
+            e.target.classList.add(value ? 'active-yes' : 'active-no');
+        }
+
+        function yn(val) { return val === null ? '' : val ? 'Yes' : 'No'; }
+
+
+        // ── SKIP EMPTY FIELDS HELPERS ──
+        function line(label, value) {
+            const v = (value || "").trim();
+            return v ? "  " + label + ": " + v + "\n" : "";
+        }
+        function lineFlat(label, value) {
+            const v = (value || "").trim();
+            return v ? label + ": " + v + "\n" : "";
+        }
+        function lineYN(label, val) {
+            return val === null ? "" : "  " + label + ": " + (val ? "Yes" : "No") + "\n";
+        }
+        function lineYNFlat(label, val) {
+            return val === null ? "" : label + ": " + (val ? "Yes" : "No") + "\n";
+        }
+
+        function generateNote() {
+            const ontSN     = (document.getElementById('tr-ont-sn').value || '').trim();
+            const routerVal = trEquip.router === 'Other'
+                ? (document.getElementById('tr-router-other').value.trim() || 'Other')
+                : trEquip.router;
+            const routerSN  = (document.getElementById('tr-router-sn').value || '').trim();
+            const ontLL     = (document.getElementById('tr-lightLevels-ont').value || '').trim();
+            const oltLL     = (document.getElementById('tr-lightLevels-olt').value || '').trim();
+            const allSteps  = [...Array.from(selectedTroubleshooting), ...customTrSteps];
+
+            let equip = '';
+            if (ontSN)     equip += `  ONT SN: ${ontSN}\n`;
+            if (routerVal) equip += `  Router: ${routerVal}\n`;
+            if (routerSN)  equip += `  Router SN: ${routerSN}\n`;
+
+            let custDetails = '';
+            custDetails += line('Name',    document.getElementById('tr-name').value);
+            custDetails += line('Phone',   document.getElementById('tr-phone').value);
+            custDetails += line('Acct #',  document.getElementById('tr-acct').value);
+            custDetails += line('Address', document.getElementById('tr-address').value);
+            custDetails += line('Node',    document.getElementById('tr-node').value);
+
+            let netWifi = '';
+            netWifi += line('Alarm Code(s)', document.getElementById('tr-alarmCodes').value);
+            netWifi += line('Speed Test',    document.getElementById('tr-speedTest').value);
+            netWifi += lineYN('Devices Disconnecting?', trYesNo.tr_devicesDisconnecting);
+            netWifi += lineYN('Network Stable?',        trYesNo.tr_networkStable);
+            if (ontLL || oltLL) {
+                const llParts = [];
+                if (ontLL) llParts.push(`ONT: ${ontLL}`);
+                if (oltLL) llParts.push(`OLT: ${oltLL}`);
+                netWifi += `  Light Levels — ${llParts.join(' / ')}\n`;
+            }
+            netWifi += lineYN('WiFi Interference?',    trYesNo.tr_wifiInterference);
+            netWifi += lineYN('Construction in Area?', trYesNo.tr_constructionInArea);
+
+            let parts = [];
+            if (trProvider)             parts.push(`Provider: ${trProvider}`);
+            const cr = (document.getElementById('tr-customerReporting').value || '').trim();
+            if (cr)                     parts.push(`Customer Reporting: ${cr}`);
+            if (equip.trim())           parts.push(`Equipment\n${equip.trimEnd()}`);
+            if (custDetails.trim())     parts.push(`Customer Details\n${custDetails.trimEnd()}`);
+            if (netWifi.trim())         parts.push(`Network & WiFi\n${netWifi.trimEnd()}`);
+            if (allSteps.length > 0)    parts.push(`Troubleshooting Steps:\n${allSteps.join('\n')}`);
+            const init = (document.getElementById('tr-agentInitials').value || '').trim();
+            if (init)                   parts.push(`Agent Initials: ${init}`);
+
+            document.getElementById('generatedNote').value = parts.join('\n\n');
+            document.getElementById('outputSection').classList.add('show');
+            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(document.getElementById('generatedNote').value).then(() => {
+                document.getElementById('copyIcon').textContent = '✓';
+                document.getElementById('copyText').textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById('copyIcon').textContent = '📋';
+                    document.getElementById('copyText').textContent = 'Copy to Dashboard';
+                }, 2000);
+            });
+        }
+
+        function resetForm() {
+            // Provider
+            trProvider = '';
+            document.getElementById('tr-provider-tachus').classList.remove('active-tachus','active-ezee');
+            document.getElementById('tr-provider-ezee').classList.remove('active-tachus','active-ezee');
+            // Equipment
+            trEquip.ont = ''; trEquip.router = '';
+            document.querySelectorAll('#tr-router-btns .equip-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tr-ont-sn').value = '';
+            document.getElementById('tr-router-sn').value = '';
+            document.getElementById('tr-router-other').style.display = 'none';
+            document.getElementById('tr-router-other').value = '';
+            // Text fields
+            ['tr-customerReporting','tr-name','tr-phone','tr-acct','tr-address','tr-node',
+             'tr-alarmCodes','tr-speedTest','tr-lightLevels-ont','tr-lightLevels-olt','tr-agentInitials',
+             'tr-ont-sn','tr-router-sn'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            // Yes/No
+            Object.keys(trYesNo).forEach(k => { trYesNo[k] = null; });
+            document.querySelectorAll('#note-sub-truckroll .yes-no-buttons button').forEach(btn => {
+                btn.classList.remove('active-yes','active-no');
+            });
+            // Troubleshooting
+            selectedTroubleshooting.clear();
+            document.querySelectorAll('.troubleshooting-item').forEach(item => item.classList.remove('selected'));
+            customTrSteps.length = 0;
+            renderCustomSteps();
+            document.getElementById('tr-custom-step-input').value = '';
+            // Output
+            document.getElementById('outputSection').classList.remove('show');
+        }
+
+        // ── HARD DOWN ──
+        const hdYesNoData = {
+            hd_devicesDisconnecting: null, hd_networkStable: null,
+            hd_verifiedHeadEnd: null, hd_wifiInterference: null,
+            hd_equipmentRebooted: null, hd_connectionsVerified: null,
+            hd_routerTroubleshooting: null, hd_otherCustomers: null
+        };
+
+        function setHdYesNo(field, value, e) {
+            hdYesNoData[field] = value;
+            const buttons = e.target.parentElement.querySelectorAll('button');
+            buttons.forEach(btn => btn.classList.remove('active-yes','active-no'));
+            e.target.classList.add(value ? 'active-yes' : 'active-no');
+        }
+
+        function generateHardDown() {
+            const ontLL = (document.getElementById('hd-lightLevels-ont').value || '').trim();
+            const oltLL = (document.getElementById('hd-lightLevels-olt').value || '').trim();
+            let lines = 'HARD DOWN\n\n';
+            lines += lineFlat('Customer Is Reporting', document.getElementById('hd-customerReporting').value);
+            lines += lineFlat('Alarm Code(s)',          document.getElementById('hd-alarmCodes').value);
+            lines += lineFlat('Speed Test (Down/Up)',   document.getElementById('hd-speedTest').value);
+            lines += lineYNFlat('Are Devices Disconnecting',          hdYesNoData.hd_devicesDisconnecting);
+            lines += lineYNFlat('Is Network Stable',                  hdYesNoData.hd_networkStable);
+            if (ontLL || oltLL) {
+                const llParts = [];
+                if (ontLL) llParts.push(`ONT: ${ontLL}`);
+                if (oltLL) llParts.push(`OLT: ${oltLL}`);
+                lines += `Light Levels — ${llParts.join(' / ')}\n`;
+            }
+            lines += lineFlat('L2-User Aligned',                      document.getElementById('hd-l2UserAligned').value);
+            lines += lineYNFlat('Verified Head End/Hub',              hdYesNoData.hd_verifiedHeadEnd);
+            lines += lineYNFlat('Is There Wi-Fi Channel Interference', hdYesNoData.hd_wifiInterference);
+            lines += lineYNFlat('Was Equipment Rebooted',             hdYesNoData.hd_equipmentRebooted);
+            lines += lineYNFlat('Are All Connections Verified',       hdYesNoData.hd_connectionsVerified);
+            lines += lineFlat('Timeframe When Issues Started',         document.getElementById('hd-timeframe').value);
+            lines += lineYNFlat('Was Basic Router Troubleshooting Done', hdYesNoData.hd_routerTroubleshooting);
+            lines += lineFlat('Troubleshooting Steps Taken',           document.getElementById('hd-troubleshootingSteps').value);
+            lines += lineYNFlat('Are Other Customers Affected',       hdYesNoData.hd_otherCustomers);
+            document.getElementById('hdGeneratedNote').value = lines.trimEnd();
+            document.getElementById('hdOutputSection').classList.add('show');
+            document.getElementById('hdOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyHardDown() {
+            navigator.clipboard.writeText(document.getElementById('hdGeneratedNote').value).then(() => {
+                document.getElementById('hdCopyIcon').textContent = '✓';
+                document.getElementById('hdCopyText').textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById('hdCopyIcon').textContent = '📋';
+                    document.getElementById('hdCopyText').textContent = 'Copy to Dashboard';
+                }, 2000);
+            });
+        }
+
+        function resetHardDown() {
+            document.getElementById('hardDownForm').reset();
+            document.getElementById('hd-lightLevels-ont').value = '';
+            document.getElementById('hd-lightLevels-olt').value = '';
+            Object.keys(hdYesNoData).forEach(k => { hdYesNoData[k] = null; });
+            document.querySelectorAll('#note-sub-harddown .yes-no-buttons button').forEach(btn => {
+                btn.classList.remove('active-yes','active-no');
+            });
+            document.getElementById('hdOutputSection').classList.remove('show');
+        }
+
+        // ── DISPATCH ──
+        let dispatchBrand = '';
+
+        function setDispatchBrand(brand) {
+            dispatchBrand = brand;
+            const display = document.getElementById('dispatch-brand-display');
+            const tBtn = document.getElementById('dispatch-btn-tachus');
+            const eBtn = document.getElementById('dispatch-btn-ezee');
+            tBtn.classList.remove('active-tachus'); eBtn.classList.remove('active-ezee');
+            if (brand === 'Tachus') {
+                tBtn.classList.add('active-tachus');
+                display.textContent = 'Tachus';
+                display.className = 'dispatch-brand-display brand-tachus';
+            } else {
+                eBtn.classList.add('active-ezee');
+                display.textContent = 'EzeeFiber';
+                display.className = 'dispatch-brand-display brand-ezee';
+            }
+        }
+
+        function generateDispatch() {
+            let parts = [];
+            if (dispatchBrand) parts.push(dispatchBrand === 'Tachus' ? 'Tachus' : 'EzeeFiber');
+            let details = '';
+            const dpRegion = document.getElementById('dp-techRegion').value;
+            if (dpRegion) details += lineFlat('Tech Region', dpRegion);
+            details += lineFlat('Customer Name', document.getElementById('dp-customerName').value);
+            details += lineFlat('Address',       document.getElementById('dp-address').value);
+            details += lineFlat('Account #',     document.getElementById('dp-accountNumber').value);
+            details += lineFlat('WO #',          document.getElementById('dp-woNumber').value);
+            if (details.trim()) parts.push(details.trimEnd());
+            const cr = (document.getElementById('dp-customerReporting').value || '').trim();
+            if (cr) parts.push(`Customer Reporting: ${cr}`);
+            document.getElementById('dpGeneratedNote').value = parts.join('\n\n');
+            document.getElementById('dpOutputSection').classList.add('show');
+            document.getElementById('dpOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyDispatch() {
+            navigator.clipboard.writeText(document.getElementById('dpGeneratedNote').value).then(() => {
+                document.getElementById('dpCopyIcon').textContent = '✓';
+                document.getElementById('dpCopyText').textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById('dpCopyIcon').textContent = '📋';
+                    document.getElementById('dpCopyText').textContent = 'Copy to Dashboard';
+                }, 2000);
+            });
+        }
+
+        function resetDispatch() {
+            document.getElementById('dispatchForm').reset();
+            document.getElementById('dp-techRegion').value = '';
+            dispatchBrand = '';
+            document.getElementById('dispatch-btn-tachus').classList.remove('active-tachus');
+            document.getElementById('dispatch-btn-ezee').classList.remove('active-ezee');
+            const display = document.getElementById('dispatch-brand-display');
+            display.textContent = ''; display.className = 'dispatch-brand-display';
+            document.getElementById('dpOutputSection').classList.remove('show');
+        }
+
+        // ── CECR ──
+        let cecrPriority = null;
+
+        function setCecrPriority(level) {
+            cecrPriority = level;
+            document.querySelectorAll('.priority-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('priority-btn-' + level).classList.add('active');
+            document.getElementById('cecr-priority-display').textContent = 'Priority ' + level;
+        }
+
+        function generateCecr() {
+            let lines = '';
+            lines += lineFlat('Phone',         document.getElementById('cecr-phone').value);
+            lines += lineFlat('Address',       document.getElementById('cecr-address').value);
+            lines += lineFlat('Ticket ID',     document.getElementById('cecr-ticketId').value);
+            lines += lineFlat('Customer Name', document.getElementById('cecr-customerName').value);
+            if (cecrPriority) lines += `Priority Level: Priority ${cecrPriority}\n`;
+            const cr = (document.getElementById('cecr-customerReport').value || '').trim();
+            if (cr) lines += `\nCustomer Report: ${cr}`;
+            document.getElementById('cecrGeneratedNote').value = lines.trimEnd();
+            document.getElementById('cecrOutputSection').classList.add('show');
+            document.getElementById('cecrOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyCecr() {
+            navigator.clipboard.writeText(document.getElementById('cecrGeneratedNote').value).then(() => {
+                document.getElementById('cecrCopyIcon').textContent = '✓';
+                document.getElementById('cecrCopyText').textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById('cecrCopyIcon').textContent = '📋';
+                    document.getElementById('cecrCopyText').textContent = 'Copy to Dashboard';
+                }, 2000);
+            });
+        }
+
+        function resetCecr() {
+            document.getElementById('cecrForm').reset();
+            cecrPriority = null;
+            document.querySelectorAll('.priority-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('cecr-priority-display').textContent = '';
+            document.getElementById('cecrOutputSection').classList.remove('show');
+        }
+
+        // ── EMAIL TEMPLATES ──
+        function resetEmailTemplate(outputId, fieldIds, routerPrefix) {
+            document.getElementById(outputId).value = '';
+            fieldIds.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+            if (routerPrefix) {
+                document.querySelectorAll(`#${routerPrefix}-router-display`).forEach(el => el.textContent = '');
+                document.querySelectorAll('.router-type-btn').forEach(btn => btn.classList.remove('active'));
+                if (routerPrefix === 'ter-t') routerTypeSelected['tachus'] = '';
+                if (routerPrefix === 'ter-e') routerTypeSelected['ezee'] = '';
+            }
+        }
+
+        function generateRAF(brand) {
+            const p    = brand === 'tachus' ? 'traf' : 'eraf';
+            const name = document.getElementById(`${p}-name`).value || '[Customer Name]';
+            const link = document.getElementById(`${p}-link`).value || '[RAF Link]';
+            document.getElementById(`${p}-output`).value =
+`Greetings, ${name}
+
+Here is your referral link. Share it far and wide and watch the savings roll in!
+
+${link}
+
+__How it works__
+
+If you received a referral link:
+
+1. Click the link your friend shared.
+1. Enter your address in the above search bar to check availability.
+1. Sign up for Ezee Fiber.
+1. Enjoy fiber internet with unmatched reliability — and get a $100 credit on your bill once eligible.
+
+If you're sharing your referral link:
+
+1. Share your link (sent to you via email) with friends, family, neighbors, coworkers — anyone who wants better internet.
+1. When someone signs up using your link, you earn a $100 credit towards your Ezee Fiber bill once eligible.
+1. Share again! There's no limit to how many friends you can refer.
+
+A few things to know
+
+* Your friend must be new to Ezee Fiber (existing customers aren't eligible).
+* Your friend must sign up through the referral link shared with them before installation of service.
+* Referrers must have already signed up for Ezee Fiber, with no outstanding balance.
+* The new customer must keep their service active for at least 30 days.
+* Once those requirements are met, both $100 credits will be applied to each account within 7 days.`;
+        }
+
+        function copyRAF(brand) {
+            const p    = brand === 'tachus' ? 'traf' : 'eraf';
+            const icon = `${p}-copy-icon`;
+            const txt  = `${p}-copy-text`;
+            navigator.clipboard.writeText(document.getElementById(`${p}-output`).value).then(() => {
+                document.getElementById(icon).textContent = '✓';
+                document.getElementById(txt).textContent  = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById(icon).textContent = '📋';
+                    document.getElementById(txt).textContent  = 'Copy';
+                }, 2000);
+            });
+        }
+
+        const routerTypeSelected = { tachus: '', ezee: '' };
+
+        function setRouterType(prefix, value, btnEl) {
+            const brand = prefix.includes('-t') ? 'tachus' : 'ezee';
+            routerTypeSelected[brand] = value;
+            btnEl.closest('.router-type-grid').querySelectorAll('.router-type-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+            const dispId = prefix + '-router-display';
+            document.getElementById(dispId).textContent = value;
+        }
+
+        function generateEquipReturn(brand) {
+            const isTachus = brand === 'tachus';
+            const p        = isTachus ? 'ter-t' : 'ter-e';
+            const name     = document.getElementById(`${p}-name`).value || '[Customer Name]';
+            const modem    = document.getElementById(`${p}-modem`).value || '[Modem SN]';
+            const router   = routerTypeSelected[brand] || '[Router Type]';
+            const routerSN = document.getElementById(`${p}-router-sn`).value || '[Router SN]';
+
+            document.getElementById(`${p}-output`).value =
+`Subject: Ezee Fiber Equipment Return | xxx-xxxxx | Return Code: EZFBRT
+
+Dear ${name}
+
+Thank you for choosing Ezee Fiber as your service Provider.  We strive to make the return process as convenient as possible for our customers.
+
+To facilitate the return process, we kindly request that you return the Ezee Fiber equipment to the nearest UPS store at your earliest convenience.
+This will ensure a smooth and efficient return process for you. Please follow the instructions below to initiate the return:
+
+
+1. Take the Ezee Fiber equipment, ethernet cable and plugs to your nearest UPS store.
+2. Present the attached PDF or have it available to show the UPS Store employee.
+
+  MODEM: ${modem}
+  ROUTER: ${router}  : ${routerSN}
+
+Once the equipment has been received and inspected, we will promptly process the disconnection of your account.
+
+Please keep a copy of the return provided to you by the UPS Store associate for your records.
+If you have any questions or need assistance with the return process, please do not hesitate to contact our customer service team at 713-255-7500 or reply to this email. We are here to help and ensure that your return experience is hassle-free.
+
+Thank you for choosing Ezee Fiber. We appreciate your business and look forward to serving you again in the future.`;
+        }
+
+        function copyEquipReturn(brand) {
+            const p      = brand === 'tachus' ? 'ter-t' : 'ter-e';
+            const output = document.getElementById(`${p}-output`).value;
+            navigator.clipboard.writeText(output).then(() => {
+                document.getElementById(`${p}-copy-icon`).textContent = '✓';
+                document.getElementById(`${p}-copy-text`).textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById(`${p}-copy-icon`).textContent = '📋';
+                    document.getElementById(`${p}-copy-text`).textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        function generateReqPic(brand) {
+            if (brand === 'tachus') {
+                const name   = document.getElementById('trp-name').value || '[Customer Name]';
+                const ticket = document.getElementById('trp-ticket').value || '[Ticket ID]';
+                document.getElementById('trp-output').value =
+`Hello ${name},
+
+Your ticket ${ticket} is being processed.   Please attach any pictures and additional details related to this case to this email.  Please feel free to keep in touch if you need any further assistance.
+
+ 
+Best regards, 
+Tachus Customer Support
+ 832.791.1100`;
+            } else {
+                const name   = document.getElementById('erp-name').value || '[Customer Name]';
+                const ticket = document.getElementById('erp-ticket').value || '[Ticket ID]';
+                document.getElementById('erp-output').value =
+`Hello ${name},
+
+Your ticket ${ticket} is being processed.   Please attach any pictures and additional details related to this case to this email.  Please feel free to keep in touch if you need any further assistance.
+
+ 
+Best regards, 
+EzeeFiber Customer Support
+ 833-920-5400`;
+            }
+        }
+
+        function copyReqPic(brand) {
+            const outputId = brand === 'tachus' ? 'trp-output'    : 'erp-output';
+            const iconId   = brand === 'tachus' ? 'trp-copy-icon' : 'erp-copy-icon';
+            const textId   = brand === 'tachus' ? 'trp-copy-text' : 'erp-copy-text';
+            navigator.clipboard.writeText(document.getElementById(outputId).value).then(() => {
+                document.getElementById(iconId).textContent = '✓';
+                document.getElementById(textId).textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById(iconId).textContent = '📋';
+                    document.getElementById(textId).textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        function generateWifiKey(brand) {
+            const isTachus = brand === 'tachus';
+            const nameId   = isTachus ? 'twsk-name'   : 'ewsk-name';
+            const outputId = isTachus ? 'twsk-output'  : 'ewsk-output';
+            const phone    = isTachus ? '832.791.1100' : '833-920-5400';
+            const support  = isTachus ? 'Tachus Customer Service' : 'EzeeFiber Customer Service';
+            const name     = document.getElementById(nameId).value || '{{{Recipient.FirstName}}}';
+
+            document.getElementById(outputId).value =
+`Subject: Assistance with Wi-Fi Connection Issue
+
+
+Hello ${name},
+
+
+Thank you for reaching out!
+
+
+It appears that your computer is prompting you to enter a PIN to connect to your Wi-Fi network. This screen may look similar to the one below:
+To resolve this issue, please select the option labeled "Connect using a security key instead" (highlighted in the image above). Once you select this option, you will be prompted to enter your regular Wi-Fi password instead of a PIN.
+
+
+If you continue to experience issues or need further assistance, please don't hesitate to contact our Technical Support team at ${phone}, option 3.
+
+
+Thank you for your cooperation. We're here to help if you need additional support!
+
+
+Kind Regards,
+
+${support}
+
+${phone}`;
+        }
+
+        function copyWifiKey(brand) {
+            const outputId = brand === 'tachus' ? 'twsk-output'  : 'ewsk-output';
+            const iconId   = brand === 'tachus' ? 'twsk-copy-icon' : 'ewsk-copy-icon';
+            const textId   = brand === 'tachus' ? 'twsk-copy-text' : 'ewsk-copy-text';
+            navigator.clipboard.writeText(document.getElementById(outputId).value).then(() => {
+                document.getElementById(iconId).textContent = '✓';
+                document.getElementById(textId).textContent = 'Copied!';
+                setTimeout(() => {
+                    document.getElementById(iconId).textContent = '📋';
+                    document.getElementById(textId).textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        initTroubleshootingGrid();
+
+        // ── STICKY NOTES ──
+        function toggleNotesPanel() {
+            document.getElementById('sticky-notes-panel').classList.toggle('open');
+        }
+        function clearNotes() {
+            if (confirm('Clear all notes?')) {
+                document.getElementById('sticky-notes-area').value = '';
+                localStorage.setItem('ef_sticky_notes', '');
+            }
+        }
+        function copyNotes() {
+            const txt = document.getElementById('sticky-notes-area').value;
+            if (!txt.trim()) return;
+            navigator.clipboard.writeText(txt).then(() => {
+                const btn = document.getElementById('notes-copy-btn');
+                btn.textContent = '✓ Copied';
+                setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+            });
+        }
+        const stickyArea = document.getElementById('sticky-notes-area');
+        const savedNotes = localStorage.getItem('ef_sticky_notes');
+        if (savedNotes) stickyArea.value = savedNotes;
+        stickyArea.addEventListener('input', () => {
+            localStorage.setItem('ef_sticky_notes', stickyArea.value);
+        });
+
+    </script>
+
     <!-- ── STICKY NOTES PANEL ── -->
     <div class="sticky-notes-tab" id="sticky-notes-tab">
         <button class="sticky-notes-toggle" onclick="toggleNotesPanel()" title="Toggle Notes">
@@ -930,22 +3373,5 @@
             </div>
         </div>
     </div>
-
-    <!-- ══════════════════════════════════════════════
-         SCRIPTS — load order matters:
-         data files first, then helpers, then features, then init last
-         ══════════════════════════════════════════════ -->
-    <script src="data/oui-db.js"></script>
-    <script src="data/tech-regions.js"></script>
-    <script src="assets/js/helpers.js"></script>
-    <script src="assets/js/app.js"></script>
-    <script src="assets/js/truckroll.js"></script>
-    <script src="assets/js/harddown.js"></script>
-    <script src="assets/js/dispatch.js"></script>
-    <script src="assets/js/cecr.js"></script>
-    <script src="assets/js/email.js"></script>
-    <script src="assets/js/notes.js"></script>
-    <script src="assets/js/init.js"></script>
-
 </body>
 </html>
