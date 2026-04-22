@@ -1438,7 +1438,7 @@ textarea {
 
 /* ── UPDATE LOG ── */
 .update-log {
-    width: 280px;
+    width: 300px;
     flex-shrink: 0;
     background: #1a1a1a;
     border: 2px solid #3a3a3a;
@@ -1565,7 +1565,7 @@ textarea {
 }
 
 .note-info-panel {
-    width: 240px;
+    width: 290px;
     flex-shrink: 0;
     background: #1a1a1a;
     border: 2px solid #FB612F;
@@ -1584,6 +1584,34 @@ textarea {
 .note-info-panel.cecr-panel {
     border-color: #3b82f6;
     box-shadow: 0 4px 16px rgba(59,130,246,0.15), 0 2px 8px rgba(0,0,0,0.35);
+}
+
+/* Truck Roll panel — green accent */
+.note-info-panel.truckroll-panel {
+    border-color: #22c55e;
+    box-shadow: 0 4px 16px rgba(34,197,94,0.15), 0 2px 8px rgba(0,0,0,0.35);
+}
+
+.note-info-panel.truckroll-panel .info-panel-header {
+    background: #16a34a;
+}
+
+.note-info-panel.truckroll-panel .info-panel-section-title {
+    color: #22c55e;
+}
+
+/* Hard Down panel — amber accent */
+.note-info-panel.harddown-panel {
+    border-color: #f59e0b;
+    box-shadow: 0 4px 16px rgba(245,158,11,0.15), 0 2px 8px rgba(0,0,0,0.35);
+}
+
+.note-info-panel.harddown-panel .info-panel-header {
+    background: #d97706;
+}
+
+.note-info-panel.harddown-panel .info-panel-section-title {
+    color: #f59e0b;
 }
 
 .info-panel-header {
@@ -1611,7 +1639,7 @@ textarea {
 }
 
 .info-panel-section {
-    padding: 0.85rem 1rem;
+    padding: 1rem 1.1rem;
     border-bottom: 1px solid #2d2d2d;
 }
 
@@ -1620,7 +1648,7 @@ textarea {
 }
 
 .info-panel-section-title {
-    font-size: 0.72rem;
+    font-size: 0.76rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1642,7 +1670,7 @@ textarea {
 }
 
 .info-panel-list li {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: #9ca3af;
     line-height: 1.45;
     padding-left: 0.85rem;
