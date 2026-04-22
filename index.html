@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/jpg" href="./assets/img/EzeeIcon.jpg">
     <title>Ezee Fiber Technical Support Note Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body>
@@ -38,7 +41,7 @@
         <div class="home-page">
             <div class="home-header">
                 <h1>Ezee Fiber Internal Tools</h1>
-                <p>Select a tool below to get started</p>
+                <p>Technical Support Agent Dashboard</p>
             </div>
 
             <!-- ── TWO-COLUMN LAYOUT: Update Log + Tool Cards ── -->
@@ -47,7 +50,7 @@
                 <!-- LEFT: Update Log -->
                 <div class="update-log">
                     <div class="update-log-header">
-                        <span class="update-log-icon">📣</span>
+                        <span class="update-log-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
                         <span class="update-log-title">Update Log</span>
                     </div>
                     <div class="update-log-list">
@@ -100,7 +103,9 @@
                 <div class="home-right">
                     <div class="home-grid">
                         <div class="home-card card-orange" onclick="goToTab('support')">
-                            <span class="home-card-icon">📋</span>
+                            <span class="home-card-icon">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                            </span>
                             <div class="home-card-title">Note Generator</div>
                             <div class="home-card-desc">Generate formatted tech support notes for truck rolls, hard downs, cancellations, dispatches, and CECR tickets.</div>
                             <div class="home-card-tags">
@@ -112,7 +117,9 @@
                             </div>
                         </div>
                         <div class="home-card card-green" onclick="goToTab('email')">
-                            <span class="home-card-icon">📧</span>
+                            <span class="home-card-icon">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            </span>
                             <div class="home-card-title">Email Templates</div>
                             <div class="home-card-desc">Pre-built email templates for both Tachus and EzeeFiber — equipment returns, referrals, WiFi help, and more.</div>
                             <div class="home-card-tags">
@@ -161,7 +168,7 @@
                 <!-- LEFT: Truck Roll Info Panel -->
                 <div class="note-info-panel truckroll-panel">
                     <div class="info-panel-header">
-                        <span class="info-panel-icon">🚛</span>
+                        <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
                         <span class="info-panel-title">Truck Roll Reference</span>
                     </div>
                     <div class="info-panel-section">
@@ -385,7 +392,7 @@
                 <!-- LEFT: Hard Down Info Panel -->
                 <div class="note-info-panel harddown-panel">
                     <div class="info-panel-header">
-                        <span class="info-panel-icon">⚡</span>
+                        <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                         <span class="info-panel-title">Hard Down Reference</span>
                     </div>
                     <div class="info-panel-section">
@@ -543,30 +550,30 @@
                 <!-- LEFT: Dispatch Info Panel -->
                 <div class="note-info-panel">
                     <div class="info-panel-header">
-                        <span class="info-panel-icon">📌</span>
+                        <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
                         <span class="info-panel-title">Dispatch Reference</span>
                     </div>
                     <div class="info-panel-section">
-                        <div class="info-panel-section-title">Placeholder Section</div>
+                        <div class="info-panel-section-title">Placeholder Section A</div>
                         <ul class="info-panel-list">
-                            <li>Placeholder</li>
-                            <li>Placeholder</li>
-                            <li>Placeholder</li>
+                            <li>Edit this in index.html → Dispatch info panel</li>
+                            <li>Placeholder item two</li>
+                            <li>Placeholder item three</li>
                         </ul>
                     </div>
                     <div class="info-panel-section">
-                        <div class="info-panel-section-title">Placeholder Section</div>
+                        <div class="info-panel-section-title">Placeholder Section B</div>
                         <ul class="info-panel-list">
-                            <li>Placeholder</li>
-                            <li>Placeholder</li>
-                            <li>Placeholder</li>
+                            <li>Placeholder item one</li>
+                            <li>Placeholder item two</li>
+                            <li>Placeholder item three</li>
                         </ul>
                     </div>
                     <div class="info-panel-section">
-                        <div class="info-panel-section-title">Placeholder Section</div>
+                        <div class="info-panel-section-title">Placeholder Section C</div>
                         <ul class="info-panel-list">
-                            <li>Placeholder</li>
-                            <li>Placeholder</li>
+                            <li>Placeholder item one</li>
+                            <li>Placeholder item two</li>
                         </ul>
                     </div>
                 </div>
@@ -661,7 +668,7 @@
                 <!-- LEFT: CECR Info Panel -->
                 <div class="note-info-panel cecr-panel">
                     <div class="info-panel-header">
-                        <span class="info-panel-icon">🎫</span>
+                        <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
                         <span class="info-panel-title">CECR Reference</span>
                     </div>
                     <div class="info-panel-section">
@@ -685,7 +692,7 @@
                         <div class="info-panel-section-title">Drop Bury Issues</div>
                         <ul class="info-panel-list">
                             <li>Email dropburyescalation@ezeefiber.com and refer to the Drop Bury Email template</li>
-                            <li>Do not include the customer in the email. Internal use only. </li>
+                            <li>Do not include the customer in the email. Internal use only.</li>
                         </ul>
                     </div>
                 </div>
@@ -1146,12 +1153,12 @@
     <!-- ── STICKY NOTES PANEL ── -->
     <div class="sticky-notes-tab" id="sticky-notes-tab">
         <button class="sticky-notes-toggle" onclick="toggleNotesPanel()" title="Toggle Notes">
-            📝 Notes
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notes
         </button>
         <div class="sticky-notes-panel" id="sticky-notes-panel">
             <div class="sticky-notes-inner">
                 <div class="sticky-notes-header">
-                    <span class="sticky-notes-title">📝 My Notes</span>
+                    <span class="sticky-notes-title"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>My Notes</span>
                     <div class="sticky-notes-actions">
                         <button class="sticky-notes-copy" id="notes-copy-btn" onclick="copyNotes()">Copy</button>
                         <button class="sticky-notes-clear" onclick="clearNotes()">Clear</button>
