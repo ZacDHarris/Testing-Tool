@@ -1,3 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   EZEE FIBER BRAND TOKENS
+   Primary:   Orange   #FB612F  |  Navy    #1B365D  |  Blue  #0077C8
+   Dark UI:   Off-Black #131E29
+   Neutral:   Cool Gray #75787B | Light Gray #D9D9D6 | Off-White #FBFBFB
+   Accent:    Brown #454142 | Tan #DBC8B6
+   Fonts:     Plus Jakarta Sans (headlines) | Nunito Sans (body)
+═══════════════════════════════════════════════════════ */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,22 +16,22 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #2d2d2d;
+    font-family: 'Nunito Sans', 'Segoe UI', Helvetica, Arial, sans-serif;
+    background-color: #0f1923;
     padding: 0;
     line-height: 1.6;
-    color: #e5e7eb;
+    color: #e8edf2;
 }
 
 /* ── TECH REGION SELECT ── */
 .tech-region-select {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #6b7280;
+    border: 1px solid #2a3d54;
     border-radius: 0.375rem;
     font-size: 0.95rem;
-    background-color: #4b5563;
-    color: #f9fafb;
+    background-color: #1e2d40;
+    color: #FBFBFB;
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s;
     appearance: none;
@@ -38,13 +49,13 @@ body {
 }
 
 .tech-region-select option {
-    background-color: #3a3a3a;
-    color: #f9fafb;
+    background-color: #1a2535;
+    color: #FBFBFB;
     font-family: 'Courier New', monospace;
 }
 
 .tech-region-select option:first-child {
-    color: #9ca3af;
+    color: #75787B;
     font-family: inherit;
 }
 
@@ -86,7 +97,7 @@ body {
 .sticky-notes-panel {
     width: 0;
     overflow: hidden;
-    background: #1a1a1a;
+    background: #0c1520;
     border-left: 3px solid #FB612F;
     box-shadow: -4px 0 20px rgba(0,0,0,0.5);
     display: flex;
@@ -113,7 +124,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #3a3a3a;
+    border-bottom: 1px solid #1a2535;
     padding-bottom: 0.5rem;
     flex-shrink: 0;
 }
@@ -134,7 +145,7 @@ body {
 .sticky-notes-clear {
     background: transparent;
     border: 1px solid #4b5563;
-    color: #9ca3af;
+    color: #75787B;
     padding: 0.2rem 0.5rem;
     border-radius: 0.25rem;
     font-size: 0.7rem;
@@ -147,7 +158,7 @@ body {
 .sticky-notes-copy {
     background: transparent;
     border: 1px solid #4b5563;
-    color: #9ca3af;
+    color: #75787B;
     padding: 0.2rem 0.5rem;
     border-radius: 0.25rem;
     font-size: 0.7rem;
@@ -160,10 +171,10 @@ body {
 .sticky-notes-textarea {
     flex: 1;
     width: 100%;
-    background: #2d2d2d;
+    background: #0f1923;
     border: 1px solid #3a3a3a;
     border-radius: 0.375rem;
-    color: #f9fafb;
+    color: #FBFBFB;
     font-size: 0.82rem;
     line-height: 1.55;
     padding: 0.65rem;
@@ -179,18 +190,18 @@ body {
     border-color: #FB612F;
 }
 
-.sticky-notes-textarea::placeholder { color: #4b5563; }
+.sticky-notes-textarea::placeholder { color: #2a3d54; }
 
 .sticky-notes-footer {
     font-size: 0.65rem;
-    color: #4b5563;
+    color: #2a3d54;
     text-align: center;
     flex-shrink: 0;
 }
 
 /* ── TAB NAV ── */
 .tab-nav {
-    background-color: #1a1a1a;
+    background-color: #0c1520;
     border-bottom: 2px solid #FB612F;
     display: flex;
     padding: 0 1rem;
@@ -200,7 +211,7 @@ body {
     padding: 1rem 2rem;
     border: none;
     background: transparent;
-    color: #9ca3af;
+    color: #75787B;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -210,7 +221,7 @@ body {
     letter-spacing: 0.5px;
 }
 
-.tab-btn:hover { color: #f9fafb; }
+.tab-btn:hover { color: #FBFBFB; }
 
 .tab-btn.active {
     color: #FB612F;
@@ -252,7 +263,8 @@ body {
 .header-title {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #f9fafb;
+    color: #FBFBFB;
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
     margin-bottom: 0.5rem;
     letter-spacing: 0.5px;
 }
@@ -269,7 +281,7 @@ body {
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    background: #3a3a3a;
+    background: #1a2535;
     border-radius: 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     padding: 2rem;
@@ -287,7 +299,8 @@ body {
 label {
     display: block;
     font-weight: 600;
-    color: #d1d5db;
+    color: #c8d4e0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     margin-bottom: 0.5rem;
     font-size: 0.875rem;
 }
@@ -296,12 +309,12 @@ input[type="text"],
 textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #6b7280;
+    border: 1px solid #2a3d54;
     border-radius: 0.375rem;
     font-size: 1rem;
     transition: border-color 0.2s, box-shadow 0.2s;
-    background-color: #4b5563;
-    color: #f9fafb;
+    background-color: #1e2d40;
+    color: #FBFBFB;
 }
 
 input[type="text"]:focus,
@@ -312,7 +325,7 @@ textarea:focus {
 }
 
 input[type="text"]::placeholder,
-textarea::placeholder { color: #9ca3af; }
+textarea::placeholder { color: #75787B; }
 
 textarea {
     resize: vertical;
@@ -329,11 +342,11 @@ textarea {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    background-color: #4b5563;
-    color: #d1d5db;
+    background-color: #1e2d40;
+    color: #c8d4e0;
 }
 
-.yes-no-buttons button:hover { background-color: #6b7280; }
+.yes-no-buttons button:hover { background-color: #243a52; }
 
 .yes-no-buttons button.active-yes {
     background-color: #FB612F;
@@ -342,7 +355,7 @@ textarea {
 }
 
 .yes-no-buttons button.active-no {
-    background-color: #6b7280;
+    background-color: #243a52;
     color: white;
 }
 
@@ -359,16 +372,16 @@ textarea {
     border-radius: 0.375rem;
     cursor: pointer;
     transition: all 0.2s;
-    background-color: #4b5563;
+    background-color: #1e2d40;
     font-size: 0.875rem;
     text-align: left;
     user-select: none;
-    color: #d1d5db;
+    color: #c8d4e0;
 }
 
 .troubleshooting-item:hover {
-    background-color: #6b7280;
-    border-color: #9ca3af;
+    background-color: #243a52;
+    border-color: #75787B;
 }
 
 .troubleshooting-item.selected {
@@ -387,7 +400,7 @@ textarea {
 }
 
 .custom-step-prefix {
-    background: #4b5563;
+    background: #1e2d40;
     border: 2px solid #6b7280;
     border-radius: 0.375rem 0 0 0.375rem;
     padding: 0 0.75rem;
@@ -407,8 +420,8 @@ textarea {
     border-left: none;
     border-radius: 0 0.375rem 0.375rem 0;
     font-size: 0.875rem;
-    background-color: #4b5563;
-    color: #f9fafb;
+    background-color: #1e2d40;
+    color: #FBFBFB;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -418,7 +431,7 @@ textarea {
     box-shadow: 0 0 0 3px rgba(251, 97, 47, 0.2);
 }
 
-.custom-step-input::placeholder { color: #9ca3af; }
+.custom-step-input::placeholder { color: #75787B; }
 
 .custom-step-add-btn {
     padding: 0.75rem 1.25rem;
@@ -475,7 +488,7 @@ textarea {
 .action-buttons {
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 2px solid #4b5563;
+    border-top: 2px solid #1e3148;
     display: flex;
     gap: 1rem;
     justify-content: center;
@@ -493,15 +506,15 @@ textarea {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.btn-primary { background-color: #FB612F; color: white; }
+.btn-primary { background-color: #FB612F; color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; }
 .btn-primary:hover {
     background-color: #e5511a;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(251, 97, 47, 0.4);
 }
 
-.btn-secondary { background-color: #6b7280; color: white; }
-.btn-secondary:hover { background-color: #4b5563; }
+.btn-secondary { background-color: #243a52; color: white; }
+.btn-secondary:hover { background-color: #0f2347; }
 
 .btn-success {
     background-color: #16a34a;
@@ -520,7 +533,7 @@ textarea {
 .output-section {
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 2px solid #4b5563;
+    border-top: 2px solid #1e3148;
     display: none;
 }
 
@@ -535,19 +548,19 @@ textarea {
     gap: 1rem;
 }
 
-.output-header h3 { font-size: 1.25rem; color: #f9fafb; }
+.output-header h3 { font-size: 1.25rem; color: #FBFBFB; font-family: 'Plus Jakarta Sans', sans-serif; }
 
 .output-box {
-    background-color: #4b5563;
+    background-color: #1e2d40;
     padding: 1.5rem;
     border-radius: 0.5rem;
-    border: 1px solid #6b7280;
+    border: 1px solid #2a3d54;
 }
 
 .output-box textarea {
     font-family: 'Courier New', monospace;
     font-size: 0.875rem;
-    color: #f9fafb;
+    color: #FBFBFB;
     white-space: pre-wrap;
     word-wrap: break-word;
     width: 100%;
@@ -561,8 +574,8 @@ textarea {
 
 /* ── NOTE SUB-TAB NAV ── */
 .note-sub-nav {
-    background-color: #222222;
-    border-bottom: 2px solid #3a3a3a;
+    background-color: #111d2b;
+    border-bottom: 2px solid #1a2535;
     display: flex;
     padding: 0 1rem;
     gap: 0.25rem;
@@ -573,7 +586,7 @@ textarea {
     padding: 0.6rem 1.25rem;
     border: none;
     background: transparent;
-    color: #9ca3af;
+    color: #75787B;
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
@@ -584,7 +597,7 @@ textarea {
     white-space: nowrap;
 }
 
-.note-sub-btn:hover { color: #f9fafb; }
+.note-sub-btn:hover { color: #FBFBFB; }
 
 .note-sub-btn.active {
     color: #FB612F;
@@ -599,7 +612,7 @@ textarea {
 .section-divider {
     grid-column: 1 / -1;
     border: none;
-    border-top: 1px solid #4b5563;
+    border-top: 1px solid #1e3148;
     margin: 0.25rem 0;
 }
 
@@ -607,6 +620,7 @@ textarea {
     grid-column: 1 / -1;
     font-size: 0.7rem;
     font-weight: 700;
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #FB612F;
@@ -625,15 +639,15 @@ textarea {
     padding: 0.6rem 1.4rem;
     border: 2px solid #6b7280;
     border-radius: 0.375rem;
-    background: #4b5563;
-    color: #d1d5db;
+    background: #1e2d40;
+    color: #c8d4e0;
     font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.provider-btn:hover { background: #6b7280; color: #f9fafb; }
+.provider-btn:hover { background: #243a52; color: #FBFBFB; }
 
 .provider-btn.active-tachus {
     background: #61bb46;
@@ -660,8 +674,8 @@ textarea {
     padding: 0.4rem 0.9rem;
     border: 2px solid #6b7280;
     border-radius: 0.375rem;
-    background: #4b5563;
-    color: #d1d5db;
+    background: #1e2d40;
+    color: #c8d4e0;
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
@@ -669,7 +683,7 @@ textarea {
     white-space: nowrap;
 }
 
-.equip-btn:hover { background: #6b7280; color: #f9fafb; }
+.equip-btn:hover { background: #243a52; color: #FBFBFB; }
 
 .equip-btn.active {
     background: #FB612F;
@@ -698,13 +712,13 @@ textarea {
 /* ── UPS LABEL SECTION ── */
 .ups-label-section {
     margin-top: 1rem;
-    border: 2px solid #4b5563;
+    border: 2px solid #1e3148;
     border-radius: 0.5rem;
     overflow: hidden;
 }
 
 .ups-label-header {
-    background: #1a1a1a;
+    background: #0c1520;
     padding: 0.6rem 1rem;
     border-bottom: 2px solid #FB612F;
 }
@@ -712,13 +726,13 @@ textarea {
 .ups-label-title {
     font-weight: 700;
     font-size: 0.9rem;
-    color: #f9fafb;
+    color: #FBFBFB;
     letter-spacing: 0.3px;
 }
 
 .ups-label-fields {
     padding: 1rem;
-    background: #3a3a3a;
+    background: #1a2535;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
@@ -736,7 +750,7 @@ textarea {
 .ups-field-group label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #d1d5db;
+    color: #c8d4e0;
     margin: 0;
 }
 
@@ -746,7 +760,7 @@ textarea {
 }
 
 .ups-download-btn {
-    background: #1a5276;
+    background: #0077C8;
     color: white;
     padding: 0.55rem 1.2rem;
     font-size: 0.875rem;
@@ -755,7 +769,7 @@ textarea {
 }
 
 .ups-download-btn:hover {
-    background: #154360;
+    background: #005fa3;
     transform: translateY(-1px);
     box-shadow: 0 3px 8px rgba(26,82,118,0.5);
 }
@@ -772,8 +786,8 @@ textarea {
     padding: 0.4rem 0.75rem;
     border: 2px solid #6b7280;
     border-radius: 0.375rem;
-    background: #4b5563;
-    color: #d1d5db;
+    background: #1e2d40;
+    color: #c8d4e0;
     font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
@@ -781,7 +795,7 @@ textarea {
     white-space: nowrap;
 }
 
-.router-type-btn:hover { background: #6b7280; color: #f9fafb; }
+.router-type-btn:hover { background: #243a52; color: #FBFBFB; }
 
 .router-type-btn.active {
     background: #FB612F;
@@ -812,15 +826,15 @@ textarea {
     height: 2.75rem;
     border: 2px solid #6b7280;
     border-radius: 0.375rem;
-    background: #4b5563;
-    color: #d1d5db;
+    background: #1e2d40;
+    color: #c8d4e0;
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.priority-btn:hover { background: #6b7280; color: #f9fafb; }
+.priority-btn:hover { background: #243a52; color: #FBFBFB; }
 
 .priority-btn.active {
     background: #FB612F;
@@ -844,11 +858,12 @@ textarea {
     gap: 0.75rem;
     padding: 1.25rem 0 1.5rem 0;
     flex-wrap: wrap;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .dispatch-brand-label {
     font-weight: 600;
-    color: #d1d5db;
+    color: #c8d4e0;
     font-size: 0.95rem;
 }
 
@@ -856,15 +871,15 @@ textarea {
     padding: 0.5rem 1.5rem;
     border: 2px solid #6b7280;
     border-radius: 0.375rem;
-    background: #4b5563;
-    color: #d1d5db;
+    background: #1e2d40;
+    color: #c8d4e0;
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.dispatch-brand-btn:hover { background: #6b7280; color: #f9fafb; }
+.dispatch-brand-btn:hover { background: #243a52; color: #FBFBFB; }
 
 .dispatch-brand-btn.active-tachus {
     background: #61bb46;
@@ -897,7 +912,7 @@ textarea {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #9ca3af;
+    color: #75787B;
 }
 
 .coming-soon-placeholder .placeholder-mark {
@@ -955,15 +970,15 @@ textarea {
     gap: 0.4rem;
     padding: 1rem 1.5rem 0 1.5rem;
     background: #252525;
-    border-bottom: 2px solid #3a3a3a;
+    border-bottom: 2px solid #1a2535;
 }
 
 .email-mini-btn {
     padding: 0.45rem 1rem;
-    border: 2px solid #4b5563;
+    border: 2px solid #1e3148;
     border-radius: 2rem;
     background: transparent;
-    color: #9ca3af;
+    color: #75787B;
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
@@ -973,7 +988,7 @@ textarea {
     letter-spacing: 0.3px;
 }
 
-.email-mini-btn:hover { color: #f9fafb; border-color: #6b7280; }
+.email-mini-btn:hover { color: #FBFBFB; border-color: #2a3d54; }
 
 .email-mini-nav-tachus .email-mini-btn-active {
     background: #61bb46;
@@ -1005,15 +1020,15 @@ textarea {
 /* ── EMAIL TEMPLATES PAGE ── */
 .email-page {
     min-height: 80vh;
-    background: #2d2d2d;
+    background: #0f1923;
     display: flex;
     flex-direction: column;
 }
 
 /* ── EMAIL SUB-TAB NAV ── */
 .email-sub-nav {
-    background-color: #222222;
-    border-bottom: 2px solid #3a3a3a;
+    background-color: #0c1520;
+    border-bottom: 2px solid #1B365D;
     display: flex;
     padding: 0 1rem;
     gap: 0.25rem;
@@ -1023,7 +1038,7 @@ textarea {
     padding: 0.65rem 1.4rem;
     border: none;
     background: transparent;
-    color: #9ca3af;
+    color: #75787B;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -1033,7 +1048,7 @@ textarea {
     letter-spacing: 0.4px;
 }
 
-.email-sub-btn:hover { color: #f9fafb; }
+.email-sub-btn:hover { color: #FBFBFB; }
 
 .email-sub-btn.active-tachus {
     color: #61bb46;
@@ -1087,7 +1102,7 @@ textarea {
 /* ── HOME PAGE ── */
 .home-page {
     min-height: 80vh;
-    background: #2d2d2d;
+    background: #0f1923;
     padding: 2rem 1.5rem;
 }
 
@@ -1099,13 +1114,14 @@ textarea {
 .home-header h1 {
     font-size: 2rem;
     font-weight: 900;
-    color: #f9fafb;
+    color: #FBFBFB;
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
     letter-spacing: 1px;
     margin-bottom: 0.4rem;
 }
 
 .home-header p {
-    color: #9ca3af;
+    color: #75787B;
     font-size: 0.9rem;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -1120,8 +1136,8 @@ textarea {
 }
 
 .home-card {
-    background: #3a3a3a;
-    border: 2px solid #4b5563;
+    background: #1a2535;
+    border: 2px solid #1e3148;
     border-radius: 12px;
     padding: 1.5rem;
     cursor: pointer;
@@ -1146,14 +1162,15 @@ textarea {
 .home-card-title {
     font-size: 1.05rem;
     font-weight: 800;
-    color: #f9fafb;
+    color: #FBFBFB;
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
     margin-bottom: 0.5rem;
     letter-spacing: 0.3px;
 }
 
 .home-card-desc {
     font-size: 0.8rem;
-    color: #9ca3af;
+    color: #75787B;
     line-height: 1.5;
 }
 
@@ -1169,8 +1186,9 @@ textarea {
     font-weight: 600;
     padding: 0.2rem 0.6rem;
     border-radius: 2rem;
-    background: #4b5563;
-    color: #d1d5db;
+    background: #0077C8;
+    color: #FBFBFB;
+    opacity: 0.85;
     letter-spacing: 0.3px;
 }
 
@@ -1183,8 +1201,8 @@ textarea {
 .oui-section {
     max-width: 1000px;
     margin: 0 auto;
-    background: #3a3a3a;
-    border: 2px solid #4b5563;
+    background: #1a2535;
+    border: 2px solid #1e3148;
     border-radius: 12px;
     padding: 1.5rem;
 }
@@ -1192,7 +1210,7 @@ textarea {
 .oui-title {
     font-size: 1rem;
     font-weight: 800;
-    color: #f9fafb;
+    color: #FBFBFB;
     margin-bottom: 0.25rem;
     display: flex;
     align-items: center;
@@ -1201,7 +1219,7 @@ textarea {
 
 .oui-subtitle {
     font-size: 0.78rem;
-    color: #9ca3af;
+    color: #75787B;
     margin-bottom: 1.25rem;
     letter-spacing: 0.3px;
 }
@@ -1217,10 +1235,10 @@ textarea {
     flex: 1;
     min-width: 200px;
     padding: 0.7rem 1rem;
-    background: #4b5563;
-    border: 1px solid #6b7280;
+    background: #1e2d40;
+    border: 1px solid #2a3d54;
     border-radius: 0.375rem;
-    color: #f9fafb;
+    color: #FBFBFB;
     font-size: 0.95rem;
     font-family: 'Courier New', monospace;
     letter-spacing: 1px;
@@ -1235,7 +1253,7 @@ textarea {
 
 .oui-btn {
     padding: 0.7rem 1.5rem;
-    background: #3b82f6;
+    background: #0077C8;
     color: white;
     border: none;
     border-radius: 0.375rem;
@@ -1247,7 +1265,7 @@ textarea {
 }
 
 .oui-btn:hover {
-    background: #2563eb;
+    background: #005fa3;
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(59,130,246,0.35);
 }
@@ -1262,7 +1280,7 @@ textarea {
 }
 
 .oui-result.success {
-    background: #052e16;
+    background: #071f2e;
     border: 1px solid #16a34a;
     color: #4ade80;
     display: flex;
@@ -1271,7 +1289,7 @@ textarea {
 }
 
 .oui-result.error {
-    background: #2d1515;
+    background: #1a0e0a;
     border: 1px solid #dc2626;
     color: #f87171;
     display: flex;
@@ -1290,7 +1308,7 @@ textarea {
 #login-overlay {
     position: fixed;
     inset: 0;
-    background: #1a1a1a;
+    background: #0c1520;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1298,7 +1316,7 @@ textarea {
 }
 
 .login-card {
-    background: #2d2d2d;
+    background: #0f1923;
     border: 2px solid #FB612F;
     border-radius: 12px;
     padding: 2.5rem 3rem;
@@ -1329,17 +1347,17 @@ textarea {
     text-align: left;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #d1d5db;
+    color: #c8d4e0;
     margin-bottom: 0.4rem;
 }
 
 .login-input {
     width: 100%;
     padding: 0.75rem 1rem;
-    background: #3a3a3a;
-    border: 1px solid #6b7280;
+    background: #1a2535;
+    border: 1px solid #2a3d54;
     border-radius: 0.375rem;
-    color: #f9fafb;
+    color: #FBFBFB;
     font-size: 1rem;
     margin-bottom: 1.25rem;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -1393,8 +1411,8 @@ textarea {
     top: 0.6rem;
     right: 1rem;
     background: transparent;
-    border: 1px solid #6b7280;
-    color: #9ca3af;
+    border: 1px solid #2a3d54;
+    color: #75787B;
     padding: 0.3rem 0.85rem;
     border-radius: 0.375rem;
     font-size: 0.78rem;
@@ -1440,8 +1458,8 @@ textarea {
 .update-log {
     width: 300px;
     flex-shrink: 0;
-    background: #1a1a1a;
-    border: 2px solid #3a3a3a;
+    background: #0c1520;
+    border: 2px solid #1a2535;
     border-radius: 12px;
     overflow: hidden;
     position: sticky;
@@ -1464,6 +1482,7 @@ textarea {
     font-size: 0.85rem;
     font-weight: 800;
     color: white;
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
@@ -1481,16 +1500,16 @@ textarea {
     width: 4px;
 }
 .update-log-list::-webkit-scrollbar-track {
-    background: #1a1a1a;
+    background: #0c1520;
 }
 .update-log-list::-webkit-scrollbar-thumb {
-    background: #4b5563;
+    background: #1e2d40;
     border-radius: 2px;
 }
 
 .update-entry {
     padding: 0.75rem 0;
-    border-bottom: 1px solid #2d2d2d;
+    border-bottom: 1px solid #152030;
 }
 
 .update-entry:last-child {
@@ -1517,14 +1536,14 @@ textarea {
 
 .update-date {
     font-size: 0.7rem;
-    color: #4b5563;
+    color: #2a3d54;
     font-weight: 600;
 }
 
 .update-entry-title {
     font-size: 0.8rem;
     font-weight: 700;
-    color: #d1d5db;
+    color: #c8d4e0;
     margin-bottom: 0.4rem;
 }
 
@@ -1549,7 +1568,7 @@ textarea {
     content: '›';
     position: absolute;
     left: 0;
-    color: #4b5563;
+    color: #2a3d54;
     font-weight: 700;
 }
 
@@ -1561,13 +1580,13 @@ textarea {
     align-items: flex-start;
     gap: 1.25rem;
     padding: 1.5rem;
-    background: #2d2d2d;
+    background: #0f1923;
 }
 
 .note-info-panel {
     width: 290px;
     flex-shrink: 0;
-    background: #1a1a1a;
+    background: #0c1520;
     border: 2px solid #FB612F;
     border-radius: 12px;
     padding: 0;
@@ -1582,8 +1601,8 @@ textarea {
 
 /* CECR panel uses a different accent color */
 .note-info-panel.cecr-panel {
-    border-color: #3b82f6;
-    box-shadow: 0 4px 16px rgba(59,130,246,0.15), 0 2px 8px rgba(0,0,0,0.35);
+    border-color: #0077C8;
+    box-shadow: 0 4px 16px rgba(0,119,200,0.15), 0 2px 8px rgba(0,0,0,0.35);
 }
 
 /* Truck Roll panel — green accent */
@@ -1623,7 +1642,7 @@ textarea {
 }
 
 .note-info-panel.cecr-panel .info-panel-header {
-    background: #3b82f6;
+    background: #0077C8;
 }
 
 .info-panel-icon {
@@ -1634,13 +1653,14 @@ textarea {
     font-size: 0.8rem;
     font-weight: 800;
     color: white;
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
 
 .info-panel-section {
     padding: 1rem 1.1rem;
-    border-bottom: 1px solid #2d2d2d;
+    border-bottom: 1px solid #152030;
 }
 
 .info-panel-section:last-child {
@@ -1657,7 +1677,7 @@ textarea {
 }
 
 .note-info-panel.cecr-panel .info-panel-section-title {
-    color: #3b82f6;
+    color: #0077C8;
 }
 
 .info-panel-list {
@@ -1671,7 +1691,7 @@ textarea {
 
 .info-panel-list li {
     font-size: 0.8rem;
-    color: #9ca3af;
+    color: #75787B;
     line-height: 1.45;
     padding-left: 0.85rem;
     position: relative;
@@ -1681,7 +1701,7 @@ textarea {
     content: '•';
     position: absolute;
     left: 0;
-    color: #4b5563;
+    color: #2a3d54;
     font-size: 0.65rem;
     top: 0.1rem;
 }
@@ -1714,4 +1734,155 @@ textarea {
     .note-info-panel.cecr-panel {
         border-color: #3b82f6;
     }
+}
+
+/* ══════════════════════════════════════════════
+   BRAND ICON STYLES
+   ══════════════════════════════════════════════ */
+
+/* Home card SVG icons */
+.home-card-icon {
+    display: block;
+    margin-bottom: 0.85rem;
+    line-height: 1;
+}
+
+.home-card-icon svg {
+    display: block;
+}
+
+/* Info panel header icon */
+.info-panel-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Update log icon */
+.update-log-icon {
+    display: flex;
+    align-items: center;
+}
+
+/* Sticky notes toggle button text/icon alignment */
+.sticky-notes-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* ══════════════════════════════════════════════
+   BRAND TYPOGRAPHY OVERRIDES
+   ══════════════════════════════════════════════ */
+
+/* All buttons use headline font */
+.btn {
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
+}
+
+/* Tab buttons */
+.tab-btn {
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
+}
+
+.note-sub-btn {
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
+}
+
+/* Form section labels already targeted, add priority + text span */
+.header-subtitle {
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
+    letter-spacing: 2px;
+    color: #FB612F;
+    font-weight: 600;
+}
+
+/* Login logo */
+.login-logo {
+    font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
+    color: #FB612F;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+}
+
+/* Generated note output — monospace stays */
+.output-box textarea {
+    font-family: 'Courier New', monospace;
+}
+
+/* Home card description uses Nunito Sans (body font — already inherited) */
+.home-card-desc {
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+/* Update entry items */
+.update-entry-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Info panel section titles */
+.info-panel-section-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ══════════════════════════════════════════════
+   BRAND COLOR REFINEMENTS
+   ══════════════════════════════════════════════ */
+
+/* Active Yes button stays orange */
+.yes-no-buttons button.active-yes {
+    background-color: #FB612F;
+    color: white;
+    box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+}
+
+/* Home page background */
+.home-page {
+    background: #0f1923;
+}
+
+/* Email page background */
+.email-page {
+    background: #0f1923;
+}
+
+/* Container bg */
+.container {
+    background: #1a2535;
+}
+
+/* Section divider — brand navy tint */
+.section-divider {
+    border-top: 1px solid #1e3148;
+}
+
+/* Selected troubleshooting items */
+.troubleshooting-item.selected {
+    background-color: #FB612F;
+    border-color: #FB612F;
+    color: white;
+}
+
+/* Active tab uses brand orange underline */
+.tab-btn.active {
+    color: #FB612F;
+    border-bottom-color: #FB612F;
+}
+
+/* Note sub-tab active */
+.note-sub-btn.active {
+    color: #FB612F;
+    border-bottom-color: #FB612F;
+}
+
+/* Dispatch brand display colors */
+.dispatch-brand-display.brand-tachus { color: #22c55e; }
+.dispatch-brand-display.brand-ezee   { color: #FB612F; }
+
+/* Header wrapper — navy gradient */
+.header-wrapper {
+    background: linear-gradient(135deg, #0c1520 0%, #1B365D 100%);
+    border-bottom: 3px solid #FB612F;
 }
