@@ -198,9 +198,11 @@ function copyOutage() {
     if (!div.innerHTML.trim()) return;
 
     // Build HTML blob: text + images as base64 data URIs (pastes into rich-text fields)
-    let htmlContent = '<pre style="font-family:monospace;white-space:pre-wrap;">'
-        + div.querySelector('pre') ? div.querySelector('pre').textContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : ''
-        + '</pre>';
+    const preEl = div.querySelector('pre');
+    const escapedText = preEl
+        ? preEl.textContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        : '';
+    let htmlContent = '<pre style="font-family:monospace;white-space:pre-wrap;">' + escapedText + '</pre>';
 
     if (nocOutageImages.length > 0) {
         htmlContent += '<p><strong>Outage Images:</strong></p>';
