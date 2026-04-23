@@ -1,0 +1,186 @@
+// ══════════════════════════════════════════════
+//  NOC TICKETING
+// ══════════════════════════════════════════════
+
+// ── NOC SUB-TAB SWITCHING ──
+function switchNocTab(tab, btnEl) {
+    document.querySelectorAll('.noc-sub-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.noc-sub-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('noc-sub-' + tab).classList.add('active');
+    btnEl.classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+//  COMMERCIAL CUSTOMER
+// ══════════════════════════════════════════════
+function generateCommercial() {
+    let note = 'NOC COMMERCIAL CUSTOMER\n\n';
+    note += lineFlat('Business Name',              document.getElementById('nc-businessName').value);
+    note += lineFlat('Call Back Number',           document.getElementById('nc-callBack').value);
+    note += lineFlat('Point of Contact',           document.getElementById('nc-poc').value);
+    note += lineFlat('Customer Reporting',         document.getElementById('nc-customerReporting').value);
+    note += lineFlat('Time Issue Started',         document.getElementById('nc-timeIssue').value);
+    document.getElementById('ncGeneratedNote').value = note.trimEnd();
+    document.getElementById('ncOutputSection').classList.add('show');
+    document.getElementById('ncOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyCommercial() {
+    navigator.clipboard.writeText(document.getElementById('ncGeneratedNote').value).then(() => {
+        document.getElementById('ncCopyIcon').textContent = '✓';
+        document.getElementById('ncCopyText').textContent = 'Copied!';
+        setTimeout(() => {
+            document.getElementById('ncCopyIcon').textContent = '📋';
+            document.getElementById('ncCopyText').textContent = 'Copy to Dashboard';
+        }, 2000);
+    });
+}
+
+function resetCommercial() {
+    document.getElementById('commercialForm').reset();
+    document.getElementById('ncOutputSection').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════
+//  CGNAT REQUEST
+// ══════════════════════════════════════════════
+const cgnatYesNo = {
+    cgnat_serviceDevice:       null,
+    cgnat_ipv6:                null,
+    cgnat_vpn:                 null,
+    cgnat_postChange:          null,
+};
+let cgnatRouterType = '';
+
+function setCgnatYesNo(field, value, e) {
+    cgnatYesNo[field] = value;
+    const buttons = e.target.parentElement.querySelectorAll('button');
+    buttons.forEach(btn => btn.classList.remove('active-yes', 'active-no'));
+    e.target.classList.add(value ? 'active-yes' : 'active-no');
+}
+
+function setCgnatRouter(val, btnEl) {
+    cgnatRouterType = val;
+    document.querySelectorAll('#cgnat-router-btns .equip-btn').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+}
+
+function generateCgnat() {
+    let note = 'CGNAT ESCALATION – PUBLIC IP REQUEST\n\n';
+    note += lineFlat('Customer Name',              document.getElementById('cg-customerName').value);
+    note += lineFlat('ONT ID',                     document.getElementById('cg-ontId').value);
+    note += lineFlat('MAC Address',                document.getElementById('cg-macAddress').value);
+    note += lineFlat('Current Learned IP',         document.getElementById('cg-currentIp').value);
+    note += lineFlat('Service Area',               document.getElementById('cg-serviceArea').value);
+    note += lineFlat('Service Package',            document.getElementById('cg-servicePackage').value);
+    note += lineFlat('Installation Address',       document.getElementById('cg-installAddress').value);
+    note += lineFlat('Issue Description',          document.getElementById('cg-issueDesc').value);
+    if (cgnatYesNo.cgnat_serviceDevice !== null)
+        note += `Service/Device Affected: ${cgnatYesNo.cgnat_serviceDevice ? 'Yes' : 'No'}\n`;
+    if (cgnatYesNo.cgnat_ipv6 !== null)
+        note += `IPv6 Compatibility: ${cgnatYesNo.cgnat_ipv6 ? 'Yes' : 'No'}\n`;
+    if (cgnatYesNo.cgnat_vpn !== null)
+        note += `VPN Tried: ${cgnatYesNo.cgnat_vpn ? 'Yes' : 'No'}\n`;
+    if (cgnatRouterType)
+        note += `Router Type: ${cgnatRouterType}\n`;
+    note += lineFlat('Preferred Time for Change',  document.getElementById('cg-preferredTime').value);
+    if (cgnatYesNo.cgnat_postChange !== null)
+        note += `Post-Change Confirmation: ${cgnatYesNo.cgnat_postChange ? 'Yes' : 'No'}\n`;
+    document.getElementById('cgGeneratedNote').value = note.trimEnd();
+    document.getElementById('cgOutputSection').classList.add('show');
+    document.getElementById('cgOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyCgnat() {
+    navigator.clipboard.writeText(document.getElementById('cgGeneratedNote').value).then(() => {
+        document.getElementById('cgCopyIcon').textContent = '✓';
+        document.getElementById('cgCopyText').textContent = 'Copied!';
+        setTimeout(() => {
+            document.getElementById('cgCopyIcon').textContent = '📋';
+            document.getElementById('cgCopyText').textContent = 'Copy to Dashboard';
+        }, 2000);
+    });
+}
+
+function resetCgnat() {
+    document.getElementById('cgnatForm').reset();
+    Object.keys(cgnatYesNo).forEach(k => { cgnatYesNo[k] = null; });
+    document.querySelectorAll('#noc-sub-cgnat .yes-no-buttons button').forEach(btn => {
+        btn.classList.remove('active-yes', 'active-no');
+    });
+    cgnatRouterType = '';
+    document.querySelectorAll('#cgnat-router-btns .equip-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('cgOutputSection').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════
+//  OUTAGE INFORMANT
+// ══════════════════════════════════════════════
+const nocOutageImages = [];
+
+function handleOutageImageUpload(e) {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            nocOutageImages.push({ name: file.name, src: ev.target.result });
+            renderOutageImages();
+        };
+        reader.readAsDataURL(file);
+    });
+    // Reset input so same file can be re-selected
+    e.target.value = '';
+}
+
+function renderOutageImages() {
+    const container = document.getElementById('outage-image-previews');
+    container.innerHTML = '';
+    nocOutageImages.forEach((img, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'outage-img-wrap';
+        wrap.innerHTML = `
+            <img src="${img.src}" alt="${img.name}" class="outage-img-thumb">
+            <div class="outage-img-name">${img.name}</div>
+            <button type="button" class="outage-img-remove" onclick="removeOutageImage(${idx})">✕</button>
+        `;
+        container.appendChild(wrap);
+    });
+}
+
+function removeOutageImage(idx) {
+    nocOutageImages.splice(idx, 1);
+    renderOutageImages();
+}
+
+function generateOutage() {
+    let note = 'OUTAGE INFORMANT\n\n';
+    note += lineFlat('Customer Address',           document.getElementById('oi-address').value);
+    note += lineFlat('Cabinet/PON',                document.getElementById('oi-cabinet').value);
+    note += lineFlat('Est. Affected Customers',    document.getElementById('oi-affected').value);
+    note += lineFlat('Customer Reporting',         document.getElementById('oi-customerReporting').value);
+    if (nocOutageImages.length > 0) {
+        note += `\nAttached Images (${nocOutageImages.length}):\n`;
+        nocOutageImages.forEach(img => { note += `  • ${img.name}\n`; });
+    }
+    document.getElementById('oiGeneratedNote').value = note.trimEnd();
+    document.getElementById('oiOutputSection').classList.add('show');
+    document.getElementById('oiOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyOutage() {
+    navigator.clipboard.writeText(document.getElementById('oiGeneratedNote').value).then(() => {
+        document.getElementById('oiCopyIcon').textContent = '✓';
+        document.getElementById('oiCopyText').textContent = 'Copied!';
+        setTimeout(() => {
+            document.getElementById('oiCopyIcon').textContent = '📋';
+            document.getElementById('oiCopyText').textContent = 'Copy to Dashboard';
+        }, 2000);
+    });
+}
+
+function resetOutage() {
+    document.getElementById('outageForm').reset();
+    nocOutageImages.length = 0;
+    renderOutageImages();
+    document.getElementById('oiOutputSection').classList.remove('show');
+}
