@@ -2062,3 +2062,74 @@ textarea {
         position: static;
     }
 }
+
+/* ══════════════════════════════════════════════
+   OUTAGE RICH OUTPUT BOX
+   ══════════════════════════════════════════════ */
+
+/* Wrapper — same look as other output-boxes */
+.outage-output-box {
+    padding: 0;
+    overflow: hidden;
+}
+
+/* The contenteditable div that holds text + images */
+.outage-rich-output {
+    width: 100%;
+    min-height: 200px;
+    background: transparent;
+    color: #FBFBFB;
+    padding: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    outline: none;
+    cursor: text;
+}
+
+.outage-rich-output:empty::before {
+    content: 'Generated note with images will appear here...';
+    color: #2a3d54;
+    font-style: italic;
+    pointer-events: none;
+}
+
+/* Plain text block inside the rich output */
+.outage-note-text {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #FBFBFB;
+    margin: 0 0 1rem 0;
+    border: none;
+    background: transparent;
+}
+
+/* "Outage Images (N):" header line */
+.outage-img-header {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fbbf24;
+    margin: 0.5rem 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Image grid inside the rich output */
+.outage-inline-imgs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Individual inline image */
+.outage-inline-img {
+    max-width: 280px;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 0.375rem;
+    border: 1px solid #1e3148;
+    display: block;
+}

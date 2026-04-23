@@ -153,34 +153,98 @@ function removeOutageImage(idx) {
 }
 
 function generateOutage() {
-    let note = 'OUTAGE INFORMANT\n\n';
-    note += lineFlat('Customer Address',           document.getElementById('oi-address').value);
-    note += lineFlat('Cabinet/PON',                document.getElementById('oi-cabinet').value);
-    note += lineFlat('Est. Affected Customers',    document.getElementById('oi-affected').value);
-    note += lineFlat('Customer Reporting',         document.getElementById('oi-customerReporting').value);
+    // Build plain-text lines
+    let textLines = 'OUTAGE INFORMANT\n\n';
+    textLines += lineFlat('Customer Address',        document.getElementById('oi-address').value);
+    textLines += lineFlat('Cabinet/PON',             document.getElementById('oi-cabinet').value);
+    textLines += lineFlat('Est. Affected Customers', document.getElementById('oi-affected').value);
+    textLines += lineFlat('Customer Reporting',      document.getElementById('oi-customerReporting').value);
+
+    // Build the rich HTML output: pre-formatted text + inline images
+    const div = document.getElementById('oiGeneratedNote');
+    div.innerHTML = '';
+
+    // Text block — use a <pre> so whitespace/newlines render correctly
+    const pre = document.createElement('pre');
+    pre.className = 'outage-note-text';
+    pre.textContent = textLines.trimEnd();
+    div.appendChild(pre);
+
+    // Inline images
     if (nocOutageImages.length > 0) {
-        note += `\nAttached Images (${nocOutageImages.length}):\n`;
-        nocOutageImages.forEach(img => { note += `  • ${img.name}\n`; });
+        const imgHeader = document.createElement('p');
+        imgHeader.className = 'outage-img-header';
+        imgHeader.textContent = `Outage Images (${nocOutageImages.length}):`;
+        div.appendChild(imgHeader);
+
+        const imgGrid = document.createElement('div');
+        imgGrid.className = 'outage-inline-imgs';
+        nocOutageImages.forEach(img => {
+            const el = document.createElement('img');
+            el.src = img.src;
+            el.alt = img.name;
+            el.className = 'outage-inline-img';
+            imgGrid.appendChild(el);
+        });
+        div.appendChild(imgGrid);
     }
-    document.getElementById('oiGeneratedNote').value = note.trimEnd();
+
     document.getElementById('oiOutputSection').classList.add('show');
     document.getElementById('oiOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function copyOutage() {
-    navigator.clipboard.writeText(document.getElementById('oiGeneratedNote').value).then(() => {
-        document.getElementById('oiCopyIcon').textContent = '✓';
-        document.getElementById('oiCopyText').textContent = 'Copied!';
-        setTimeout(() => {
-            document.getElementById('oiCopyIcon').textContent = '📋';
-            document.getElementById('oiCopyText').textContent = 'Copy to Dashboard';
-        }, 2000);
-    });
+    const div = document.getElementById('oiGeneratedNote');
+    if (!div.innerHTML.trim()) return;
+
+    // Build HTML blob: text + images as base64 data URIs (pastes into rich-text fields)
+    let htmlContent = '<pre style="font-family:monospace;white-space:pre-wrap;">'
+        + div.querySelector('pre') ? div.querySelector('pre').textContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : ''
+        + '</pre>';
+
+    if (nocOutageImages.length > 0) {
+        htmlContent += '<p><strong>Outage Images:</strong></p>';
+        nocOutageImages.forEach(img => {
+            htmlContent += `<img src="${img.src}" alt="${img.name}" style="max-width:480px;display:block;margin:8px 0;">`;
+        });
+    }
+
+    const textContent = div.querySelector('pre') ? div.querySelector('pre').textContent : '';
+
+    try {
+        // Use Clipboard API with rich HTML + plain text fallback
+        const item = new ClipboardItem({
+            'text/html':  new Blob([htmlContent],  { type: 'text/html' }),
+            'text/plain': new Blob([textContent],  { type: 'text/plain' }),
+        });
+        navigator.clipboard.write([item]).then(() => {
+            document.getElementById('oiCopyIcon').textContent = '✓';
+            document.getElementById('oiCopyText').textContent = 'Copied with images!';
+            setTimeout(() => {
+                document.getElementById('oiCopyIcon').textContent = '📋';
+                document.getElementById('oiCopyText').textContent = 'Copy to Dashboard';
+            }, 2500);
+        }).catch(() => {
+            // Fallback: copy text only if ClipboardItem isn't supported
+            navigator.clipboard.writeText(textContent).then(() => {
+                document.getElementById('oiCopyIcon').textContent = '✓';
+                document.getElementById('oiCopyText').textContent = 'Copied (text only)';
+                setTimeout(() => {
+                    document.getElementById('oiCopyIcon').textContent = '📋';
+                    document.getElementById('oiCopyText').textContent = 'Copy to Dashboard';
+                }, 2500);
+            });
+        });
+    } catch {
+        navigator.clipboard.writeText(textContent);
+    }
 }
 
 function resetOutage() {
     document.getElementById('outageForm').reset();
     nocOutageImages.length = 0;
     renderOutageImages();
+    const div = document.getElementById('oiGeneratedNote');
+    div.innerHTML = '';
     document.getElementById('oiOutputSection').classList.remove('show');
 }
