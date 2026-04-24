@@ -1,6 +1,3 @@
-// ── LOGIN ──
-const SITE_PASSWORD = 'Ezeefiber#1';
-
 function goToTab(tabId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -12,36 +9,6 @@ function goToTab(tabId) {
     });
 }
 
-function checkLogin() {
-    const input = document.getElementById('login-password').value;
-    const card = document.getElementById('login-card');
-    if (input === SITE_PASSWORD) {
-        sessionStorage.setItem('ef_auth', '1');
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('signout-btn').style.display = 'block';
-        goToTab('home');
-    } else {
-        document.getElementById('login-error').textContent = 'Incorrect password. Please try again.';
-        card.classList.remove('shake');
-        void card.offsetWidth;
-        card.classList.add('shake');
-        document.getElementById('login-password').value = '';
-        setTimeout(() => card.classList.remove('shake'), 400);
-    }
-}
-
-function signOut() {
-    sessionStorage.removeItem('ef_auth');
-    document.getElementById('login-overlay').style.display = 'flex';
-    document.getElementById('signout-btn').style.display = 'none';
-    document.getElementById('login-password').value = '';
-    document.getElementById('login-error').textContent = '';
-}
-
-if (sessionStorage.getItem('ef_auth') === '1') {
-    document.getElementById('login-overlay').style.display = 'none';
-    document.getElementById('signout-btn').style.display = 'block';
-}
 
 // ── UPS PDF DOWNLOAD ──
 async function downloadFilledPDF(brand) {

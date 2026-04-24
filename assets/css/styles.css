@@ -634,35 +634,17 @@ textarea {
     color: #FB612F;
 }
 
-.context-panel-hint {
-    font-size: 0.72rem;
-    color: #4a5a6a;
-    font-weight: 500;
-}
-
-.context-panel-textarea {
-    width: 100%;
-    min-height: 80px;
+.context-panel-body {
     background: #111d2b;
     border: 1px solid #1e3148;
     border-radius: 6px;
-    color: #FBFBFB;
+    color: #8da0b3;
     font-family: 'Nunito Sans', sans-serif;
     font-size: 0.875rem;
-    padding: 0.6rem 0.875rem;
-    resize: vertical;
-    box-sizing: border-box;
-    line-height: 1.6;
-    transition: border-color 0.2s;
-}
-
-.context-panel-textarea:focus {
-    outline: none;
-    border-color: rgba(251,97,47,0.5);
-}
-
-.context-panel-textarea::placeholder {
-    color: #2d3f52;
+    padding: 0.75rem 1rem;
+    line-height: 1.7;
+    min-height: 56px;
+    white-space: pre-wrap;
 }
 
 /* ── SUB-NAV DIVIDER ── */
@@ -675,17 +657,29 @@ textarea {
     flex-shrink: 0;
 }
 
-.sub-nav-section-label {
+/* ── NOC TAB GROUP (label above buttons) ── */
+.sub-nav-noc-group {
     display: flex;
-    align-items: center;
-    font-size: 0.62rem;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 0;
+}
+
+.sub-nav-noc-label {
+    font-size: 0.6rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: #0077C8;
-    padding: 0 0.2rem;
+    padding: 0.3rem 0.3rem 0.1rem;
+    opacity: 0.9;
     white-space: nowrap;
-    opacity: 0.85;
+}
+
+.sub-nav-noc-tabs {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 /* ── SECTION DIVIDER ── */

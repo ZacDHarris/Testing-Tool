@@ -12,23 +12,6 @@
 </head>
 <body>
 
-    <!-- ── LOGIN OVERLAY ── -->
-    <div id="login-overlay">
-        <div class="login-card" id="login-card">
-            <div class="login-logo">EZEEFIBER</div>
-            <div class="login-subtitle">Internal Tools</div>
-            <form id="login-form" onsubmit="checkLogin(); return false;" autocomplete="on">
-                <label class="login-label" for="login-password">Password</label>
-                <input class="login-input" type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Enter password">
-                <button type="submit" class="login-btn">Sign In</button>
-            </form>
-            <div class="login-error" id="login-error"></div>
-        </div>
-    </div>
-
-    <!-- ── SIGN OUT BUTTON ── -->
-    <button class="signout-btn" id="signout-btn" style="display:none;" onclick="signOut()">Sign Out</button>
-
     <!-- ── TAB NAVIGATION ── -->
     <nav class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('home', this)">Home</button>
@@ -166,18 +149,6 @@
             </div>
         </div>
 
-        <!-- ── CONTEXT PANEL ── -->
-        <div class="context-panel" id="note-context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context
-                </div>
-                <div class="context-panel-hint">Shared context visible across all tabs</div>
-            </div>
-            <textarea class="context-panel-textarea" id="note-context" placeholder="Paste customer account details, issue summary, prior call notes, or any relevant information here — visible regardless of which tab is active."></textarea>
-        </div>
-
         <!-- ── NOTE SUB-TAB NAVIGATION ── -->
         <nav class="note-sub-nav">
             <button class="note-sub-btn active" id="note-btn-truckroll" onclick="switchNoteTab('truckroll', this)">Truck Roll Approval</button>
@@ -186,17 +157,30 @@
             <button class="note-sub-btn" id="note-btn-dispatch" onclick="switchNoteTab('dispatch', this)">Dispatch</button>
             <button class="note-sub-btn" id="note-btn-cecr" onclick="switchNoteTab('cecr', this)">CECR</button>
             <span class="sub-nav-divider" aria-hidden="true"></span>
-            <span class="sub-nav-section-label">NOC</span>
-            <button class="note-sub-btn noc-sub-btn" id="noc-btn-commercial" onclick="switchNocTab('commercial', this)">Commercial Customer</button>
-            <button class="note-sub-btn noc-sub-btn" id="noc-btn-cgnat" onclick="switchNocTab('cgnat', this)">CGNAT Request</button>
-            <button class="note-sub-btn noc-sub-btn" id="noc-btn-outage" onclick="switchNocTab('outage', this)">Outage Informant</button>
-            <button class="note-sub-btn noc-sub-btn" id="noc-btn-jira" onclick="switchNocTab('jira', this)">Jira Escalation</button>
+            <div class="sub-nav-noc-group">
+                <span class="sub-nav-noc-label">NOC Ticketing</span>
+                <div class="sub-nav-noc-tabs">
+                    <button class="note-sub-btn noc-sub-btn" id="noc-btn-commercial" onclick="switchNocTab('commercial', this)">Commercial Customer</button>
+                    <button class="note-sub-btn noc-sub-btn" id="noc-btn-cgnat" onclick="switchNocTab('cgnat', this)">CGNAT Request</button>
+                    <button class="note-sub-btn noc-sub-btn" id="noc-btn-outage" onclick="switchNocTab('outage', this)">Outage Informant</button>
+                    <button class="note-sub-btn noc-sub-btn" id="noc-btn-jira" onclick="switchNocTab('jira', this)">Jira Escalation</button>
+                </div>
+            </div>
         </nav>
 
         <!-- ══════════════════════════════════════════════
              NOTE SUB-PAGE: Truck Roll Approval (NEW TEMPLATE)
              ══════════════════════════════════════════════ -->
         <div id="note-sub-truckroll" class="note-sub-page active">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — Truck Roll Approval
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for the Truck Roll Approval process.</div>
+            </div>
             <div class="note-with-sidebar">
 
                 <!-- LEFT: Truck Roll Info Panel -->
@@ -421,6 +405,15 @@
 
         <!-- ── NOTE SUB-PAGE: Hard Down ── -->
         <div id="note-sub-harddown" class="note-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — Hard Down
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for Hard Down escalations.</div>
+            </div>
             <div class="note-with-sidebar">
 
                 <!-- LEFT: Hard Down Info Panel -->
@@ -571,6 +564,15 @@
 
         <!-- ── NOTE SUB-PAGE: Cancellation ── -->
         <div id="note-sub-cancellation" class="note-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — Cancellation
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for the Cancellation process.</div>
+            </div>
             <div class="coming-soon-placeholder">
                 <div class="placeholder-mark">Cancellation</div>
                 <div class="placeholder-sub">Coming Soon</div>
@@ -579,6 +581,15 @@
 
         <!-- ── NOTE SUB-PAGE: Dispatch ── -->
         <div id="note-sub-dispatch" class="note-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — Dispatch
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for the Dispatch process.</div>
+            </div>
             <div class="note-with-sidebar">
 
                 <!-- LEFT: Dispatch Info Panel -->
@@ -697,6 +708,15 @@
 
         <!-- ── NOTE SUB-PAGE: CECR ── -->
         <div id="note-sub-cecr" class="note-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — CECR
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for the CECR process.</div>
+            </div>
             <div class="note-with-sidebar">
 
                 <!-- LEFT: CECR Info Panel -->
@@ -790,6 +810,15 @@
 
         <!-- ══ NOC SUB-PAGE: Commercial Customer ══ -->
         <div id="noc-sub-commercial" class="note-sub-page noc-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — Commercial Customer
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for Commercial Customer escalations.</div>
+            </div>
             <div class="note-with-sidebar">
 
                 <!-- LEFT: NOC Info Panel -->
@@ -870,6 +899,15 @@
 
         <!-- ══ NOC SUB-PAGE: CGNAT Request ══ -->
         <div id="noc-sub-cgnat" class="note-sub-page noc-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — CGNAT Request
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for CGNAT / Public IP requests.</div>
+            </div>
             <div class="note-with-sidebar">
 
                 <!-- LEFT: CGNAT Info Panel -->
@@ -1023,6 +1061,15 @@
 
         <!-- ══ NOC SUB-PAGE: Outage Informant ══ -->
         <div id="noc-sub-outage" class="note-sub-page noc-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — Outage Informant
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for the Outage Informant process.</div>
+            </div>
             <div class="note-with-sidebar">
 
                 <!-- LEFT: Outage Info Panel -->
@@ -1114,6 +1161,15 @@
 
         <!-- ══ NOC SUB-PAGE: Jira Escalation ══ -->
         <div id="noc-sub-jira" class="note-sub-page noc-sub-page">
+            <div class="context-panel">
+                <div class="context-panel-header">
+                    <div class="context-panel-title">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Context — Jira Escalation
+                    </div>
+                </div>
+                <div class="context-panel-body">Placeholder — edit this section in index.html to add educational context for Jira Escalations.</div>
+            </div>
             <div class="coming-soon-placeholder">
                 <div class="placeholder-mark" style="color:#0077C8;">Jira Escalation</div>
                 <div class="placeholder-sub">Coming Soon</div>
