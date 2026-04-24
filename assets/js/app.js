@@ -2,8 +2,8 @@
 const SITE_PASSWORD = 'Ezeefiber#1';
 
 function goToTab(tabId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));   //have to parse all buttons to remove classes is not needed
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
     document.getElementById('page-' + tabId).classList.add('active');
     document.querySelectorAll('.tab-btn').forEach(b => {
         if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + tabId + "'")) {
