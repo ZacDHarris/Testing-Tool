@@ -152,7 +152,7 @@
         <!-- ── NOTE SUB-TAB NAVIGATION ── -->
         <nav class="note-sub-nav">
             <button class="note-sub-btn active" id="note-btn-truckroll" onclick="switchNoteTab('truckroll', this)">Truck Roll Approval</button>
-            <button class="note-sub-btn" id="note-btn-harddown" onclick="switchNoteTab('harddown', this)">Hard Down</button>
+            <button class="note-sub-btn" id="note-btn-harddown" onclick="switchNoteTab('harddown', this)">T2 Review</button>
             <button class="note-sub-btn" id="note-btn-cancellation" onclick="switchNoteTab('cancellation', this)">Cancellation</button>
             <button class="note-sub-btn" id="note-btn-dispatch" onclick="switchNoteTab('dispatch', this)">Dispatch</button>
             <button class="note-sub-btn" id="note-btn-cecr" onclick="switchNoteTab('cecr', this)">CECR</button>
@@ -209,10 +209,16 @@
                         </ul>
                     </div>
                     <div class="info-panel-section">
-                        <div class="info-panel-section-title">Placeholder Section</div>
+                        <div class="info-panel-section-title">HOT Escalations</div>
                         <ul class="info-panel-list">
-                            <li>Placeholder</li>
-                            <li>Placeholder</li>
+                            <li>HOT Customer - A HOT customer meets any of the following</li>
+                            <li>Repeated issue and installed within the last 7 days</li>
+                            <li>2+ service tickets in the last 30 days</li>
+                            <li>Customer is at risk of disconnecting (threatens to cancel)</li>
+                            <li>Cut Drop Bury/Safety Hazard – The Fiber drop has been cut or is posing a safety hazard.</li>
+                            <li>Customer confirmed physical cut</li>
+                            <li>Another service company cut line in error</li>
+                            <li>Physical line can cause physical injury</li>
                         </ul>
                     </div>
                 </div>
@@ -403,27 +409,27 @@
             </div><!-- end note-with-sidebar -->
         </div>
 
-        <!-- ── NOTE SUB-PAGE: Hard Down ── -->
+        <!-- ── NOTE SUB-PAGE: T2 Review ── -->
         <div id="note-sub-harddown" class="note-sub-page">
             <div class="context-panel">
                 <div class="context-panel-header">
                     <div class="context-panel-title">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                        Context — Hard Down
+                        Context — T2 Review
                     </div>
                 </div>
                 <div class="context-panel-body">Placeholder - More Info coming soon.</div>
             </div>
             <div class="note-with-sidebar">
 
-                <!-- LEFT: Hard Down Info Panel -->
+                <!-- LEFT: T2 Review Info Panel -->
                 <div class="note-info-panel harddown-panel">
                     <div class="info-panel-header">
                         <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-                        <span class="info-panel-title">Hard Down Reference</span>
+                        <span class="info-panel-title">T2 Review Reference</span>
                     </div>
                     <div class="info-panel-section">
-                        <div class="info-panel-section-title">Modem Probing Questions</div>
+                        <div class="info-panel-section-title">ONT Probing Questions</div>
                         <ul class="info-panel-list">
                             <li>Do you see any red or blinking lights on the ONT?</li>
                             <li>Has the ONT lost power recently? → Check Alarms</li>
@@ -437,109 +443,102 @@
                             <li>Placeholder</li>
                             <li>Placeholder</li>
                             <li>Placeholder</li>
-                            <li>Placeholder</li>
-                        </ul>
-                    </div>
-                    <div class="info-panel-section">
-                        <div class="info-panel-section-title">Placeholder Section</div>
-                        <ul class="info-panel-list">
-                            <li>Placeholder</li>
-                            <li>Placeholder</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- RIGHT: Hard Down Form -->
+                <!-- RIGHT: T2 Review Form -->
                 <div class="container">
                 <form id="hardDownForm">
                     <div class="form-grid">
+
+                        <!-- PROVIDER -->
                         <div class="form-group full-width">
-                            <label for="hd-customerReporting">Customer Is Reporting</label>
-                            <textarea id="hd-customerReporting" placeholder="Enter customer report"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="hd-alarmCodes">Alarm Code(s)</label>
-                            <input type="text" id="hd-alarmCodes" placeholder="Enter alarm code(s)">
-                        </div>
-                        <div class="form-group">
-                            <label for="hd-speedTest">Speed Test (Down/Up)</label>
-                            <input type="text" id="hd-speedTest" placeholder="Enter speed test">
-                        </div>
-                        <div class="form-group">
-                            <label>Are Devices Disconnecting</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_devicesDisconnecting', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_devicesDisconnecting', false, event)">No</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Is Network Stable</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_networkStable', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_networkStable', false, event)">No</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Light Levels</label>
-                            <div style="display:flex;gap:0.5rem;">
-                                <input type="text" id="hd-lightLevels-ont" placeholder="ONT" style="flex:1;">
-                                <input type="text" id="hd-lightLevels-olt" placeholder="OLT" style="flex:1;">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="hd-l2UserAligned">L2-User Aligned (if applicable)</label>
-                            <input type="text" id="hd-l2UserAligned" placeholder="Enter L2-User aligned">
-                        </div>
-                        <div class="form-group">
-                            <label>Verified Head End/Hub</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_verifiedHeadEnd', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_verifiedHeadEnd', false, event)">No</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Is There Wi-Fi Channel Interference</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_wifiInterference', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_wifiInterference', false, event)">No</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Was Equipment Rebooted</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_equipmentRebooted', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_equipmentRebooted', false, event)">No</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Are All Connections Verified</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_connectionsVerified', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_connectionsVerified', false, event)">No</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="hd-timeframe">Timeframe When Issues Started</label>
-                            <input type="text" id="hd-timeframe" placeholder="Enter timeframe">
-                        </div>
-                        <div class="form-group">
-                            <label>Was Basic Router Troubleshooting Done</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_routerTroubleshooting', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_routerTroubleshooting', false, event)">No</button>
-                            </div>
+                            <div class="section-label">Provider</div>
                         </div>
                         <div class="form-group full-width">
-                            <label for="hd-troubleshootingSteps">Troubleshooting Steps Taken</label>
-                            <textarea id="hd-troubleshootingSteps" placeholder="Enter troubleshooting steps taken"></textarea>
-                        </div>
-                        <div class="form-group full-width">
-                            <label>Are Other Customers Affected</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setHdYesNo('hd_otherCustomers', true, event)">Yes</button>
-                                <button type="button" onclick="setHdYesNo('hd_otherCustomers', false, event)">No</button>
+                            <div class="provider-btn-group">
+                                <button type="button" class="provider-btn" id="hd-provider-tachus" onclick="setHdProvider('Tachus')">Tachus</button>
+                                <button type="button" class="provider-btn" id="hd-provider-ezee" onclick="setHdProvider('EzeeFiber')">EzeeFiber</button>
                             </div>
                         </div>
+
+                        <hr class="section-divider">
+
+                        <!-- CUSTOMER INFO -->
+                        <div class="form-group full-width">
+                            <div class="section-label">Customer Information</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-name">Name</label>
+                            <input type="text" id="hd-name" placeholder="Enter name">
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-address">Address</label>
+                            <input type="text" id="hd-address" placeholder="Enter address">
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-callbackContact">Callback Contact</label>
+                            <input type="text" id="hd-callbackContact" placeholder="Enter callback contact">
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- NETWORK INFO -->
+                        <div class="form-group full-width">
+                            <div class="section-label">Network Information</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-node">Node</label>
+                            <input type="text" id="hd-node" placeholder="Enter node">
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-ontId">ONT ID</label>
+                            <input type="text" id="hd-ontId" placeholder="Enter ONT ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-routerId">Router ID</label>
+                            <input type="text" id="hd-routerId" placeholder="Enter router ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-alarms">Alarms</label>
+                            <input type="text" id="hd-alarms" placeholder="Enter alarms">
+                        </div>
+                        <div class="form-group">
+                            <label for="hd-lightLevels">Light Levels</label>
+                            <input type="text" id="hd-lightLevels" placeholder="Enter light levels">
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- ISSUE -->
+                        <div class="form-group full-width">
+                            <div class="section-label">Issue</div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="hd-issueDescription">Issue Description</label>
+                            <textarea id="hd-issueDescription" placeholder="Describe the issue..." style="min-height:120px;"></textarea>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- TROUBLESHOOTING STEPS -->
+                        <div class="form-group full-width">
+                            <div class="section-label">Troubleshooting Steps</div>
+                        </div>
+                        <div class="form-group full-width">
+                            <div class="troubleshooting-grid" id="t2TroubleshootingGrid"></div>
+                            <div style="margin-top:1rem;">
+                                <label style="margin-bottom:0.4rem; font-size:0.8rem; color:#9ca3af;">Add Custom Step</label>
+                                <div class="custom-step-wrapper">
+                                    <span class="custom-step-prefix">•</span>
+                                    <input class="custom-step-input" type="text" id="hd-custom-step-input" placeholder="Type a custom troubleshooting step..." onkeydown="if(event.key==='Enter'){event.preventDefault();addT2CustomStep();}">
+                                    <button type="button" class="custom-step-add-btn" onclick="addT2CustomStep()">+ Add</button>
+                                </div>
+                                <div class="custom-steps-list" id="hd-custom-steps-list"></div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
                 <div class="action-buttons">

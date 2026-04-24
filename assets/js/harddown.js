@@ -1,43 +1,92 @@
-// ── HARD DOWN ──
-const hdYesNoData = {
-    hd_devicesDisconnecting: null, hd_networkStable: null,
-    hd_verifiedHeadEnd: null, hd_wifiInterference: null,
-    hd_equipmentRebooted: null, hd_connectionsVerified: null,
-    hd_routerTroubleshooting: null, hd_otherCustomers: null
-};
+// ── T2 REVIEW ──
+let hdProvider = '';
+const selectedT2Troubleshooting = new Set();
+const customHdSteps = [];
 
-function setHdYesNo(field, value, e) {
-    hdYesNoData[field] = value;
-    const buttons = e.target.parentElement.querySelectorAll('button');
-    buttons.forEach(btn => btn.classList.remove('active-yes','active-no'));
-    e.target.classList.add(value ? 'active-yes' : 'active-no');
+function setHdProvider(val) {
+    hdProvider = val;
+    document.getElementById('hd-provider-tachus').classList.remove('active-tachus', 'active-ezee');
+    document.getElementById('hd-provider-ezee').classList.remove('active-tachus', 'active-ezee');
+    if (val === 'Tachus') {
+        document.getElementById('hd-provider-tachus').classList.add('active-tachus');
+    } else {
+        document.getElementById('hd-provider-ezee').classList.add('active-ezee');
+    }
+}
+
+function initT2TroubleshootingGrid() {
+    const grid = document.getElementById('t2TroubleshootingGrid');
+    troubleshootingOptions.forEach(option => {
+        const item = document.createElement('div');
+        item.className = 'troubleshooting-item';
+        item.textContent = option;
+        item.onclick = () => toggleT2Troubleshooting(option, item);
+        grid.appendChild(item);
+    });
+}
+
+function toggleT2Troubleshooting(option, element) {
+    if (selectedT2Troubleshooting.has(option)) {
+        selectedT2Troubleshooting.delete(option);
+        element.classList.remove('selected');
+    } else {
+        selectedT2Troubleshooting.add(option);
+        element.classList.add('selected');
+    }
+}
+
+function addT2CustomStep() {
+    const input = document.getElementById('hd-custom-step-input');
+    const text = input.value.trim();
+    if (!text) return;
+    customHdSteps.push('•' + text);
+    renderT2CustomSteps();
+    input.value = '';
+    input.focus();
+}
+
+function removeT2CustomStep(idx) {
+    customHdSteps.splice(idx, 1);
+    renderT2CustomSteps();
+}
+
+function renderT2CustomSteps() {
+    const list = document.getElementById('hd-custom-steps-list');
+    list.innerHTML = '';
+    customHdSteps.forEach((step, idx) => {
+        const tag = document.createElement('div');
+        tag.className = 'custom-step-tag';
+        tag.innerHTML = `<span>${step}</span><button class="custom-step-remove" onclick="removeT2CustomStep(${idx})" title="Remove">×</button>`;
+        list.appendChild(tag);
+    });
 }
 
 function generateHardDown() {
-    const ontLL = (document.getElementById('hd-lightLevels-ont').value || '').trim();
-    const oltLL = (document.getElementById('hd-lightLevels-olt').value || '').trim();
-    let lines = 'HARD DOWN\n\n';
-    lines += lineFlat('Customer Is Reporting', document.getElementById('hd-customerReporting').value);
-    lines += lineFlat('Alarm Code(s)',          document.getElementById('hd-alarmCodes').value);
-    lines += lineFlat('Speed Test (Down/Up)',   document.getElementById('hd-speedTest').value);
-    lines += lineYNFlat('Are Devices Disconnecting',          hdYesNoData.hd_devicesDisconnecting);
-    lines += lineYNFlat('Is Network Stable',                  hdYesNoData.hd_networkStable);
-    if (ontLL || oltLL) {
-        const llParts = [];
-        if (ontLL) llParts.push(`ONT: ${ontLL}`);
-        if (oltLL) llParts.push(`OLT: ${oltLL}`);
-        lines += `Light Levels — ${llParts.join(' / ')}\n`;
-    }
-    lines += lineFlat('L2-User Aligned',                      document.getElementById('hd-l2UserAligned').value);
-    lines += lineYNFlat('Verified Head End/Hub',              hdYesNoData.hd_verifiedHeadEnd);
-    lines += lineYNFlat('Is There Wi-Fi Channel Interference', hdYesNoData.hd_wifiInterference);
-    lines += lineYNFlat('Was Equipment Rebooted',             hdYesNoData.hd_equipmentRebooted);
-    lines += lineYNFlat('Are All Connections Verified',       hdYesNoData.hd_connectionsVerified);
-    lines += lineFlat('Timeframe When Issues Started',         document.getElementById('hd-timeframe').value);
-    lines += lineYNFlat('Was Basic Router Troubleshooting Done', hdYesNoData.hd_routerTroubleshooting);
-    lines += lineFlat('Troubleshooting Steps Taken',           document.getElementById('hd-troubleshootingSteps').value);
-    lines += lineYNFlat('Are Other Customers Affected',       hdYesNoData.hd_otherCustomers);
-    document.getElementById('hdGeneratedNote').value = lines.trimEnd();
+    const allSteps = [...Array.from(selectedT2Troubleshooting), ...customHdSteps];
+    let parts = [];
+
+    if (hdProvider) parts.push(`Provider: ${hdProvider}`);
+
+    let customer = '';
+    customer += lineFlat('Name',             document.getElementById('hd-name').value);
+    customer += lineFlat('Address',          document.getElementById('hd-address').value);
+    customer += lineFlat('Callback Contact', document.getElementById('hd-callbackContact').value);
+    if (customer.trim()) parts.push(customer.trimEnd());
+
+    let network = '';
+    network += lineFlat('Node',         document.getElementById('hd-node').value);
+    network += lineFlat('ONT ID',       document.getElementById('hd-ontId').value);
+    network += lineFlat('Router ID',    document.getElementById('hd-routerId').value);
+    network += lineFlat('Alarms',       document.getElementById('hd-alarms').value);
+    network += lineFlat('Light Levels', document.getElementById('hd-lightLevels').value);
+    if (network.trim()) parts.push(network.trimEnd());
+
+    const issue = (document.getElementById('hd-issueDescription').value || '').trim();
+    if (issue) parts.push(`Issue Description: ${issue}`);
+
+    if (allSteps.length > 0) parts.push(`Troubleshooting Steps:\n${allSteps.join('\n')}`);
+
+    document.getElementById('hdGeneratedNote').value = parts.join('\n\n');
     document.getElementById('hdOutputSection').classList.add('show');
     document.getElementById('hdOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
@@ -54,13 +103,18 @@ function copyHardDown() {
 }
 
 function resetHardDown() {
-    document.getElementById('hardDownForm').reset();
-    document.getElementById('hd-lightLevels-ont').value = '';
-    document.getElementById('hd-lightLevels-olt').value = '';
-    Object.keys(hdYesNoData).forEach(k => { hdYesNoData[k] = null; });
-    document.querySelectorAll('#note-sub-harddown .yes-no-buttons button').forEach(btn => {
-        btn.classList.remove('active-yes','active-no');
+    hdProvider = '';
+    document.getElementById('hd-provider-tachus').classList.remove('active-tachus', 'active-ezee');
+    document.getElementById('hd-provider-ezee').classList.remove('active-tachus', 'active-ezee');
+    ['hd-name','hd-address','hd-callbackContact','hd-node','hd-ontId',
+     'hd-routerId','hd-alarms','hd-lightLevels','hd-issueDescription'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
     });
+    selectedT2Troubleshooting.clear();
+    document.querySelectorAll('#t2TroubleshootingGrid .troubleshooting-item').forEach(item => item.classList.remove('selected'));
+    customHdSteps.length = 0;
+    renderT2CustomSteps();
+    document.getElementById('hd-custom-step-input').value = '';
     document.getElementById('hdOutputSection').classList.remove('show');
 }
-

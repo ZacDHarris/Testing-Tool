@@ -5,8 +5,9 @@ populateTechRegionSelects();
 // Populate WO Type dropdowns from data
 populateWOTypeSelects();
 
-// Build the troubleshooting button grid
+// Build the troubleshooting button grids
 initTroubleshootingGrid();
+initT2TroubleshootingGrid();
 
 // Restore sticky notes from localStorage
 const stickyArea = document.getElementById('sticky-notes-area');
