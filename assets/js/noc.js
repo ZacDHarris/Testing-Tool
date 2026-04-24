@@ -4,8 +4,8 @@
 
 // ── NOC SUB-TAB SWITCHING ──
 function switchNocTab(tab, btnEl) {
-    document.querySelectorAll('.noc-sub-page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.noc-sub-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.note-sub-page, .noc-sub-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.note-sub-btn, .noc-sub-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('noc-sub-' + tab).classList.add('active');
     btnEl.classList.add('active');
 }
