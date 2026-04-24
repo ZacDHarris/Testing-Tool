@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="./assets/img/EzeeIcon.jpg">
+    <title>Ezee Fiber Technical Support Note Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body>
+
+    <!-- ── TAB NAVIGATION ── -->
+    <nav class="tab-nav">
+        <a href="index.html"><button class="tab-btn" onclick="switchTab('home', this)">Home</button></a>
+        <a href="index.html"><button class="tab-btn" onclick="switchTab('support', this)">Note Generator</button></a>
+        <a href="emailtemplates.html"><button class="tab-btn active" onclick="switchTab('email', this)">Email Templates</button></a>
+    </nav>
+
+    <!-- ── PAGE: EMAIL TEMPLATES ── -->
+    <div id="page-email" class="page">
+        <div class="email-page">
+            <nav class="email-sub-nav">
+                <button class="email-sub-btn active-tachus" id="sub-btn-tachus" onclick="switchEmailTab('tachus')">
+                    <span class="sub-indicator dot-tachus"></span>Tachus Email Templates
+                </button>
+                <button class="email-sub-btn" id="sub-btn-ezee" onclick="switchEmailTab('ezee')">
+                    <span class="sub-indicator dot-ezee"></span>EzeeFiber Email Templates
+                </button>
+            </nav>
+
+            <!-- Tachus Sub-Page -->
+            <div id="email-sub-tachus" class="email-sub-page active">
+                <nav class="email-mini-nav email-mini-nav-tachus">
+                    <button class="email-mini-btn email-mini-btn-active" id="email-tachus-btn-cancellation" onclick="switchEmailMiniTab('tachus', 'cancellation', this)">Equipment Return</button>
+                    <button class="email-mini-btn" id="email-tachus-btn-raf" onclick="switchEmailMiniTab('tachus', 'raf', this)">Refer a Friend</button>
+                    <button class="email-mini-btn" id="email-tachus-btn-requesting-pictures" onclick="switchEmailMiniTab('tachus', 'requesting-pictures', this)">Requesting Pictures</button>
+                    <button class="email-mini-btn" id="email-tachus-btn-wifi-security-key" onclick="switchEmailMiniTab('tachus', 'wifi-security-key', this)">WiFi Security Key</button>
+                    <button class="email-mini-btn" id="email-tachus-btn-portal-password-reset" onclick="switchEmailMiniTab('tachus', 'portal-password-reset', this)">Customer Portal Password Reset</button>
+                    <button class="email-mini-btn" id="email-tachus-btn-lifetime-pricing" onclick="switchEmailMiniTab('tachus', 'lifetime-pricing', this)">Lifetime Pricing Declaration</button>
+                    <button class="email-mini-btn" id="email-tachus-btn-construction-case" onclick="switchEmailMiniTab('tachus', 'construction-case', this)">Construction Case</button>
+                    <button class="email-mini-btn" id="email-tachus-btn-outage" onclick="switchEmailMiniTab('tachus', 'outage', this)">Outage</button>
+                </nav>
+                <div class="email-mini-content">
+                    <div id="email-tachus-cancellation" class="email-mini-page active">
+                        <div class="email-template-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="ter-t-name">Customer Name</label>
+                                    <input type="text" id="ter-t-name" placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ter-t-modem">Modem SN</label>
+                                    <input type="text" id="ter-t-modem" placeholder="Enter modem serial number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Router Type</label>
+                                    <div class="router-type-grid">
+                                        <button type="button" class="router-type-btn" id="ter-t-router-EERO-PRO6E" onclick="setRouterType('ter-t', 'EERO PRO6E', this)">EERO PRO6E</button>
+                                        <button type="button" class="router-type-btn" id="ter-t-router-EERO-MAX7" onclick="setRouterType('ter-t', 'EERO MAX7', this)">EERO MAX7</button>
+                                        <button type="button" class="router-type-btn" id="ter-t-router-EVO-AP6700" onclick="setRouterType('ter-t', 'EVO AP6700', this)">EVO AP6700</button>
+                                        <button type="button" class="router-type-btn" id="ter-t-router-TP-LINK-P50" onclick="setRouterType('ter-t', 'TP-LINK P50', this)">TP-LINK P50</button>
+                                        <button type="button" class="router-type-btn" id="ter-t-router-TP-LINK-PB70" onclick="setRouterType('ter-t', 'TP-LINK PB70', this)">TP-LINK PB70</button>
+                                        <button type="button" class="router-type-btn" id="ter-t-router-TP-LINK-P110" onclick="setRouterType('ter-t', 'TP-LINK P110', this)">TP-LINK P110</button>
+                                    </div>
+                                    <span id="ter-t-router-display" class="router-type-display"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ter-t-router-sn">Router SN</label>
+                                    <input type="text" id="ter-t-router-sn" placeholder="Enter router serial number">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" onclick="generateEquipReturn('tachus')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyEquipReturn('tachus')">
+                                        <span id="ter-t-copy-icon">&#128203;</span>
+                                        <span id="ter-t-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('ter-t-output', ['ter-t-name','ter-t-modem','ter-t-router-sn'], 'ter-t')" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <div class="output-box">
+                                    <textarea id="ter-t-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                                <div class="ups-label-section">
+                                    <div class="ups-label-header">
+                                        <span class="ups-label-title">📦 UPS Return Label Generator</span>
+                                    </div>
+                                    <div class="ups-label-fields">
+                                        <div class="ups-field-group">
+                                            <label for="ter-t-acct">Customer Account Number</label>
+                                            <input type="text" id="ter-t-acct" placeholder="Enter account number">
+                                        </div>
+                                        <div class="ups-field-group">
+                                            <label for="ter-t-wo">Work Order Number</label>
+                                            <input type="text" id="ter-t-wo" placeholder="Enter work order number">
+                                        </div>
+                                        <button class="btn ups-download-btn" onclick="downloadFilledPDF('tachus')">⬇️ Download Filled Return Label PDF</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-tachus-raf" class="email-mini-page">
+                        <div class="email-template-form raf-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="traf-name">Customer Name</label>
+                                    <input type="text" id="traf-name" placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="traf-link">RAF Link</label>
+                                    <input type="text" id="traf-link" placeholder="Enter referral link" style="width:100%;">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" style="background:#61bb46;" onclick="generateRAF('tachus')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyRAF('tachus')">
+                                        <span id="traf-copy-icon">&#128203;</span>
+                                        <span id="traf-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('traf-output', ['traf-name','traf-link'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <img src="./assets/img/RAF1.png" class="raf-img-preview" alt="Refer a Friend header">
+                                <div class="output-box">
+                                    <textarea id="traf-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                                <img src="./assets/img/RAF2.png" class="raf-img-preview" alt="Refer a Friend footer">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-tachus-requesting-pictures" class="email-mini-page">
+                        <div class="email-template-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="trp-name">Customer Name</label>
+                                    <input type="text" id="trp-name" placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="trp-ticket">Ticket ID</label>
+                                    <input type="text" id="trp-ticket" placeholder="Enter ticket ID">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" onclick="generateReqPic('tachus')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyReqPic('tachus')">
+                                        <span id="trp-copy-icon">&#128203;</span>
+                                        <span id="trp-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('trp-output', ['trp-name','trp-ticket'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <div class="output-box">
+                                    <textarea id="trp-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-tachus-wifi-security-key" class="email-mini-page">
+                        <div class="email-template-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="twsk-name">Customer First Name</label>
+                                    <input type="text" id="twsk-name" placeholder="Enter first name">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" onclick="generateWifiKey('tachus')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyWifiKey('tachus')">
+                                        <span id="twsk-copy-icon">&#128203;</span>
+                                        <span id="twsk-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('twsk-output', ['twsk-name'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <div class="output-box">
+                                    <textarea id="twsk-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-tachus-portal-password-reset" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#61bb46;">Customer Portal Password Reset</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-tachus-lifetime-pricing" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#61bb46;">Lifetime Pricing Declaration</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-tachus-construction-case" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#61bb46;">Construction Case</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-tachus-outage" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#61bb46;">Outage</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EzeeFiber Sub-Page -->
+            <div id="email-sub-ezee" class="email-sub-page">
+                <nav class="email-mini-nav email-mini-nav-ezee">
+                    <button class="email-mini-btn email-mini-btn-active" id="email-ezee-btn-cancellation" onclick="switchEmailMiniTab('ezee', 'cancellation', this)">Equipment Return</button>
+                    <button class="email-mini-btn" id="email-ezee-btn-raf" onclick="switchEmailMiniTab('ezee', 'raf', this)">Refer a Friend</button>
+                    <button class="email-mini-btn" id="email-ezee-btn-requesting-pictures" onclick="switchEmailMiniTab('ezee', 'requesting-pictures', this)">Requesting Pictures</button>
+                    <button class="email-mini-btn" id="email-ezee-btn-wifi-security-key" onclick="switchEmailMiniTab('ezee', 'wifi-security-key', this)">WiFi Security Key</button>
+                    <button class="email-mini-btn" id="email-ezee-btn-portal-password-reset" onclick="switchEmailMiniTab('ezee', 'portal-password-reset', this)">Customer Portal Password Reset</button>
+                    <button class="email-mini-btn" id="email-ezee-btn-lifetime-pricing" onclick="switchEmailMiniTab('ezee', 'lifetime-pricing', this)">Lifetime Pricing Declaration</button>
+                    <button class="email-mini-btn" id="email-ezee-btn-construction-case" onclick="switchEmailMiniTab('ezee', 'construction-case', this)">Construction Case</button>
+                    <button class="email-mini-btn" id="email-ezee-btn-outage" onclick="switchEmailMiniTab('ezee', 'outage', this)">Outage</button>
+                </nav>
+                <div class="email-mini-content">
+                    <div id="email-ezee-cancellation" class="email-mini-page active">
+                        <div class="email-template-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="ter-e-name">Customer Name</label>
+                                    <input type="text" id="ter-e-name" placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ter-e-modem">Modem SN</label>
+                                    <input type="text" id="ter-e-modem" placeholder="Enter modem serial number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Router Type</label>
+                                    <div class="router-type-grid">
+                                        <button type="button" class="router-type-btn" id="ter-e-router-EERO-PRO6E" onclick="setRouterType('ter-e', 'EERO PRO6E', this)">EERO PRO6E</button>
+                                        <button type="button" class="router-type-btn" id="ter-e-router-EERO-MAX7" onclick="setRouterType('ter-e', 'EERO MAX7', this)">EERO MAX7</button>
+                                        <button type="button" class="router-type-btn" id="ter-e-router-EVO-AP6700" onclick="setRouterType('ter-e', 'EVO AP6700', this)">EVO AP6700</button>
+                                        <button type="button" class="router-type-btn" id="ter-e-router-TP-LINK-P50" onclick="setRouterType('ter-e', 'TP-LINK P50', this)">TP-LINK P50</button>
+                                        <button type="button" class="router-type-btn" id="ter-e-router-TP-LINK-PB70" onclick="setRouterType('ter-e', 'TP-LINK PB70', this)">TP-LINK PB70</button>
+                                        <button type="button" class="router-type-btn" id="ter-e-router-TP-LINK-P110" onclick="setRouterType('ter-e', 'TP-LINK P110', this)">TP-LINK P110</button>
+                                    </div>
+                                    <span id="ter-e-router-display" class="router-type-display"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ter-e-router-sn">Router SN</label>
+                                    <input type="text" id="ter-e-router-sn" placeholder="Enter router serial number">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateEquipReturn('ezee')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyEquipReturn('ezee')">
+                                        <span id="ter-e-copy-icon">&#128203;</span>
+                                        <span id="ter-e-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('ter-e-output', ['ter-e-name','ter-e-modem','ter-e-router-sn'], 'ter-e')" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <div class="output-box">
+                                    <textarea id="ter-e-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                                <div class="ups-label-section">
+                                    <div class="ups-label-header">
+                                        <span class="ups-label-title">📦 UPS Return Label Generator</span>
+                                    </div>
+                                    <div class="ups-label-fields">
+                                        <div class="ups-field-group">
+                                            <label for="ter-e-acct">Customer Account Number</label>
+                                            <input type="text" id="ter-e-acct" placeholder="Enter account number">
+                                        </div>
+                                        <div class="ups-field-group">
+                                            <label for="ter-e-wo">Work Order Number</label>
+                                            <input type="text" id="ter-e-wo" placeholder="Enter work order number">
+                                        </div>
+                                        <button class="btn ups-download-btn" onclick="downloadFilledPDF('ezee')">⬇️ Download Filled Return Label PDF</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-ezee-raf" class="email-mini-page">
+                        <div class="email-template-form raf-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="eraf-name">Customer Name</label>
+                                    <input type="text" id="eraf-name" placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="eraf-link">RAF Link</label>
+                                    <input type="text" id="eraf-link" placeholder="Enter referral link" style="width:100%;">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateRAF('ezee')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyRAF('ezee')">
+                                        <span id="eraf-copy-icon">&#128203;</span>
+                                        <span id="eraf-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('eraf-output', ['eraf-name','eraf-link'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <img src="./assets/img/RAF1.png" class="raf-img-preview" alt="Refer a Friend header">
+                                <div class="output-box">
+                                    <textarea id="eraf-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                                <img src="./assets/img/RAF2.png" class="raf-img-preview" alt="Refer a Friend footer">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-ezee-requesting-pictures" class="email-mini-page">
+                        <div class="email-template-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="erp-name">Customer Name</label>
+                                    <input type="text" id="erp-name" placeholder="Enter customer name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="erp-ticket">Ticket ID</label>
+                                    <input type="text" id="erp-ticket" placeholder="Enter ticket ID">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateReqPic('ezee')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyReqPic('ezee')">
+                                        <span id="erp-copy-icon">&#128203;</span>
+                                        <span id="erp-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('erp-output', ['erp-name','erp-ticket'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <div class="output-box">
+                                    <textarea id="erp-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-ezee-wifi-security-key" class="email-mini-page">
+                        <div class="email-template-form">
+                            <div class="etf-fields">
+                                <div class="form-group">
+                                    <label for="ewsk-name">Customer First Name</label>
+                                    <input type="text" id="ewsk-name" placeholder="Enter first name">
+                                </div>
+                                <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateWifiKey('ezee')">Generate Email</button>
+                            </div>
+                            <div class="etf-output-wrap">
+                                <div class="output-header">
+                                    <h3>Email Output</h3>
+                                    <button class="btn btn-success" onclick="copyWifiKey('ezee')">
+                                        <span id="ewsk-copy-icon">&#128203;</span>
+                                        <span id="ewsk-copy-text">Copy</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('ewsk-output', ['ewsk-name'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                </div>
+                                <div class="output-box">
+                                    <textarea id="ewsk-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-ezee-portal-password-reset" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#FB612F;">Customer Portal Password Reset</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-ezee-lifetime-pricing" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#FB612F;">Lifetime Pricing Declaration</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-ezee-construction-case" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#FB612F;">Construction Case</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="email-ezee-outage" class="email-mini-page">
+                        <div class="email-template-placeholder">
+                            <div class="coming-soon-placeholder">
+                                <div class="placeholder-mark" style="color:#FB612F;">Outage</div>
+                                <div class="placeholder-sub">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ══ NOC sub-pages moved into page-support (stub kept hidden for reference) ══ -->
+    <div id="x-noc-stub" style="display:none!important;">
+
+        <!-- ══ NOC SUB-PAGE stubs (live content is in page-support above) ══ -->
+        <div id="noc-sub-commercial" class="note-sub-page noc-sub-page active">
+            <div class="note-with-sidebar">
+
+                <!-- LEFT: NOC Info Panel -->
+                <div class="note-info-panel noc-panel">
+                    <div class="info-panel-header">
+                        <span class="info-panel-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        </span>
+                        <span class="info-panel-title">NOC Reference</span>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">NOC Probing Questions</div>
+                        <ul class="info-panel-list">
+                            <li>When did this issue happen?</li>
+                            <li>Did anything in the network change? → Adding Devices, Switches, or Access Point Routers</li>
+                            <li>What troubleshooting has already been done? → Document, document, document.</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">NOC Escalation Guidelines</div>
+                        <ul class="info-panel-list">
+                            <li>For HARD DOWN commercial inquiries, TSRs will continue to create a Jira ticket when the inquiry is received by the contact center and forwarded to NOC.</li>
+                            <li>Provide the customer with the Jira ticket number and clearly set the expectation that a NOC technician will contact them within the one-hour SLA.</li>
+                            <li>TSRs may also provide the NOC contact number if needed: <strong>281-407-0050</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Commercial Form -->
+                <div class="container">
+                    <form id="commercialForm">
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <div class="section-label">Commercial Customer Details</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nc-businessName">Business Name</label>
+                                <input type="text" id="nc-businessName" placeholder="Enter business name">
+                            </div>
+                            <div class="form-group">
+                                <label for="nc-callBack">Call Back Number</label>
+                                <input type="text" id="nc-callBack" placeholder="Enter call back number">
+                            </div>
+                            <div class="form-group">
+                                <label for="nc-poc">Point of Contact (Caller's Name)</label>
+                                <input type="text" id="nc-poc" placeholder="Enter caller's name">
+                            </div>
+                            <div class="form-group">
+                                <label for="nc-timeIssue">Time Issue Started</label>
+                                <input type="text" id="nc-timeIssue" placeholder="e.g. 2:30 PM today">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="nc-customerReporting">Customer Reporting</label>
+                                <textarea id="nc-customerReporting" placeholder="Describe what the customer is reporting..." style="min-height:100px;"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="generateCommercial()">Generate Note</button>
+                        <button class="btn btn-secondary" onclick="resetCommercial()">Reset Form</button>
+                    </div>
+                    <div id="ncOutputSection" class="output-section">
+                        <div class="output-header">
+                            <h3>Generated Note</h3>
+                            <button class="btn btn-success" onclick="copyCommercial()">
+                                <span id="ncCopyIcon">📋</span>
+                                <span id="ncCopyText">Copy to Dashboard</span>
+                            </button>
+                        </div>
+                        <div class="output-box">
+                            <textarea id="ncGeneratedNote" spellcheck="false"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══ NOC SUB-PAGE: CGNAT Request ══ -->
+        <div id="noc-sub-cgnat" class="note-sub-page noc-sub-page">
+            <div class="note-with-sidebar">
+
+                <!-- LEFT: CGNAT Info Panel -->
+                <div class="note-info-panel cgnat-panel">
+                    <div class="info-panel-header">
+                        <span class="info-panel-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </span>
+                        <span class="info-panel-title">CGNAT Reference</span>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Identification: Private IP</div>
+                        <ul class="info-panel-list">
+                            <li>To confirm CGNAT, review the customer's router IP. If it falls in a private range, the customer is not on a public IP.</li>
+                            <li><strong>100.64.0.0 – 100.127.255.255</strong></li>
+                            <li><strong>10.0.0.0 – 10.255.255.255</strong></li>
+                            <li>Example: Router IP 100.115.26.47 → Indicates private IP under CGNAT</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Common CGNAT Symptoms</div>
+                        <ul class="info-panel-list">
+                            <li>Inability to host/join online multiplayer games</li>
+                            <li>Non-functional port forwarding despite correct setup</li>
+                            <li>Cannot access home devices remotely (IP cameras, smart home)</li>
+                            <li>VPN services not connecting or inconsistent</li>
+                            <li>Router IP is in a private range (100.x.x.x or 10.x.x.x)</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Escalation</div>
+                        <ul class="info-panel-list">
+                            <li>If one or more symptoms are reported and a private IP is confirmed, escalate as outlined.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RIGHT: CGNAT Form -->
+                <div class="container">
+                    <form id="cgnatForm">
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <div class="section-label">CGNAT Escalation – Public IP Request</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-customerName">Customer Name</label>
+                                <input type="text" id="cg-customerName" placeholder="Enter customer name">
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-ontId">ONT ID</label>
+                                <input type="text" id="cg-ontId" placeholder="Enter ONT ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-macAddress">MAC Address</label>
+                                <input type="text" id="cg-macAddress" placeholder="e.g. 00:1A:2B:3C:4D:5E">
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-currentIp">Current Learned IP</label>
+                                <input type="text" id="cg-currentIp" placeholder="e.g. 100.115.26.47">
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-serviceArea">Service Area</label>
+                                <select id="cg-serviceArea" class="tech-region-select">
+                                    <option value="">— Select Service Area —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-servicePackage">Service Package</label>
+                                <select id="cg-servicePackage" class="tech-region-select">
+                                    <option value="">— Select Package —</option>
+                                    <option value="1 Gig">1 Gig</option>
+                                    <option value="2 Gig">2 Gig</option>
+                                    <option value="5 Gig">5 Gig</option>
+                                    <option value="10 Gig">10 Gig</option>
+                                    <option value="Commercial 1 Gig">Commercial 1 Gig</option>
+                                    <option value="Commercial 2 Gig">Commercial 2 Gig</option>
+                                    <option value="Commercial 5 Gig">Commercial 5 Gig</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="cg-installAddress">Installation Address</label>
+                                <input type="text" id="cg-installAddress" placeholder="Enter installation address">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="cg-issueDesc">Issue Description</label>
+                                <textarea id="cg-issueDesc" placeholder="Describe the issue..." style="min-height:80px;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Service/Device Affected?</label>
+                                <div class="yes-no-buttons">
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_serviceDevice', true, event)">Yes</button>
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_serviceDevice', false, event)">No</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>IPv6 Compatibility?</label>
+                                <div class="yes-no-buttons">
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_ipv6', true, event)">Yes</button>
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_ipv6', false, event)">No</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>VPN Tried?</label>
+                                <div class="yes-no-buttons">
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_vpn', true, event)">Yes</button>
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_vpn', false, event)">No</button>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Router Type</label>
+                                <div class="equip-btn-group" id="cgnat-router-btns">
+                                    <button type="button" class="equip-btn" onclick="setCgnatRouter('EERO PRO6E', this)">EERO PRO6E</button>
+                                    <button type="button" class="equip-btn" onclick="setCgnatRouter('EERO MAX7', this)">EERO MAX7</button>
+                                    <button type="button" class="equip-btn" onclick="setCgnatRouter('EERO PRO7', this)">EERO PRO7</button>
+                                    <button type="button" class="equip-btn" onclick="setCgnatRouter('Third Party', this)">Third Party</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cg-preferredTime">Preferred Time for Change</label>
+                                <input type="text" id="cg-preferredTime" placeholder="e.g. After 6 PM weekdays">
+                            </div>
+                            <div class="form-group">
+                                <label>Post-Change Confirmation (IPv6/Resolved)?</label>
+                                <div class="yes-no-buttons">
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_postChange', true, event)">Yes</button>
+                                    <button type="button" onclick="setCgnatYesNo('cgnat_postChange', false, event)">No</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="generateCgnat()">Generate Note</button>
+                        <button class="btn btn-secondary" onclick="resetCgnat()">Reset Form</button>
+                    </div>
+                    <div id="cgOutputSection" class="output-section">
+                        <div class="output-header">
+                            <h3>Generated Note</h3>
+                            <button class="btn btn-success" onclick="copyCgnat()">
+                                <span id="cgCopyIcon">📋</span>
+                                <span id="cgCopyText">Copy to Dashboard</span>
+                            </button>
+                        </div>
+                        <div class="output-box">
+                            <textarea id="cgGeneratedNote" spellcheck="false"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══ NOC SUB-PAGE: Outage Informant ══ -->
+        <div id="noc-sub-outage" class="note-sub-page noc-sub-page">
+            <div class="note-with-sidebar">
+
+                <!-- LEFT: Outage Info Panel -->
+                <div class="note-info-panel outage-panel">
+                    <div class="info-panel-header">
+                        <span class="info-panel-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </span>
+                        <span class="info-panel-title">Outage Reference</span>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">NOC Probing Questions</div>
+                        <ul class="info-panel-list">
+                            <li>When did this issue happen?</li>
+                            <li>Did anything in the network change? → Adding Devices, Switches, or Access Point Routers</li>
+                            <li>What troubleshooting has already been done? → Document, document, document.</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">Escalation Guidelines</div>
+                        <ul class="info-panel-list">
+                            <li>For HARD DOWN commercial inquiries, TSRs will continue to create a Jira ticket when received and forward to NOC.</li>
+                            <li>Provide the customer with the Jira ticket number and set expectation: NOC technician will contact within the one-hour SLA.</li>
+                            <li>NOC contact number: <strong>281-407-0050</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Outage Form -->
+                <div class="container">
+                    <form id="outageForm">
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <div class="section-label">Outage Details</div>
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="form-group full-width">
+                                <label>Relevant Outage Images</label>
+                                <div class="outage-upload-area">
+                                    <label for="outage-image-input" class="outage-upload-btn">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                        Upload Images
+                                    </label>
+                                    <input type="file" id="outage-image-input" accept="image/*" multiple style="display:none;" onchange="handleOutageImageUpload(event)">
+                                    <span class="outage-upload-hint">PNG, JPG, GIF accepted • Multiple files OK</span>
+                                </div>
+                                <div id="outage-image-previews" class="outage-image-previews"></div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="oi-address">Customer Address</label>
+                                <input type="text" id="oi-address" placeholder="Enter customer address">
+                            </div>
+                            <div class="form-group">
+                                <label for="oi-cabinet">Cabinet/PON</label>
+                                <input type="text" id="oi-cabinet" placeholder="Enter cabinet or PON">
+                            </div>
+                            <div class="form-group">
+                                <label for="oi-affected">Estimated Affected Customers</label>
+                                <input type="text" id="oi-affected" placeholder="e.g. 15">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="oi-customerReporting">Customer Reporting</label>
+                                <textarea id="oi-customerReporting" placeholder="Describe what the customer is reporting..." style="min-height:100px;"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="generateOutage()">Generate Note</button>
+                        <button class="btn btn-secondary" onclick="resetOutage()">Reset Form</button>
+                    </div>
+                    <div id="oiOutputSection" class="output-section">
+                        <div class="output-header">
+                            <h3>Generated Note</h3>
+                            <button class="btn btn-success" onclick="copyOutage()">
+                                <span id="oiCopyIcon">📋</span>
+                                <span id="oiCopyText">Copy to Dashboard</span>
+                            </button>
+                        </div>
+                        <div class="output-box outage-output-box">
+                            <div id="oiGeneratedNote" class="outage-rich-output" contenteditable="true" spellcheck="false"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══ NOC SUB-PAGE: Jira Escalation ══ -->
+        <div id="noc-sub-jira" class="note-sub-page noc-sub-page">
+            <div class="coming-soon-placeholder">
+                <div class="placeholder-mark" style="color:#0077C8;">Jira Escalation</div>
+                <div class="placeholder-sub">Coming Soon</div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ── STICKY NOTES PANEL ── -->
+    <div class="sticky-notes-tab" id="sticky-notes-tab">
+        <button class="sticky-notes-toggle" onclick="toggleNotesPanel()" title="Toggle Notes">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notes
+        </button>
+        <div class="sticky-notes-panel" id="sticky-notes-panel">
+            <div class="sticky-notes-inner">
+                <div class="sticky-notes-header">
+                    <span class="sticky-notes-title"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>My Notes</span>
+                    <div class="sticky-notes-actions">
+                        <button class="sticky-notes-copy" id="notes-copy-btn" onclick="copyNotes()">Copy</button>
+                        <button class="sticky-notes-clear" onclick="clearNotes()">Clear</button>
+                    </div>
+                </div>
+                <textarea class="sticky-notes-textarea" id="sticky-notes-area" placeholder="Type notes here... They'll be saved automatically."></textarea>
+                <div class="sticky-notes-footer">Auto-saved to this browser</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         SCRIPTS — load order matters:
+         data files first, then helpers, then features, then init last
+         ══════════════════════════════════════════════ -->
+    <script src="./data/oui-db.js"></script>
+    <script src="./data/tech-regions.js"></script>
+    <script src="./assets/js/helpers.js"></script>
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/truckroll.js"></script>
+    <script src="./assets/js/harddown.js"></script>
+    <script src="./assets/js/dispatch.js"></script>
+    <script src="./assets/js/cecr.js"></script>
+    <script src="./assets/js/email.js"></script>
+    <script src="./assets/js/notes.js"></script>
+    <script src="./assets/js/noc.js"></script>
+    <script src="./assets/js/init.js"></script>
+
+</body>
+</html>
