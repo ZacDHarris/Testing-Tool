@@ -23,8 +23,9 @@ body {
     color: #e8edf2;
 }
 
-/* ── TECH REGION SELECT ── */
-.tech-region-select {
+/* ── TECH REGION SELECT / WO TYPE SELECT ── */
+.tech-region-select,
+.wo-type-select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #2a3d54;
@@ -42,19 +43,22 @@ body {
     padding-right: 2rem;
 }
 
-.tech-region-select:focus {
+.tech-region-select:focus,
+.wo-type-select:focus {
     outline: none;
     border-color: #FB612F;
     box-shadow: 0 0 0 3px rgba(251, 97, 47, 0.2);
 }
 
-.tech-region-select option {
+.tech-region-select option,
+.wo-type-select option {
     background-color: #1a2535;
     color: #FBFBFB;
     font-family: 'Courier New', monospace;
 }
 
-.tech-region-select option:first-child {
+.tech-region-select option:first-child,
+.wo-type-select option:first-child {
     color: #75787B;
     font-family: inherit;
 }

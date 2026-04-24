@@ -28,6 +28,8 @@ function generateDispatch() {
     details += lineFlat('Address',       document.getElementById('dp-address').value);
     details += lineFlat('Account #',     document.getElementById('dp-accountNumber').value);
     details += lineFlat('WO #',          document.getElementById('dp-woNumber').value);
+    const woTypeEl = document.getElementById('dp-WOType');
+    if (woTypeEl.value) details += lineFlat('WO Type', woTypeEl.options[woTypeEl.selectedIndex].text);
     if (details.trim()) parts.push(details.trimEnd());
     const cr = (document.getElementById('dp-customerReporting').value || '').trim();
     if (cr) parts.push(`Customer Reporting: ${cr}`);
@@ -50,6 +52,7 @@ function copyDispatch() {
 function resetDispatch() {
     document.getElementById('dispatchForm').reset();
     document.getElementById('dp-techRegion').value = '';
+    document.getElementById('dp-WOType').value = '';
     dispatchBrand = '';
     document.getElementById('dispatch-btn-tachus').classList.remove('active-tachus');
     document.getElementById('dispatch-btn-ezee').classList.remove('active-ezee');

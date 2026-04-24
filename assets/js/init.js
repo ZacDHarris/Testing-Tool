@@ -2,6 +2,9 @@
 // Populate tech region dropdowns from data
 populateTechRegionSelects();
 
+// Populate WO Type dropdowns from data
+populateWOTypeSelects();
+
 // Build the troubleshooting button grid
 initTroubleshootingGrid();
 
