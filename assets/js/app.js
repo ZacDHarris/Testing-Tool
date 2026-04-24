@@ -85,8 +85,8 @@ async function downloadFilledPDF(brand) {
 
 // ── TAB SWITCHING ──
 function switchNoteTab(tab, btnEl) {
-    document.querySelectorAll('.note-sub-page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.note-sub-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.note-sub-page, .noc-sub-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.note-sub-btn, .noc-sub-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('note-sub-' + tab).classList.add('active');
     btnEl.classList.add('active');
 }
