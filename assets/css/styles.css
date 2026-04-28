@@ -890,6 +890,70 @@ textarea {
     color: #FB612F;
 }
 
+/* ── MULTI-ROUTER ENTRIES ── */
+.router-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.router-entry {
+    background: #0f1923;
+    border: 1px solid #243a52;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.router-entry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.router-entry-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #FB612F;
+}
+
+.router-remove-btn {
+    background: transparent;
+    border: 1px solid #4b5563;
+    border-radius: 4px;
+    color: #9bacc4;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+.router-remove-btn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+
+.router-add-btn {
+    background: transparent;
+    border: 1px dashed #FB612F;
+    border-radius: 6px;
+    color: #FB612F;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.25rem;
+    transition: background 0.15s, color 0.15s;
+}
+.router-add-btn:hover {
+    background: rgba(251,97,47,0.1);
+}
+
 /* ── CECR PRIORITY BUTTONS ── */
 .priority-row {
     display: flex;
@@ -1656,13 +1720,13 @@ textarea {
 .note-with-sidebar {
     display: flex;
     align-items: flex-start;
-    gap: 1.25rem;
+    gap: 0.5rem;
     padding: 1.5rem;
     background: #0f1923;
 }
 
 .note-info-panel {
-    width: 290px;
+    width: 400px;
     flex-shrink: 0;
     background: #0c1520;
     border: 2px solid #FB612F;
@@ -1728,7 +1792,7 @@ textarea {
 }
 
 .info-panel-title {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 800;
     color: white;
     font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
@@ -1737,7 +1801,7 @@ textarea {
 }
 
 .info-panel-section {
-    padding: 1rem 1.1rem;
+    padding: 1rem 1.25rem;
     border-bottom: 1px solid #152030;
 }
 
@@ -1746,7 +1810,7 @@ textarea {
 }
 
 .info-panel-section-title {
-    font-size: 0.76rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1768,9 +1832,9 @@ textarea {
 }
 
 .info-panel-list li {
-    font-size: 0.8rem;
-    color: #75787B;
-    line-height: 1.45;
+    font-size: 0.875rem;
+    color: #9bacc4;
+    line-height: 1.6;
     padding-left: 0.85rem;
     position: relative;
 }
@@ -1779,8 +1843,8 @@ textarea {
     content: '•';
     position: absolute;
     left: 0;
-    color: #2a3d54;
-    font-size: 0.65rem;
+    color: #4a6a8a;
+    font-size: 0.7rem;
     top: 0.1rem;
 }
 

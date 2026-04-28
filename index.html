@@ -1219,22 +1219,30 @@
                                     <label for="ter-t-modem">Modem SN</label>
                                     <input type="text" id="ter-t-modem" placeholder="Enter modem serial number">
                                 </div>
-                                <div class="form-group">
-                                    <label>Router Type</label>
-                                    <div class="router-type-grid">
-                                        <button type="button" class="router-type-btn" id="ter-t-router-EERO-PRO6E" onclick="setRouterType('ter-t', 'EERO PRO6E', this)">EERO PRO6E</button>
-                                        <button type="button" class="router-type-btn" id="ter-t-router-EERO-MAX7" onclick="setRouterType('ter-t', 'EERO MAX7', this)">EERO MAX7</button>
-                                        <button type="button" class="router-type-btn" id="ter-t-router-EVO-AP6700" onclick="setRouterType('ter-t', 'EVO AP6700', this)">EVO AP6700</button>
-                                        <button type="button" class="router-type-btn" id="ter-t-router-TP-LINK-P50" onclick="setRouterType('ter-t', 'TP-LINK P50', this)">TP-LINK P50</button>
-                                        <button type="button" class="router-type-btn" id="ter-t-router-TP-LINK-PB70" onclick="setRouterType('ter-t', 'TP-LINK PB70', this)">TP-LINK PB70</button>
-                                        <button type="button" class="router-type-btn" id="ter-t-router-TP-LINK-P110" onclick="setRouterType('ter-t', 'TP-LINK P110', this)">TP-LINK P110</button>
+                                <div class="router-entries" id="ter-t-router-entries">
+                                    <div class="router-entry" data-router-type="">
+                                        <div class="router-entry-header">
+                                            <span class="router-entry-label">Router 1</span>
+                                            <button type="button" class="router-remove-btn" style="display:none" onclick="removeRouterRow(this, 'ter-t')">✕ Remove</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Router Type</label>
+                                            <div class="router-type-grid">
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('EERO PRO6E', this)">EERO PRO6E</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('EERO MAX7', this)">EERO MAX7</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('EVO AP6700', this)">EVO AP6700</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK P50', this)">TP-LINK P50</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK PB70', this)">TP-LINK PB70</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK P110', this)">TP-LINK P110</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Router SN</label>
+                                            <input type="text" class="router-sn-input" placeholder="Enter router serial number">
+                                        </div>
                                     </div>
-                                    <span id="ter-t-router-display" class="router-type-display"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label for="ter-t-router-sn">Router SN</label>
-                                    <input type="text" id="ter-t-router-sn" placeholder="Enter router serial number">
-                                </div>
+                                <button type="button" class="router-add-btn" onclick="addRouterRow('ter-t')">+ Add Router</button>
                                 <button class="btn btn-primary etf-generate-btn" onclick="generateEquipReturn('tachus')">Generate Email</button>
                             </div>
                             <div class="etf-output-wrap">
@@ -1244,7 +1252,7 @@
                                         <span id="ter-t-copy-icon">&#128203;</span>
                                         <span id="ter-t-copy-text">Copy</span>
                                     </button>
-                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('ter-t-output', ['ter-t-name','ter-t-modem','ter-t-router-sn'], 'ter-t')" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('ter-t-output', ['ter-t-name','ter-t-modem'], 'ter-t')" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
                                 </div>
                                 <div class="output-box">
                                     <textarea id="ter-t-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
@@ -1409,22 +1417,30 @@
                                     <label for="ter-e-modem">Modem SN</label>
                                     <input type="text" id="ter-e-modem" placeholder="Enter modem serial number">
                                 </div>
-                                <div class="form-group">
-                                    <label>Router Type</label>
-                                    <div class="router-type-grid">
-                                        <button type="button" class="router-type-btn" id="ter-e-router-EERO-PRO6E" onclick="setRouterType('ter-e', 'EERO PRO6E', this)">EERO PRO6E</button>
-                                        <button type="button" class="router-type-btn" id="ter-e-router-EERO-MAX7" onclick="setRouterType('ter-e', 'EERO MAX7', this)">EERO MAX7</button>
-                                        <button type="button" class="router-type-btn" id="ter-e-router-EVO-AP6700" onclick="setRouterType('ter-e', 'EVO AP6700', this)">EVO AP6700</button>
-                                        <button type="button" class="router-type-btn" id="ter-e-router-TP-LINK-P50" onclick="setRouterType('ter-e', 'TP-LINK P50', this)">TP-LINK P50</button>
-                                        <button type="button" class="router-type-btn" id="ter-e-router-TP-LINK-PB70" onclick="setRouterType('ter-e', 'TP-LINK PB70', this)">TP-LINK PB70</button>
-                                        <button type="button" class="router-type-btn" id="ter-e-router-TP-LINK-P110" onclick="setRouterType('ter-e', 'TP-LINK P110', this)">TP-LINK P110</button>
+                                <div class="router-entries" id="ter-e-router-entries">
+                                    <div class="router-entry" data-router-type="">
+                                        <div class="router-entry-header">
+                                            <span class="router-entry-label">Router 1</span>
+                                            <button type="button" class="router-remove-btn" style="display:none" onclick="removeRouterRow(this, 'ter-e')">✕ Remove</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Router Type</label>
+                                            <div class="router-type-grid">
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('EERO PRO6E', this)">EERO PRO6E</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('EERO MAX7', this)">EERO MAX7</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('EVO AP6700', this)">EVO AP6700</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK P50', this)">TP-LINK P50</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK PB70', this)">TP-LINK PB70</button>
+                                                <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK P110', this)">TP-LINK P110</button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Router SN</label>
+                                            <input type="text" class="router-sn-input" placeholder="Enter router serial number">
+                                        </div>
                                     </div>
-                                    <span id="ter-e-router-display" class="router-type-display"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label for="ter-e-router-sn">Router SN</label>
-                                    <input type="text" id="ter-e-router-sn" placeholder="Enter router serial number">
-                                </div>
+                                <button type="button" class="router-add-btn" onclick="addRouterRow('ter-e')">+ Add Router</button>
                                 <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateEquipReturn('ezee')">Generate Email</button>
                             </div>
                             <div class="etf-output-wrap">
@@ -1434,7 +1450,7 @@
                                         <span id="ter-e-copy-icon">&#128203;</span>
                                         <span id="ter-e-copy-text">Copy</span>
                                     </button>
-                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('ter-e-output', ['ter-e-name','ter-e-modem','ter-e-router-sn'], 'ter-e')" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                                    <button class="btn btn-secondary" onclick="resetEmailTemplate('ter-e-output', ['ter-e-name','ter-e-modem'], 'ter-e')" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
                                 </div>
                                 <div class="output-box">
                                     <textarea id="ter-e-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>

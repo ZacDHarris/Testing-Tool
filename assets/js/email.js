@@ -3,10 +3,22 @@ function resetEmailTemplate(outputId, fieldIds, routerPrefix) {
     document.getElementById(outputId).value = '';
     fieldIds.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     if (routerPrefix) {
-        document.querySelectorAll(`#${routerPrefix}-router-display`).forEach(el => el.textContent = '');
-        document.querySelectorAll('.router-type-btn').forEach(btn => btn.classList.remove('active'));
-        if (routerPrefix === 'ter-t') routerTypeSelected['tachus'] = '';
-        if (routerPrefix === 'ter-e') routerTypeSelected['ezee'] = '';
+        const container = document.getElementById(`${routerPrefix}-router-entries`);
+        if (container) {
+            const rows = container.querySelectorAll('.router-entry');
+            rows.forEach((row, i) => {
+                if (i === 0) {
+                    row.dataset.routerType = '';
+                    row.querySelectorAll('.router-type-btn').forEach(b => b.classList.remove('active'));
+                    const snInput = row.querySelector('.router-sn-input');
+                    if (snInput) snInput.value = '';
+
+                } else {
+                    row.remove();
+                }
+            });
+            _updateRouterRemoveBtns(container);
+        }
     }
 }
 
@@ -59,27 +71,75 @@ function copyRAF(brand) {
     });
 }
 
-const routerTypeSelected = { tachus: '', ezee: '' };
+const ROUTER_TYPES = ['EERO PRO6E', 'EERO MAX7', 'EVO AP6700', 'TP-LINK P50', 'TP-LINK PB70', 'TP-LINK P110'];
 
-function setRouterType(prefix, value, btnEl) {
-    const brand = prefix.includes('-t') ? 'tachus' : 'ezee';
-    routerTypeSelected[brand] = value;
-    btnEl.closest('.router-type-grid').querySelectorAll('.router-type-btn').forEach(b => b.classList.remove('active'));
+function setRouterType(value, btnEl) {
+    const row = btnEl.closest('.router-entry');
+    row.dataset.routerType = value;
+    row.querySelectorAll('.router-type-btn').forEach(b => b.classList.remove('active'));
     btnEl.classList.add('active');
-    const dispId = prefix + '-router-display';
-    document.getElementById(dispId).textContent = value;
+}
+
+function addRouterRow(prefix) {
+    const container = document.getElementById(`${prefix}-router-entries`);
+    const index = container.querySelectorAll('.router-entry').length;
+    const row = document.createElement('div');
+    row.className = 'router-entry';
+    row.dataset.routerType = '';
+    const btnHtml = ROUTER_TYPES.map(t =>
+        `<button type="button" class="router-type-btn" onclick="setRouterType('${t}', this)">${t}</button>`
+    ).join('');
+    row.innerHTML = `
+        <div class="router-entry-header">
+            <span class="router-entry-label">Router ${index + 1}</span>
+            <button type="button" class="router-remove-btn" onclick="removeRouterRow(this, '${prefix}')">&#x2715; Remove</button>
+        </div>
+        <div class="form-group">
+            <label>Router Type</label>
+            <div class="router-type-grid">${btnHtml}</div>
+        </div>
+        <div class="form-group">
+            <label>Router SN</label>
+            <input type="text" class="router-sn-input" placeholder="Enter router serial number">
+        </div>`;
+    container.appendChild(row);
+    _updateRouterRemoveBtns(container);
+}
+
+function removeRouterRow(btn, prefix) {
+    const container = document.getElementById(`${prefix}-router-entries`);
+    btn.closest('.router-entry').remove();
+    _updateRouterRemoveBtns(container);
+    container.querySelectorAll('.router-entry').forEach((row, i) => {
+        const label = row.querySelector('.router-entry-label');
+        if (label) label.textContent = `Router ${i + 1}`;
+    });
+}
+
+function _updateRouterRemoveBtns(container) {
+    const rows = container.querySelectorAll('.router-entry');
+    rows.forEach(row => {
+        const btn = row.querySelector('.router-remove-btn');
+        if (btn) btn.style.display = rows.length > 1 ? '' : 'none';
+    });
 }
 
 function generateEquipReturn(brand) {
     const isTachus = brand === 'tachus';
     const p        = isTachus ? 'ter-t' : 'ter-e';
     const name     = document.getElementById(`${p}-name`).value || '[Customer Name]';
+    const acct     = document.getElementById(`${p}-acct`).value || 'xxx-xxxxx';
     const modem    = document.getElementById(`${p}-modem`).value || '[Modem SN]';
-    const router   = routerTypeSelected[brand] || '[Router Type]';
-    const routerSN = document.getElementById(`${p}-router-sn`).value || '[Router SN]';
+
+    const routerLines = [];
+    document.querySelectorAll(`#${p}-router-entries .router-entry`).forEach(row => {
+        const type = row.dataset.routerType || '[Router Type]';
+        const sn   = row.querySelector('.router-sn-input').value || '[Router SN]';
+        routerLines.push(`  ROUTER: ${type}  : ${sn}`);
+    });
 
     document.getElementById(`${p}-output`).value =
-`Subject: Ezee Fiber Equipment Return | xxx-xxxxx | Return Code: EZFBRT
+`Subject: Ezee Fiber Equipment Return | ${acct} | Return Code: EZFBRT
 
 Dear ${name}
 
@@ -93,7 +153,7 @@ This will ensure a smooth and efficient return process for you. Please follow th
 2. Present the attached PDF or have it available to show the UPS Store employee.
 
   MODEM: ${modem}
-  ROUTER: ${router}  : ${routerSN}
+${routerLines.join('\n')}
 
 Once the equipment has been received and inspected, we will promptly process the disconnection of your account.
 
