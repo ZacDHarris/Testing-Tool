@@ -22,11 +22,10 @@ function resetEmailTemplate(outputId, fieldIds, routerPrefix) {
     }
 }
 
-function generateRAF(brand) {
-    const p    = brand === 'tachus' ? 'traf' : 'eraf';
-    const name = document.getElementById(`${p}-name`).value || '[Customer Name]';
-    const link = document.getElementById(`${p}-link`).value || '[RAF Link]';
-    document.getElementById(`${p}-output`).value =
+function generateRAF() {
+    const name = document.getElementById('eraf-name').value || '[Customer Name]';
+    const link = document.getElementById('eraf-link').value || '[RAF Link]';
+    document.getElementById('eraf-output').value =
 `Greetings, ${name}
 
 Here is your referral link. Share it far and wide and watch the savings roll in!
@@ -57,16 +56,13 @@ A few things to know
 * Once those requirements are met, both $100 credits will be applied to each account within 7 days.`;
 }
 
-function copyRAF(brand) {
-    const p    = brand === 'tachus' ? 'traf' : 'eraf';
-    const icon = `${p}-copy-icon`;
-    const txt  = `${p}-copy-text`;
-    navigator.clipboard.writeText(document.getElementById(`${p}-output`).value).then(() => {
-        document.getElementById(icon).textContent = '✓';
-        document.getElementById(txt).textContent  = 'Copied!';
+function copyRAF() {
+    navigator.clipboard.writeText(document.getElementById('eraf-output').value).then(() => {
+        document.getElementById('eraf-copy-icon').textContent = '✓';
+        document.getElementById('eraf-copy-text').textContent  = 'Copied!';
         setTimeout(() => {
-            document.getElementById(icon).textContent = '📋';
-            document.getElementById(txt).textContent  = 'Copy';
+            document.getElementById('eraf-copy-icon').textContent = '📋';
+            document.getElementById('eraf-copy-text').textContent  = 'Copy';
         }, 2000);
     });
 }
@@ -124,21 +120,19 @@ function _updateRouterRemoveBtns(container) {
     });
 }
 
-function generateEquipReturn(brand) {
-    const isTachus = brand === 'tachus';
-    const p        = isTachus ? 'ter-t' : 'ter-e';
-    const name     = document.getElementById(`${p}-name`).value || '[Customer Name]';
-    const acct     = document.getElementById(`${p}-acct`).value || 'xxx-xxxxx';
-    const modem    = document.getElementById(`${p}-modem`).value || '[Modem SN]';
+function generateEquipReturn() {
+    const name  = document.getElementById('ter-e-name').value || '[Customer Name]';
+    const acct  = document.getElementById('ter-e-acct').value || 'xxx-xxxxx';
+    const modem = document.getElementById('ter-e-modem').value || '[Modem SN]';
 
     const routerLines = [];
-    document.querySelectorAll(`#${p}-router-entries .router-entry`).forEach(row => {
+    document.querySelectorAll('#ter-e-router-entries .router-entry').forEach(row => {
         const type = row.dataset.routerType || '[Router Type]';
         const sn   = row.querySelector('.router-sn-input').value || '[Router SN]';
         routerLines.push(`  ROUTER: ${type}  : ${sn}`);
     });
 
-    document.getElementById(`${p}-output`).value =
+    document.getElementById('ter-e-output').value =
 `Subject: Ezee Fiber Equipment Return | ${acct} | Return Code: EZFBRT
 
 Dear ${name}
@@ -163,70 +157,46 @@ If you have any questions or need assistance with the return process, please do 
 Thank you for choosing Ezee Fiber. We appreciate your business and look forward to serving you again in the future.`;
 }
 
-function copyEquipReturn(brand) {
-    const p      = brand === 'tachus' ? 'ter-t' : 'ter-e';
-    const output = document.getElementById(`${p}-output`).value;
-    navigator.clipboard.writeText(output).then(() => {
-        document.getElementById(`${p}-copy-icon`).textContent = '✓';
-        document.getElementById(`${p}-copy-text`).textContent = 'Copied!';
+function copyEquipReturn() {
+    navigator.clipboard.writeText(document.getElementById('ter-e-output').value).then(() => {
+        document.getElementById('ter-e-copy-icon').textContent = '✓';
+        document.getElementById('ter-e-copy-text').textContent = 'Copied!';
         setTimeout(() => {
-            document.getElementById(`${p}-copy-icon`).textContent = '📋';
-            document.getElementById(`${p}-copy-text`).textContent = 'Copy';
+            document.getElementById('ter-e-copy-icon').textContent = '📋';
+            document.getElementById('ter-e-copy-text').textContent = 'Copy';
         }, 2000);
     });
 }
 
-function generateReqPic(brand) {
-    if (brand === 'tachus') {
-        const name   = document.getElementById('trp-name').value || '[Customer Name]';
-        const ticket = document.getElementById('trp-ticket').value || '[Ticket ID]';
-        document.getElementById('trp-output').value =
+function generateReqPic() {
+    const name   = document.getElementById('erp-name').value || '[Customer Name]';
+    const ticket = document.getElementById('erp-ticket').value || '[Ticket ID]';
+    document.getElementById('erp-output').value =
 `Hello ${name},
 
 Your ticket ${ticket} is being processed.   Please attach any pictures and additional details related to this case to this email.  Please feel free to keep in touch if you need any further assistance.
 
- 
-Best regards, 
-Tachus Customer Support
- 832.791.1100`;
-    } else {
-        const name   = document.getElementById('erp-name').value || '[Customer Name]';
-        const ticket = document.getElementById('erp-ticket').value || '[Ticket ID]';
-        document.getElementById('erp-output').value =
-`Hello ${name},
 
-Your ticket ${ticket} is being processed.   Please attach any pictures and additional details related to this case to this email.  Please feel free to keep in touch if you need any further assistance.
-
- 
-Best regards, 
+Best regards,
 EzeeFiber Customer Support
  833-920-5400`;
-    }
 }
 
-function copyReqPic(brand) {
-    const outputId = brand === 'tachus' ? 'trp-output'    : 'erp-output';
-    const iconId   = brand === 'tachus' ? 'trp-copy-icon' : 'erp-copy-icon';
-    const textId   = brand === 'tachus' ? 'trp-copy-text' : 'erp-copy-text';
-    navigator.clipboard.writeText(document.getElementById(outputId).value).then(() => {
-        document.getElementById(iconId).textContent = '✓';
-        document.getElementById(textId).textContent = 'Copied!';
+function copyReqPic() {
+    navigator.clipboard.writeText(document.getElementById('erp-output').value).then(() => {
+        document.getElementById('erp-copy-icon').textContent = '✓';
+        document.getElementById('erp-copy-text').textContent = 'Copied!';
         setTimeout(() => {
-            document.getElementById(iconId).textContent = '📋';
-            document.getElementById(textId).textContent = 'Copy';
+            document.getElementById('erp-copy-icon').textContent = '📋';
+            document.getElementById('erp-copy-text').textContent = 'Copy';
         }, 2000);
     });
 }
 
-function generateWifiKey(brand) {
-    const isTachus = brand === 'tachus';
-    const nameId   = isTachus ? 'twsk-name'   : 'ewsk-name';
-    const outputId = isTachus ? 'twsk-output'  : 'ewsk-output';
-    const phone    = isTachus ? '832.791.1100' : '833-920-5400';
-    const support  = isTachus ? 'Tachus Customer Service' : 'EzeeFiber Customer Service';
-    const name     = document.getElementById(nameId).value || '{{{Recipient.FirstName}}}';
+function generateWifiKey() {
+    const name = document.getElementById('ewsk-name').value || '{{{Recipient.FirstName}}}';
 
-    document.getElementById(outputId).value =
+    document.getElementById('ewsk-output').value =
 `Subject: Assistance with Wi-Fi Connection Issue
 
 
@@ -240,7 +210,7 @@ It appears that your computer is prompting you to enter a PIN to connect to your
 To resolve this issue, please select the option labeled "Connect using a security key instead" (highlighted in the image above). Once you select this option, you will be prompted to enter your regular Wi-Fi password instead of a PIN.
 
 
-If you continue to experience issues or need further assistance, please don't hesitate to contact our Technical Support team at ${phone}, option 3.
+If you continue to experience issues or need further assistance, please don't hesitate to contact our Technical Support team at 833-920-5400, option 3.
 
 
 Thank you for your cooperation. We're here to help if you need additional support!
@@ -248,22 +218,18 @@ Thank you for your cooperation. We're here to help if you need additional suppor
 
 Kind Regards,
 
-${support}
+EzeeFiber Customer Service
 
-${phone}`;
+833-920-5400`;
 }
 
-function copyWifiKey(brand) {
-    const outputId = brand === 'tachus' ? 'twsk-output'  : 'ewsk-output';
-    const iconId   = brand === 'tachus' ? 'twsk-copy-icon' : 'ewsk-copy-icon';
-    const textId   = brand === 'tachus' ? 'twsk-copy-text' : 'ewsk-copy-text';
-    navigator.clipboard.writeText(document.getElementById(outputId).value).then(() => {
-        document.getElementById(iconId).textContent = '✓';
-        document.getElementById(textId).textContent = 'Copied!';
+function copyWifiKey() {
+    navigator.clipboard.writeText(document.getElementById('ewsk-output').value).then(() => {
+        document.getElementById('ewsk-copy-icon').textContent = '✓';
+        document.getElementById('ewsk-copy-text').textContent = 'Copied!';
         setTimeout(() => {
-            document.getElementById(iconId).textContent = '📋';
-            document.getElementById(textId).textContent = 'Copy';
+            document.getElementById('ewsk-copy-icon').textContent = '📋';
+            document.getElementById('ewsk-copy-text').textContent = 'Copy';
         }, 2000);
     });
 }
-

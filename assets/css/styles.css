@@ -741,6 +741,13 @@ textarea {
     box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
 }
 
+.provider-btn.active-daynet {
+    background: #0077C8;
+    border-color: #0077C8;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 119, 200, 0.4);
+}
+
 /* ── EQUIPMENT BUTTONS ── */
 .equip-btn-group {
     display: flex;
@@ -1035,6 +1042,13 @@ textarea {
     border-color: #FB612F;
     color: white;
     box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+}
+
+.dispatch-brand-btn.active-daynet {
+    background: #0077C8;
+    border-color: #0077C8;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 119, 200, 0.4);
 }
 
 .dispatch-brand-display {

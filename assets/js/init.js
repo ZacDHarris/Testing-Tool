@@ -5,17 +5,19 @@ populateTechRegionSelects();
 // Populate WO Type dropdowns from data
 populateWOTypeSelects();
 
-// Build the troubleshooting button grids
-initTroubleshootingGrid();
-initT2TroubleshootingGrid();
+// Build the troubleshooting button grids (guarded — only present on notegenerator.html)
+if (document.getElementById('troubleshootingGrid')) initTroubleshootingGrid();
+if (document.getElementById('t2TroubleshootingGrid')) initT2TroubleshootingGrid();
 
 // Restore sticky notes from localStorage
 const stickyArea = document.getElementById('sticky-notes-area');
-const savedNotes = localStorage.getItem('ef_sticky_notes');
-if (savedNotes) stickyArea.value = savedNotes;
-stickyArea.addEventListener('input', () => {
-    localStorage.setItem('ef_sticky_notes', stickyArea.value);
-});
+if (stickyArea) {
+    const savedNotes = localStorage.getItem('ef_sticky_notes');
+    if (savedNotes) stickyArea.value = savedNotes;
+    stickyArea.addEventListener('input', () => {
+        localStorage.setItem('ef_sticky_notes', stickyArea.value);
+    });
+}
 
 // ── CGNAT Service Area Dropdown ──
 // Reuses TECH_REGIONS data — select has class "tech-region-select" so it auto-populates.

@@ -5,12 +5,15 @@ const customHdSteps = [];
 
 function setHdProvider(val) {
     hdProvider = val;
-    document.getElementById('hd-provider-tachus').classList.remove('active-tachus', 'active-ezee');
-    document.getElementById('hd-provider-ezee').classList.remove('active-tachus', 'active-ezee');
+    ['hd-provider-tachus','hd-provider-ezee','hd-provider-daynet'].forEach(id =>
+        document.getElementById(id).classList.remove('active-tachus','active-ezee','active-daynet')
+    );
     if (val === 'Tachus') {
         document.getElementById('hd-provider-tachus').classList.add('active-tachus');
-    } else {
+    } else if (val === 'EzeeFiber') {
         document.getElementById('hd-provider-ezee').classList.add('active-ezee');
+    } else {
+        document.getElementById('hd-provider-daynet').classList.add('active-daynet');
     }
 }
 
@@ -69,8 +72,11 @@ function generateHardDown() {
 
     let customer = '';
     customer += lineFlat('Name',             document.getElementById('hd-name').value);
+    customer += lineFlat('Account #',        document.getElementById('hd-acct').value);
     customer += lineFlat('Address',          document.getElementById('hd-address').value);
     customer += lineFlat('Callback Contact', document.getElementById('hd-callbackContact').value);
+    const issue = (document.getElementById('hd-issueDescription').value || '').trim();
+    if (issue) customer += `Issue Description: ${issue}\n`;
     if (customer.trim()) parts.push(customer.trimEnd());
 
     let network = '';
@@ -80,9 +86,6 @@ function generateHardDown() {
     network += lineFlat('Alarms',       document.getElementById('hd-alarms').value);
     network += lineFlat('Light Levels', document.getElementById('hd-lightLevels').value);
     if (network.trim()) parts.push(network.trimEnd());
-
-    const issue = (document.getElementById('hd-issueDescription').value || '').trim();
-    if (issue) parts.push(`Issue Description: ${issue}`);
 
     if (allSteps.length > 0) parts.push(`Troubleshooting Steps:\n${allSteps.join('\n')}`);
 
@@ -104,9 +107,10 @@ function copyHardDown() {
 
 function resetHardDown() {
     hdProvider = '';
-    document.getElementById('hd-provider-tachus').classList.remove('active-tachus', 'active-ezee');
-    document.getElementById('hd-provider-ezee').classList.remove('active-tachus', 'active-ezee');
-    ['hd-name','hd-address','hd-callbackContact','hd-node','hd-ontId',
+    ['hd-provider-tachus','hd-provider-ezee','hd-provider-daynet'].forEach(id =>
+        document.getElementById(id).classList.remove('active-tachus','active-ezee','active-daynet')
+    );
+    ['hd-name','hd-acct','hd-address','hd-callbackContact','hd-node','hd-ontId',
      'hd-routerId','hd-alarms','hd-lightLevels','hd-issueDescription'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';

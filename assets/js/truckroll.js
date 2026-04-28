@@ -13,12 +13,15 @@ const customTrSteps = [];
 
 function setTrProvider(val) {
     trProvider = val;
-    document.getElementById('tr-provider-tachus').classList.remove('active-tachus','active-ezee');
-    document.getElementById('tr-provider-ezee').classList.remove('active-tachus','active-ezee');
+    ['tr-provider-tachus','tr-provider-ezee','tr-provider-daynet'].forEach(id =>
+        document.getElementById(id).classList.remove('active-tachus','active-ezee','active-daynet')
+    );
     if (val === 'Tachus') {
         document.getElementById('tr-provider-tachus').classList.add('active-tachus');
-    } else {
+    } else if (val === 'EzeeFiber') {
         document.getElementById('tr-provider-ezee').classList.add('active-ezee');
+    } else {
+        document.getElementById('tr-provider-daynet').classList.add('active-daynet');
     }
 }
 
@@ -163,8 +166,9 @@ function copyToClipboard() {
 function resetForm() {
     // Provider
     trProvider = '';
-    document.getElementById('tr-provider-tachus').classList.remove('active-tachus','active-ezee');
-    document.getElementById('tr-provider-ezee').classList.remove('active-tachus','active-ezee');
+    ['tr-provider-tachus','tr-provider-ezee','tr-provider-daynet'].forEach(id =>
+        document.getElementById(id).classList.remove('active-tachus','active-ezee','active-daynet')
+    );
     // Equipment
     trEquip.ont = ''; trEquip.router = '';
     document.querySelectorAll('#tr-router-btns .equip-btn').forEach(b => b.classList.remove('active'));
