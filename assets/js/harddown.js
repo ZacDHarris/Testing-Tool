@@ -1,5 +1,8 @@
 // ── T2 REVIEW ──
 let hdProvider = '';
+const hdYesNo = {
+    hd_verifiedHeadHub: null
+};
 const selectedT2Troubleshooting = new Set();
 const customHdSteps = [];
 
@@ -15,6 +18,13 @@ function setHdProvider(val) {
     } else {
         document.getElementById('hd-provider-daynet').classList.add('active-daynet');
     }
+}
+
+function setHdYesNo(field, value, e) {
+    hdYesNo[field] = value;
+    const buttons = e.target.parentElement.querySelectorAll('button');
+    buttons.forEach(btn => btn.classList.remove('active-yes', 'active-no'));
+    e.target.classList.add(value ? 'active-yes' : 'active-no');
 }
 
 function initT2TroubleshootingGrid() {
@@ -85,6 +95,7 @@ function generateHardDown() {
     network += lineFlat('Router ID',    document.getElementById('hd-routerId').value);
     network += lineFlat('Alarms',       document.getElementById('hd-alarms').value);
     network += lineFlat('Light Levels', document.getElementById('hd-lightLevels').value);
+    if (hdYesNo.hd_verifiedHeadHub !== null) network += lineFlat('Verified Head/Hub?', hdYesNo.hd_verifiedHeadHub ? 'Yes' : 'No');
     if (network.trim()) parts.push(network.trimEnd());
 
     if (allSteps.length > 0) parts.push(`Troubleshooting Steps:\n${allSteps.join('\n')}`);
@@ -115,6 +126,8 @@ function resetHardDown() {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
+    Object.keys(hdYesNo).forEach(key => hdYesNo[key] = null);
+    document.querySelectorAll('form#hardDownForm .yes-no-buttons button').forEach(btn => btn.classList.remove('active-yes', 'active-no'));
     selectedT2Troubleshooting.clear();
     document.querySelectorAll('#t2TroubleshootingGrid .troubleshooting-item').forEach(item => item.classList.remove('selected'));
     customHdSteps.length = 0;

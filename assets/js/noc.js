@@ -13,13 +13,44 @@ function switchNocTab(tab, btnEl) {
 // ══════════════════════════════════════════════
 //  COMMERCIAL CUSTOMER
 // ══════════════════════════════════════════════
+const customNocCommercialSteps = [];
+
+function addNocCommercialCustomStep() {
+    const input = document.getElementById('nc-custom-step-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const step = '•' + text;
+    customNocCommercialSteps.push(step);
+    renderNocCommercialCustomSteps();
+    input.value = '';
+    input.focus();
+}
+
+function removeNocCommercialCustomStep(idx) {
+    customNocCommercialSteps.splice(idx, 1);
+    renderNocCommercialCustomSteps();
+}
+
+function renderNocCommercialCustomSteps() {
+    const list = document.getElementById('nc-custom-steps-list');
+    list.innerHTML = '';
+    customNocCommercialSteps.forEach((step, idx) => {
+        const tag = document.createElement('div');
+        tag.className = 'custom-step-tag';
+        tag.innerHTML = `<span>${step}</span><button class="custom-step-remove" onclick="removeNocCommercialCustomStep(${idx})" title="Remove">×</button>`;
+        list.appendChild(tag);
+    });
+}
+
 function generateCommercial() {
     let note = 'NOC COMMERCIAL CUSTOMER\n\n';
     note += lineFlat('Business Name',              document.getElementById('nc-businessName').value);
     note += lineFlat('Call Back Number',           document.getElementById('nc-callBack').value);
     note += lineFlat('Point of Contact',           document.getElementById('nc-poc').value);
-    note += lineFlat('Customer Reporting',         document.getElementById('nc-customerReporting').value);
     note += lineFlat('Time Issue Started',         document.getElementById('nc-timeIssue').value);
+    const allSteps = [...customNocCommercialSteps];
+    if (allSteps.length > 0) note += `Troubleshooting Steps:\n${allSteps.join('\n')}\n`;
+    note += lineFlat('Issue Description',          document.getElementById('nc-customerReporting').value);
     document.getElementById('ncGeneratedNote').value = note.trimEnd();
     document.getElementById('ncOutputSection').classList.add('show');
     document.getElementById('ncOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -38,6 +69,9 @@ function copyCommercial() {
 
 function resetCommercial() {
     document.getElementById('commercialForm').reset();
+    customNocCommercialSteps.length = 0;
+    renderNocCommercialCustomSteps();
+    document.getElementById('nc-custom-step-input').value = '';
     document.getElementById('ncOutputSection').classList.remove('show');
 }
 
@@ -158,7 +192,7 @@ function generateOutage() {
     textLines += lineFlat('Customer Address',        document.getElementById('oi-address').value);
     textLines += lineFlat('Cabinet/PON',             document.getElementById('oi-cabinet').value);
     textLines += lineFlat('Est. Affected Customers', document.getElementById('oi-affected').value);
-    textLines += lineFlat('Customer Reporting',      document.getElementById('oi-customerReporting').value);
+    textLines += lineFlat('Issue Description',       document.getElementById('oi-customerReporting').value);
 
     // Build the rich HTML output: pre-formatted text + inline images
     const div = document.getElementById('oiGeneratedNote');

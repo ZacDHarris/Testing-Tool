@@ -62,7 +62,8 @@
                     Context — Truck Roll Approval
                 </div>
             </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
+            <div class="context-panel-body">This page should be used for messaging in the teams chat: "Truck Roll Dispatch Approval Requests"
+</div>
         </div>
         <div class="note-with-sidebar">
 
@@ -152,9 +153,9 @@
 
                     <hr class="section-divider">
 
-                    <!-- CUSTOMER REPORTING -->
+                    <!-- ISSUE DESCRIPTION -->
                     <div class="form-group full-width">
-                        <div class="section-label">Customer Reporting</div>
+                        <div class="section-label">Issue Description</div>
                     </div>
                     <div class="form-group full-width">
                         <textarea id="tr-customerReporting" placeholder="Enter customer report" style="min-height:90px;"></textarea>
@@ -235,6 +236,13 @@
                         <div class="yes-no-buttons">
                             <button type="button" onclick="setYesNo('tr_constructionInArea', true, event)">Yes</button>
                             <button type="button" onclick="setYesNo('tr_constructionInArea', false, event)">No</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Verified Head/Hub?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setYesNo('tr_verifiedHeadHub', true, event)">Yes</button>
+                            <button type="button" onclick="setYesNo('tr_verifiedHeadHub', false, event)">No</button>
                         </div>
                     </div>
 
@@ -401,6 +409,13 @@
                         <label for="hd-lightLevels">Light Levels</label>
                         <input type="text" id="hd-lightLevels" placeholder="Enter light levels">
                     </div>
+                    <div class="form-group">
+                        <label>Verified Head/Hub?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setHdYesNo('hd_verifiedHeadHub', true, event)">Yes</button>
+                            <button type="button" onclick="setHdYesNo('hd_verifiedHeadHub', false, event)">No</button>
+                        </div>
+                    </div>
 
                     <hr class="section-divider">
 
@@ -469,7 +484,8 @@
                     Context — Dispatch
                 </div>
             </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
+            <div class="context-panel-body">This is used for messaging any Dispatch Chat, all this information will be used by the Dispatch team. 
+Please remember that dispatch does not need specific details related to the call just what to do with the customer.</div>
         </div>
         <div class="note-with-sidebar">
 
@@ -488,18 +504,18 @@
                     </ul>
                 </div>
                 <div class="info-panel-section">
-                    <div class="info-panel-section-title">Placeholder Section B</div>
+                    <div class="info-panel-section-title">Placeholder</div>
                     <ul class="info-panel-list">
-                        <li>Placeholder item one</li>
-                        <li>Placeholder item two</li>
-                        <li>Placeholder item three</li>
+                        <li>Placeholder</li>
+                        <li>Placeholder</li>
+                        <li>Placeholder</li>
                     </ul>
                 </div>
                 <div class="info-panel-section">
                     <div class="info-panel-section-title">Placeholder Section C</div>
                     <ul class="info-panel-list">
-                        <li>Placeholder item one</li>
-                        <li>Placeholder item two</li>
+                        <li>Placeholder</li>
+                        <li>Placeholder</li>
                     </ul>
                 </div>
             </div>
@@ -568,8 +584,8 @@
                             </select>
                         </div>
                         <div class="form-group full-width">
-                            <label for="dp-customerReporting">Customer Reporting</label>
-                            <textarea id="dp-customerReporting" placeholder="Enter customer report"></textarea>
+                            <label for="dp-customerReporting">Issue Description</label>
+                            <textarea id="dp-customerReporting" placeholder="Describe the issue..."></textarea>
                         </div>
                     </div>
                 </form>
@@ -758,9 +774,30 @@
                             <label for="nc-timeIssue">Time Issue Started</label>
                             <input type="text" id="nc-timeIssue" placeholder="e.g. 2:30 PM today">
                         </div>
+
+                        <hr class="section-divider">
+
+                        <!-- TROUBLESHOOTING STEPS -->
                         <div class="form-group full-width">
-                            <label for="nc-customerReporting">Customer Reporting</label>
-                            <textarea id="nc-customerReporting" placeholder="Describe what the customer is reporting..." style="min-height:100px;"></textarea>
+                            <div class="section-label">Troubleshooting Steps</div>
+                        </div>
+                        <div class="form-group full-width">
+                            <div style="margin-top:0.5rem;">
+                                <label style="margin-bottom:0.4rem; font-size:0.8rem; color:#9ca3af;">Add Custom Step</label>
+                                <div class="custom-step-wrapper">
+                                    <span class="custom-step-prefix">•</span>
+                                    <input class="custom-step-input" type="text" id="nc-custom-step-input" placeholder="Type a custom troubleshooting step..." onkeydown="if(event.key==='Enter'){event.preventDefault();addNocCommercialCustomStep();}">
+                                    <button type="button" class="custom-step-add-btn" onclick="addNocCommercialCustomStep()">+ Add</button>
+                                </div>
+                                <div class="custom-steps-list" id="nc-custom-steps-list"></div>
+                            </div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <div class="form-group full-width">
+                            <label for="nc-customerReporting">Issue Description</label>
+                            <textarea id="nc-customerReporting" placeholder="Describe the issue..." style="min-height:100px;"></textarea>
                         </div>
                     </div>
                 </form>
@@ -1021,8 +1058,8 @@
                             <input type="text" id="oi-affected" placeholder="e.g. 15">
                         </div>
                         <div class="form-group full-width">
-                            <label for="oi-customerReporting">Customer Reporting</label>
-                            <textarea id="oi-customerReporting" placeholder="Describe what the customer is reporting..." style="min-height:100px;"></textarea>
+                            <label for="oi-customerReporting">Issue Description</label>
+                            <textarea id="oi-customerReporting" placeholder="Describe the issue..." style="min-height:100px;"></textarea>
                         </div>
                     </div>
                 </form>
