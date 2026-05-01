@@ -79,10 +79,8 @@ function resetCommercial() {
 //  CGNAT REQUEST
 // ══════════════════════════════════════════════
 const cgnatYesNo = {
-    cgnat_serviceDevice:       null,
-    cgnat_ipv6:                null,
-    cgnat_vpn:                 null,
-    cgnat_postChange:          null,
+    cgnat_serviceDevice: null,
+    cgnat_ipv6:          null,
 };
 let cgnatRouterType = '';
 
@@ -113,13 +111,9 @@ function generateCgnat() {
         note += `Service/Device Affected: ${cgnatYesNo.cgnat_serviceDevice ? 'Yes' : 'No'}\n`;
     if (cgnatYesNo.cgnat_ipv6 !== null)
         note += `IPv6 Compatibility: ${cgnatYesNo.cgnat_ipv6 ? 'Yes' : 'No'}\n`;
-    if (cgnatYesNo.cgnat_vpn !== null)
-        note += `VPN Tried: ${cgnatYesNo.cgnat_vpn ? 'Yes' : 'No'}\n`;
     if (cgnatRouterType)
         note += `Router Type: ${cgnatRouterType}\n`;
     note += lineFlat('Preferred Time for Change',  document.getElementById('cg-preferredTime').value);
-    if (cgnatYesNo.cgnat_postChange !== null)
-        note += `Post-Change Confirmation: ${cgnatYesNo.cgnat_postChange ? 'Yes' : 'No'}\n`;
     document.getElementById('cgGeneratedNote').value = note.trimEnd();
     document.getElementById('cgOutputSection').classList.add('show');
     document.getElementById('cgOutputSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -150,6 +144,17 @@ function resetCgnat() {
 // ══════════════════════════════════════════════
 //  OUTAGE INFORMANT
 // ══════════════════════════════════════════════
+const outageYesNo = {
+    oi_constructionReported: null,
+};
+
+function setOutageYesNo(field, value, e) {
+    outageYesNo[field] = value;
+    const buttons = e.target.parentElement.querySelectorAll('button');
+    buttons.forEach(btn => btn.classList.remove('active-yes', 'active-no'));
+    e.target.classList.add(value ? 'active-yes' : 'active-no');
+}
+
 const nocOutageImages = [];
 
 function handleOutageImageUpload(e) {
@@ -192,6 +197,8 @@ function generateOutage() {
     textLines += lineFlat('Customer Address',        document.getElementById('oi-address').value);
     textLines += lineFlat('Cabinet/PON',             document.getElementById('oi-cabinet').value);
     textLines += lineFlat('Est. Affected Customers', document.getElementById('oi-affected').value);
+    if (outageYesNo.oi_constructionReported !== null)
+        textLines += `Construction Reported: ${outageYesNo.oi_constructionReported ? 'Yes' : 'No'}\n`;
     textLines += lineFlat('Issue Description',       document.getElementById('oi-customerReporting').value);
 
     // Build the rich HTML output: pre-formatted text + inline images
@@ -278,6 +285,10 @@ function copyOutage() {
 
 function resetOutage() {
     document.getElementById('outageForm').reset();
+    Object.keys(outageYesNo).forEach(k => { outageYesNo[k] = null; });
+    document.querySelectorAll('#noc-sub-outage .yes-no-buttons button').forEach(btn => {
+        btn.classList.remove('active-yes', 'active-no');
+    });
     nocOutageImages.length = 0;
     renderOutageImages();
     const div = document.getElementById('oiGeneratedNote');

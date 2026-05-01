@@ -9,17 +9,245 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/css/styles.css">
+    <style>
+        /* ── Info Button: small circular "ⓘ" that replaces the old context panel banner ── */
+        .tab-info-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px 0;
+        }
+        .info-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid #FB612F;
+            color: #FB612F;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .info-btn:hover {
+            background: #FB612F;
+            color: white;
+            transform: scale(1.1);
+        }
+        /* NOC tabs use blue instead of orange */
+        .noc-sub-page .info-btn {
+            border-color: #0077C8;
+            color: #0077C8;
+        }
+        .noc-sub-page .info-btn:hover {
+            background: #0077C8;
+            color: white;
+        }
+        /* ── Info Modal: full context popup triggered by clicking the info button ── */
+        .info-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-modal-overlay.open { display: flex; }
+        .info-modal-box {
+            background: #1a2738;
+            border: 1px solid #2a3d54;
+            border-radius: 12px;
+            padding: 28px 28px 24px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        }
+        .info-modal-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #FB612F;
+            margin-bottom: 10px;
+        }
+        .info-modal-box.noc-style .info-modal-tag { color: #0077C8; }
+        .info-modal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .info-modal-body {
+            color: #94a3b8;
+            font-size: 0.88rem;
+            line-height: 1.75;
+            white-space: pre-wrap;
+        }
+        .info-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #4b5563;
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .info-modal-close:hover {
+            color: #e2e8f0;
+            background: #2a3d54;
+        }
+        /* ── Sidebar column: stacks the info button above the reference panel ── */
+        .sidebar-col {
+            width: 400px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: sticky;
+            top: 1.5rem;
+            align-self: flex-start;
+        }
+        /* Panel inside the column loses its own sticky/width (the wrapper handles it) */
+        .sidebar-col .note-info-panel {
+            position: static;
+            width: 100%;
+            flex-shrink: unset;
+            align-self: unset;
+        }
+        /* Button bar above the panel — left-aligned, flush with the panel edge */
+        .sidebar-col .tab-info-bar {
+            padding: 0;
+            justify-content: flex-start;
+        }
+        /* ── CGNAT IP Checker ── */
+        .cgnat-checker {
+            background: #0c1824;
+            border: 1px solid #1e3148;
+            border-radius: 10px;
+            padding: 16px 18px 18px;
+            margin-bottom: 1.25rem;
+        }
+        .cgnat-checker-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: #0077C8;
+            margin-bottom: 10px;
+        }
+        .cgnat-checker-row {
+            display: flex;
+            gap: 8px;
+        }
+        .cgnat-ip-input {
+            flex: 1;
+            padding: 0.6rem 0.9rem;
+            background: #1a2738;
+            border: 1.5px solid #2a3d54;
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .cgnat-ip-input::placeholder { color: #4b6070; }
+        .cgnat-ip-input:focus {
+            border-color: #0077C8;
+            box-shadow: 0 0 0 3px rgba(0, 119, 200, 0.18);
+        }
+        .cgnat-check-btn {
+            padding: 0.6rem 1.25rem;
+            background: #0077C8;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+        .cgnat-check-btn:hover { background: #005fa3; }
+        .cgnat-check-result {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.25s ease, padding 0.2s ease, margin 0.2s ease;
+            border-radius: 6px;
+            margin-top: 0;
+            font-size: 0.83rem;
+        }
+        .cgnat-check-result.visible {
+            max-height: 260px;
+            margin-top: 10px;
+            padding: 10px 14px;
+        }
+        /* Confirmed CGNAT — the RFC 6598 shared space. Escalate to NOC. */
+        .cgnat-check-result.cgnat-cgnat {
+            background: rgba(220, 38, 38, 0.12);
+            border: 1px solid rgba(220, 38, 38, 0.35);
+            color: #fca5a5;
+        }
+        /* RFC 1918 private ranges — potential CGNAT or double-NAT. */
+        .cgnat-check-result.cgnat-private {
+            background: rgba(249, 115, 22, 0.12);
+            border: 1px solid rgba(249, 115, 22, 0.35);
+            color: #fdba74;
+        }
+        /* Problem states: APIPA, unspecified — device or DHCP issue. */
+        .cgnat-check-result.cgnat-warning {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.32);
+            color: #fde047;
+        }
+        /* Unusual / reserved ranges — not a real customer IP. */
+        .cgnat-check-result.cgnat-special {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.28);
+            color: #a5b4fc;
+        }
+        /* Publicly routable — no CGNAT present. */
+        .cgnat-check-result.cgnat-public {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.28);
+            color: #86efac;
+        }
+        /* Invalid input format. */
+        .cgnat-check-result.cgnat-invalid {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.28);
+            color: #fde047;
+        }
+        .cgnat-result-status {
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 3px;
+        }
+        .cgnat-result-detail { opacity: 0.85; }
+    </style>
 </head>
 <body>
 
-    <!-- ── TAB NAVIGATION ── -->
+    <!-- Top nav: jump between the three main pages -->
     <nav class="tab-nav">
         <button class="tab-btn" onclick="location.href='index.html'">Home</button>
         <button class="tab-btn active" onclick="location.href='notegenerator.html'">Note Generator</button>
         <button class="tab-btn" onclick="location.href='emailtemplate.html'">Email Templates</button>
     </nav>
 
-    <!-- ── PAGE: NOTE GENERATOR ── -->
+    <!-- Page header — logo, title, and subtitle -->
     <div class="header-wrapper">
         <div class="header-container">
             <div class="logo-container">
@@ -32,7 +260,7 @@
         </div>
     </div>
 
-    <!-- ── NOTE SUB-TAB NAVIGATION ── -->
+    <!-- Sub-tab bar: switch between note types (Truck Roll, T2, Dispatch, NOC, etc.) -->
     <nav class="note-sub-nav">
         <button class="note-sub-btn active" id="note-btn-truckroll" onclick="switchNoteTab('truckroll', this)">Truck Roll Approval</button>
         <button class="note-sub-btn" id="note-btn-harddown" onclick="switchNoteTab('harddown', this)">T2 Review</button>
@@ -52,23 +280,28 @@
     </nav>
 
     <!-- ══════════════════════════════════════════════
-         NOTE SUB-PAGE: Truck Roll Approval (NEW TEMPLATE)
+         TAB: Truck Roll Approval
          ══════════════════════════════════════════════ -->
     <div id="note-sub-truckroll" class="note-sub-page active">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — Truck Roll Approval
-                </div>
-            </div>
-            <div class="context-panel-body">This page should be used for messaging in the teams chat: "Truck Roll Dispatch Approval Requests"
-</div>
-        </div>
+
         <div class="note-with-sidebar">
 
-            <!-- LEFT: Truck Roll Info Panel -->
-            <div class="note-info-panel truckroll-panel">
+            <!-- Left sidebar — reference guide: probing questions and HOT escalation rules -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="Post in Teams chat: Truck Roll Dispatch Approval Requests"
+                            onclick="showInfoModal('Truck Roll Approval', 'This page should be used for messaging in the teams chat: &quot;Truck Roll Dispatch Approval Requests&quot;', false)"
+                            aria-label="Show context info for Truck Roll Approval">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel truckroll-panel">
                 <div class="info-panel-header">
                     <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
                     <span class="info-panel-title">Truck Roll Reference</span>
@@ -106,13 +339,14 @@
                     </ul>
                 </div>
             </div>
+            </div><!-- end sidebar-col -->
 
-            <!-- RIGHT: Truck Roll Form -->
+            <!-- Right side — main form to fill out before generating the note -->
             <div class="container">
             <form id="supportForm">
                 <div class="form-grid">
 
-                    <!-- PROVIDER -->
+                    <!-- Which provider/brand this customer is on -->
                     <div class="form-group full-width">
                         <div class="section-label">Provider</div>
                     </div>
@@ -126,7 +360,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- CUSTOMER DETAILS -->
+                    <!-- Basic customer info -->
                     <div class="form-group full-width">
                         <div class="section-label">Customer Details</div>
                     </div>
@@ -153,7 +387,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- ISSUE DESCRIPTION -->
+                    <!-- What the customer is reporting in their own words -->
                     <div class="form-group full-width">
                         <div class="section-label">Issue Description</div>
                     </div>
@@ -163,7 +397,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- EQUIPMENT -->
+                    <!-- ONT and router hardware info -->
                     <div class="form-group full-width">
                         <div class="section-label">Equipment</div>
                     </div>
@@ -191,7 +425,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- NETWORK & WIFI -->
+                    <!-- Diagnostics: alarms, speed test, light levels, interference -->
                     <div class="form-group full-width">
                         <div class="section-label">Network &amp; WiFi</div>
                     </div>
@@ -248,14 +482,14 @@
 
                     <hr class="section-divider">
 
-                    <!-- TROUBLESHOOTING STEPS -->
+                    <!-- Steps taken during the call -->
                     <div class="form-group full-width">
                         <div class="section-label">Troubleshooting Steps</div>
                     </div>
                     <div class="form-group full-width">
                         <div class="troubleshooting-grid" id="troubleshootingGrid"></div>
 
-                        <!-- Custom Step Input -->
+                        <!-- Type and add a one-off custom step -->
                         <div style="margin-top:1rem;">
                             <label style="margin-bottom:0.4rem; font-size:0.8rem; color:#9ca3af;">Add Custom Step</label>
                             <div class="custom-step-wrapper">
@@ -269,7 +503,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- AGENT INITIALS -->
+                    <!-- Who handled this call -->
                     <div class="form-group full-width">
                         <div class="section-label">Agent Initials</div>
                     </div>
@@ -301,21 +535,29 @@
         </div><!-- end note-with-sidebar -->
     </div>
 
-    <!-- ── NOTE SUB-PAGE: T2 Review ── -->
+    <!-- ══════════════════════════════════════════════
+         TAB: T2 Review
+         ══════════════════════════════════════════════ -->
     <div id="note-sub-harddown" class="note-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — T2 Review
-                </div>
-            </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
-        </div>
+
         <div class="note-with-sidebar">
 
-            <!-- LEFT: T2 Review Info Panel -->
-            <div class="note-info-panel harddown-panel">
+            <!-- Left sidebar — ONT probing questions and T2 reference notes -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="T2 escalation review — more context coming soon"
+                            onclick="showInfoModal('T2 Review', 'Placeholder - More Info coming soon.', false)"
+                            aria-label="Show context info for T2 Review">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel harddown-panel">
                 <div class="info-panel-header">
                     <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
                     <span class="info-panel-title">T2 Review Reference</span>
@@ -338,13 +580,14 @@
                     </ul>
                 </div>
             </div>
+            </div><!-- end sidebar-col -->
 
-            <!-- RIGHT: T2 Review Form -->
+            <!-- Right side — form for generating the T2 escalation note -->
             <div class="container">
             <form id="hardDownForm">
                 <div class="form-grid">
 
-                    <!-- PROVIDER -->
+                    <!-- Which provider/brand this customer is on -->
                     <div class="form-group full-width">
                         <div class="section-label">Provider</div>
                     </div>
@@ -358,7 +601,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- CUSTOMER INFO -->
+                    <!-- Customer details for this escalation -->
                     <div class="form-group full-width">
                         <div class="section-label">Customer Information</div>
                     </div>
@@ -385,7 +628,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- NETWORK INFO -->
+                    <!-- Network diagnostics: node, ONT, router, alarms, light levels -->
                     <div class="form-group full-width">
                         <div class="section-label">Network Information</div>
                     </div>
@@ -419,7 +662,7 @@
 
                     <hr class="section-divider">
 
-                    <!-- TROUBLESHOOTING STEPS -->
+                    <!-- Steps already taken before escalating to T2 -->
                     <div class="form-group full-width">
                         <div class="section-label">Troubleshooting Steps</div>
                     </div>
@@ -458,39 +701,54 @@
         </div><!-- end note-with-sidebar -->
     </div>
 
-    <!-- ── NOTE SUB-PAGE: Cancellation ── -->
+    <!-- ══════════════════════════════════════════════
+         TAB: Cancellation
+         ══════════════════════════════════════════════ -->
     <div id="note-sub-cancellation" class="note-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — Cancellation
-                </div>
-            </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
+
+        <!-- Info button: hover for a quick tip, click for full context -->
+        <div class="tab-info-bar" style="justify-content:flex-start; padding: 1.5rem 0 0 1.5rem;">
+            <button class="info-btn"
+                    title="Cancellation note template — more context coming soon"
+                    onclick="showInfoModal('Cancellation', 'Placeholder - More Info coming soon.', false)"
+                    aria-label="Show context info for Cancellation">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+            </button>
         </div>
+
         <div class="coming-soon-placeholder">
             <div class="placeholder-mark">Cancellation</div>
             <div class="placeholder-sub">Coming Soon</div>
         </div>
     </div>
 
-    <!-- ── NOTE SUB-PAGE: Dispatch ── -->
+    <!-- ══════════════════════════════════════════════
+         TAB: Dispatch
+         ══════════════════════════════════════════════ -->
     <div id="note-sub-dispatch" class="note-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — Dispatch
-                </div>
-            </div>
-            <div class="context-panel-body">This is used for messaging any Dispatch Chat, all this information will be used by the Dispatch team. 
-Please remember that dispatch does not need specific details related to the call just what to do with the customer.</div>
-        </div>
+
         <div class="note-with-sidebar">
 
-            <!-- LEFT: Dispatch Info Panel -->
-            <div class="note-info-panel">
+            <!-- Left sidebar — Shenandoah customer notes and dispatch reference -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="Use for Dispatch Chat — dispatch only needs the action, not full call details"
+                            onclick="showInfoModal('Dispatch', 'This is used for messaging any Dispatch Chat, all this information will be used by the Dispatch team.\n\nPlease remember that dispatch does not need specific details related to the call — just what to do with the customer.', false)"
+                            aria-label="Show context info for Dispatch">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel">
                 <div class="info-panel-header">
                     <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
                     <span class="info-panel-title">Dispatch Reference</span>
@@ -519,8 +777,9 @@ Please remember that dispatch does not need specific details related to the call
                     </ul>
                 </div>
             </div>
+            </div><!-- end sidebar-col -->
 
-            <!-- RIGHT: Dispatch Form -->
+            <!-- Right side — dispatch form for generating the message -->
             <div class="container">
                 <div class="dispatch-brand-row">
                     <span class="dispatch-brand-label">Customer Type:</span>
@@ -610,21 +869,29 @@ Please remember that dispatch does not need specific details related to the call
         </div>
     </div>
 
-    <!-- ── NOTE SUB-PAGE: CECR ── -->
+    <!-- ══════════════════════════════════════════════
+         TAB: CECR (Cable Excavation & Construction Report)
+         ══════════════════════════════════════════════ -->
     <div id="note-sub-cecr" class="note-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — CECR
-                </div>
-            </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
-        </div>
+
         <div class="note-with-sidebar">
 
-            <!-- LEFT: CECR Info Panel -->
-            <div class="note-info-panel cecr-panel">
+            <!-- Left sidebar — CECR guidelines, drop bury info, and 811 escalation notes -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="CECR escalation — assign to Contractor or Drop Bury"
+                            onclick="showInfoModal('CECR', 'Placeholder - More Info coming soon.', false)"
+                            aria-label="Show context info for CECR">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel cecr-panel">
                 <div class="info-panel-header">
                     <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
                     <span class="info-panel-title">CECR Reference</span>
@@ -654,8 +921,9 @@ Please remember that dispatch does not need specific details related to the call
                     </ul>
                 </div>
             </div>
+            </div><!-- end sidebar-col -->
 
-            <!-- RIGHT: CECR Form -->
+            <!-- Right side — form for generating the CECR note -->
             <div class="container">
                 <form id="cecrForm">
                     <div class="form-grid">
@@ -712,21 +980,29 @@ Please remember that dispatch does not need specific details related to the call
         </div>
     </div>
 
-    <!-- ══ NOC SUB-PAGE: Commercial Customer ══ -->
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: Commercial Customer
+         ══════════════════════════════════════════════ -->
     <div id="noc-sub-commercial" class="note-sub-page noc-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — Commercial Customer
-                </div>
-            </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
-        </div>
+
         <div class="note-with-sidebar">
 
-            <!-- LEFT: NOC Info Panel -->
-            <div class="note-info-panel noc-panel">
+            <!-- Left sidebar — NOC probing questions and escalation guidelines -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="NOC ticketing for commercial hard-down customers"
+                            onclick="showInfoModal('Commercial Customer', 'Placeholder - More Info coming soon.', true)"
+                            aria-label="Show context info for Commercial Customer">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel noc-panel">
                 <div class="info-panel-header">
                     <span class="info-panel-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
@@ -750,8 +1026,9 @@ Please remember that dispatch does not need specific details related to the call
                     </ul>
                 </div>
             </div>
+            </div><!-- end sidebar-col -->
 
-            <!-- RIGHT: Commercial Form -->
+            <!-- Right side — form for generating the commercial customer note -->
             <div class="container">
                 <form id="commercialForm">
                     <div class="form-grid">
@@ -777,7 +1054,7 @@ Please remember that dispatch does not need specific details related to the call
 
                         <hr class="section-divider">
 
-                        <!-- TROUBLESHOOTING STEPS -->
+                        <!-- Custom steps the agent took during the call -->
                         <div class="form-group full-width">
                             <div class="section-label">Troubleshooting Steps</div>
                         </div>
@@ -822,21 +1099,29 @@ Please remember that dispatch does not need specific details related to the call
         </div>
     </div>
 
-    <!-- ══ NOC SUB-PAGE: CGNAT Request ══ -->
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: CGNAT Request
+         ══════════════════════════════════════════════ -->
     <div id="noc-sub-cgnat" class="note-sub-page noc-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — CGNAT Request
-                </div>
-            </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
-        </div>
+
         <div class="note-with-sidebar">
 
-            <!-- LEFT: CGNAT Info Panel -->
-            <div class="note-info-panel cgnat-panel">
+            <!-- Left sidebar — CGNAT identification guide and common symptoms -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="NOC request to move a customer off CGNAT to a public IP"
+                            onclick="showInfoModal('CGNAT Request', 'Placeholder - More Info coming soon.', true)"
+                            aria-label="Show context info for CGNAT Request">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel cgnat-panel">
                 <div class="info-panel-header">
                     <span class="info-panel-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -869,9 +1154,30 @@ Please remember that dispatch does not need specific details related to the call
                     </ul>
                 </div>
             </div>
+            </div><!-- end sidebar-col -->
 
-            <!-- RIGHT: CGNAT Form -->
+            <!-- Right side — form for generating the CGNAT escalation note -->
             <div class="container">
+
+                <!-- IP checker: paste any IP to instantly see if it's CGNAT/private or public -->
+                <div class="cgnat-checker">
+                    <div class="cgnat-checker-label">IP Address Checker</div>
+                    <div class="cgnat-checker-row">
+                        <input type="text"
+                               id="cgnat-ip-input"
+                               class="cgnat-ip-input"
+                               placeholder="e.g. 100.115.26.47"
+                               maxlength="15"
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();checkCgnatIp();}"
+                               oninput="clearCgnatResult()">
+                        <button type="button" class="cgnat-check-btn" onclick="checkCgnatIp()">Check IP</button>
+                    </div>
+                    <div id="cgnat-check-result" class="cgnat-check-result">
+                        <div class="cgnat-result-status" id="cgnat-result-status"></div>
+                        <div class="cgnat-result-detail" id="cgnat-result-detail"></div>
+                    </div>
+                </div>
+
                 <form id="cgnatForm">
                     <div class="form-grid">
                         <div class="form-group full-width">
@@ -934,13 +1240,6 @@ Please remember that dispatch does not need specific details related to the call
                                 <button type="button" onclick="setCgnatYesNo('cgnat_ipv6', false, event)">No</button>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>VPN Tried?</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setCgnatYesNo('cgnat_vpn', true, event)">Yes</button>
-                                <button type="button" onclick="setCgnatYesNo('cgnat_vpn', false, event)">No</button>
-                            </div>
-                        </div>
                         <div class="form-group full-width">
                             <label>Router Type</label>
                             <div class="equip-btn-group" id="cgnat-router-btns">
@@ -953,13 +1252,6 @@ Please remember that dispatch does not need specific details related to the call
                         <div class="form-group">
                             <label for="cg-preferredTime">Preferred Time for Change</label>
                             <input type="text" id="cg-preferredTime" placeholder="e.g. After 6 PM weekdays">
-                        </div>
-                        <div class="form-group">
-                            <label>Post-Change Confirmation (IPv6/Resolved)?</label>
-                            <div class="yes-no-buttons">
-                                <button type="button" onclick="setCgnatYesNo('cgnat_postChange', true, event)">Yes</button>
-                                <button type="button" onclick="setCgnatYesNo('cgnat_postChange', false, event)">No</button>
-                            </div>
                         </div>
                     </div>
                 </form>
@@ -984,21 +1276,29 @@ Please remember that dispatch does not need specific details related to the call
         </div>
     </div>
 
-    <!-- ══ NOC SUB-PAGE: Outage Informant ══ -->
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: Outage Informant
+         ══════════════════════════════════════════════ -->
     <div id="noc-sub-outage" class="note-sub-page noc-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — Outage Informant
-                </div>
-            </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
-        </div>
+
         <div class="note-with-sidebar">
 
-            <!-- LEFT: Outage Info Panel -->
-            <div class="note-info-panel outage-panel">
+            <!-- Left sidebar — NOC outage reference and escalation guidelines -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="Report an outage area to the NOC team"
+                            onclick="showInfoModal('Outage Informant', 'Placeholder - More Info coming soon.', true)"
+                            aria-label="Show context info for Outage Informant">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel outage-panel">
                 <div class="info-panel-header">
                     <span class="info-panel-icon">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -1022,8 +1322,9 @@ Please remember that dispatch does not need specific details related to the call
                     </ul>
                 </div>
             </div>
+            </div><!-- end sidebar-col -->
 
-            <!-- RIGHT: Outage Form -->
+            <!-- Right side — outage form (supports image upload) -->
             <div class="container">
                 <form id="outageForm">
                     <div class="form-grid">
@@ -1031,7 +1332,7 @@ Please remember that dispatch does not need specific details related to the call
                             <div class="section-label">Outage Details</div>
                         </div>
 
-                        <!-- Image Upload -->
+                        <!-- Image uploader for relevant outage photos -->
                         <div class="form-group full-width">
                             <label>Relevant Outage Images</label>
                             <div class="outage-upload-area">
@@ -1056,6 +1357,13 @@ Please remember that dispatch does not need specific details related to the call
                         <div class="form-group">
                             <label for="oi-affected">Estimated Affected Customers</label>
                             <input type="text" id="oi-affected" placeholder="e.g. 15">
+                        </div>
+                        <div class="form-group">
+                            <label>Construction Reported?</label>
+                            <div class="yes-no-buttons">
+                                <button type="button" onclick="setOutageYesNo('oi_constructionReported', true, event)">Yes</button>
+                                <button type="button" onclick="setOutageYesNo('oi_constructionReported', false, event)">No</button>
+                            </div>
                         </div>
                         <div class="form-group full-width">
                             <label for="oi-customerReporting">Issue Description</label>
@@ -1084,31 +1392,39 @@ Please remember that dispatch does not need specific details related to the call
         </div>
     </div>
 
-    <!-- ══ NOC SUB-PAGE: Jira Escalation ══ -->
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: Jira Escalation
+         ══════════════════════════════════════════════ -->
     <div id="noc-sub-jira" class="note-sub-page noc-sub-page">
-        <div class="context-panel">
-            <div class="context-panel-header">
-                <div class="context-panel-title">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0077C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    Context — Jira Escalation
-                </div>
-            </div>
-            <div class="context-panel-body">Placeholder - More Info coming soon.</div>
+
+        <!-- Info button: hover for a quick tip, click for full context -->
+        <div class="tab-info-bar" style="justify-content:flex-start; padding: 1.5rem 0 0 1.5rem;">
+            <button class="info-btn"
+                    title="NOC Jira escalation — coming soon"
+                    onclick="showInfoModal('Jira Escalation', 'Placeholder - More Info coming soon.', true)"
+                    aria-label="Show context info for Jira Escalation">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+            </button>
         </div>
+
         <div class="coming-soon-placeholder">
             <div class="placeholder-mark" style="color:#0077C8;">Jira Escalation</div>
             <div class="placeholder-sub">Coming Soon</div>
         </div>
     </div>
 
-    <!-- ══ NOC sub-pages moved into page-support (stub kept hidden for reference) ══ -->
+    <!-- Hidden stub section — kept for reference only, not displayed to users -->
     <div id="x-noc-stub" style="display:none!important;">
 
-        <!-- ══ NOC SUB-PAGE stubs (live content is above) ══ -->
+        <!-- These are stubs for reference — the live NOC pages are above this block -->
         <div id="noc-sub-commercial-stub" class="note-sub-page noc-sub-page active">
             <div class="note-with-sidebar">
 
-                <!-- LEFT: NOC Info Panel -->
+                <!-- Left sidebar stub — reference only -->
                 <div class="note-info-panel noc-panel">
                     <div class="info-panel-header">
                         <span class="info-panel-icon">
@@ -1134,7 +1450,7 @@ Please remember that dispatch does not need specific details related to the call
                     </div>
                 </div>
 
-                <!-- RIGHT: Commercial Form (stub) -->
+                <!-- Right side stub — form placeholder only -->
                 <div class="container">
                     <form>
                         <div class="form-grid">
@@ -1150,7 +1466,7 @@ Please remember that dispatch does not need specific details related to the call
 
     </div>
 
-    <!-- ── STICKY NOTES PANEL ── -->
+    <!-- Sticky notes panel — floats on the right edge, auto-saves to browser storage -->
     <div class="sticky-notes-tab" id="sticky-notes-tab">
         <button class="sticky-notes-toggle" onclick="toggleNotesPanel()" title="Toggle Notes">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notes
@@ -1170,13 +1486,100 @@ Please remember that dispatch does not need specific details related to the call
         </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════
-         SCRIPTS — load order matters:
-         data files first, then helpers, then features, then init last
-         ══════════════════════════════════════════════ -->
+    <!-- Info modal: pops up when you click a tab's info button -->
+    <div id="info-modal-overlay" class="info-modal-overlay" onclick="closeInfoModal()">
+        <div id="info-modal-box" class="info-modal-box" onclick="event.stopPropagation()">
+            <button class="info-modal-close" onclick="closeInfoModal()" aria-label="Close info panel">×</button>
+            <div class="info-modal-tag">Tab Context</div>
+            <div class="info-modal-title" id="info-modal-title"></div>
+            <div class="info-modal-body" id="info-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Script loading — order matters: data files first, then helpers, features, and init last -->
+    <script>
+        /* ── CGNAT IP Checker — uses IP_RANGES from data/ip-ranges.js ── */
+        function ipToInt(a, b, c, d) {
+            return ((a << 24) | (b << 16) | (c << 8) | d) >>> 0;
+        }
+
+        var CATEGORY_PREFIX = {
+            cgnat:   '⚠ CGNAT Detected — ',
+            private: '⚠ Private IP — ',
+            warning: '⚠ Problem Address — ',
+            special: 'ⓘ Special / Reserved — '
+        };
+
+        function checkCgnatIp() {
+            var raw      = document.getElementById('cgnat-ip-input').value.trim();
+            var resultBox = document.getElementById('cgnat-check-result');
+            var statusEl  = document.getElementById('cgnat-result-status');
+            var detailEl  = document.getElementById('cgnat-result-detail');
+
+            resultBox.className = 'cgnat-check-result visible';
+
+            // Validate: four numeric octets 0–255, no leading zeros
+            var parts = raw.split('.');
+            var valid = parts.length === 4 && parts.every(function(p) {
+                var n = parseInt(p, 10);
+                return p !== '' && !isNaN(n) && n >= 0 && n <= 255 && String(n) === p;
+            });
+
+            if (!valid) {
+                resultBox.classList.add('cgnat-invalid');
+                statusEl.textContent = 'Invalid IP address';
+                detailEl.textContent = 'Enter a valid IPv4 address — four numbers separated by dots, each between 0 and 255 (e.g. 100.115.26.47).';
+                return;
+            }
+
+            var a = +parts[0], b = +parts[1], c = +parts[2], d = +parts[3];
+            var ipInt = ipToInt(a, b, c, d);
+
+            var match = null;
+            for (var i = 0; i < IP_RANGES.length; i++) {
+                var r = IP_RANGES[i];
+                var s = ipToInt(r.start[0], r.start[1], r.start[2], r.start[3]);
+                var e = ipToInt(r.end[0],   r.end[1],   r.end[2],   r.end[3]);
+                if (ipInt >= s && ipInt <= e) { match = r; break; }
+            }
+
+            if (!match) {
+                resultBox.classList.add('cgnat-public');
+                statusEl.textContent = '✓ Public Internet IP';
+                detailEl.textContent = raw + ' is a publicly routable address — no CGNAT detected. Port forwarding, VPNs, and remote access should work normally, assuming no firewall restrictions on the customer\'s router.';
+                return;
+            }
+
+            resultBox.classList.add('cgnat-' + match.category);
+            statusEl.textContent = (CATEGORY_PREFIX[match.category] || '') + match.label + ' (' + match.cidr + ')';
+            detailEl.textContent = match.description;
+        }
+
+        function clearCgnatResult() {
+            var resultBox = document.getElementById('cgnat-check-result');
+            resultBox.className = 'cgnat-check-result';
+            document.getElementById('cgnat-result-status').textContent = '';
+            document.getElementById('cgnat-result-detail').textContent = '';
+        }
+
+        function showInfoModal(title, body, isNoc) {
+            document.getElementById('info-modal-title').textContent = title;
+            document.getElementById('info-modal-body').textContent = body;
+            var box = document.getElementById('info-modal-box');
+            isNoc ? box.classList.add('noc-style') : box.classList.remove('noc-style');
+            document.getElementById('info-modal-overlay').classList.add('open');
+        }
+        function closeInfoModal() {
+            document.getElementById('info-modal-overlay').classList.remove('open');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeInfoModal();
+        });
+    </script>
     <script src="./data/oui-db.js"></script>
     <script src="./data/tech-regions.js"></script>
     <script src="./data/wo-type.js"></script>
+    <script src="./data/ip-ranges.js"></script>
     <script src="./assets/js/helpers.js"></script>
     <script src="./assets/js/app.js"></script>
     <script src="./assets/js/truckroll.js"></script>
