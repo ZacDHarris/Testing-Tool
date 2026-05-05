@@ -6,19 +6,23 @@ const trYesNo = {
     tr_devicesDisconnecting: null,
     tr_networkStable: null,
     tr_wifiInterference: null,
-    tr_constructionInArea: null
+    tr_constructionInArea: null,
+    tr_verifiedHeadHub: null
 };
 const selectedTroubleshooting = new Set();
 const customTrSteps = [];
 
 function setTrProvider(val) {
     trProvider = val;
-    document.getElementById('tr-provider-tachus').classList.remove('active-tachus','active-ezee');
-    document.getElementById('tr-provider-ezee').classList.remove('active-tachus','active-ezee');
+    ['tr-provider-tachus','tr-provider-ezee','tr-provider-daynet'].forEach(id =>
+        document.getElementById(id).classList.remove('active-tachus','active-ezee','active-daynet')
+    );
     if (val === 'Tachus') {
         document.getElementById('tr-provider-tachus').classList.add('active-tachus');
-    } else {
+    } else if (val === 'EzeeFiber') {
         document.getElementById('tr-provider-ezee').classList.add('active-ezee');
+    } else {
+        document.getElementById('tr-provider-daynet').classList.add('active-daynet');
     }
 }
 
@@ -38,7 +42,7 @@ const troubleshootingOptions = [
     "•Checked Fiber Patch Cable","•Ascending Bip8Errors","•Factory Reset Modem",
     "•Cleared Counters","•Checked Cx Power","•Power Cycled Router","•Firmware Update",
     "•Swapped gateway router","•Temporarily Disable 5GHz","•Enabled Guest SSID",
-    "•Disabled IPv6","•Factory Reset Routers","•Optimization on Network","•Changed DNS Server to:"
+    "•Disabled IPv6","•Factory Reset Routers","•Optimization on Network"
 ];
 
 function initTroubleshootingGrid() {
@@ -132,6 +136,7 @@ function generateNote() {
     }
     netWifi += lineYN('WiFi Interference?',    trYesNo.tr_wifiInterference);
     netWifi += lineYN('Construction in Area?', trYesNo.tr_constructionInArea);
+    netWifi += lineYN('Verified Head/Hub?',    trYesNo.tr_verifiedHeadHub);
 
     let parts = [];
     if (trProvider)             parts.push(`Provider: ${trProvider}`);
@@ -163,8 +168,9 @@ function copyToClipboard() {
 function resetForm() {
     // Provider
     trProvider = '';
-    document.getElementById('tr-provider-tachus').classList.remove('active-tachus','active-ezee');
-    document.getElementById('tr-provider-ezee').classList.remove('active-tachus','active-ezee');
+    ['tr-provider-tachus','tr-provider-ezee','tr-provider-daynet'].forEach(id =>
+        document.getElementById(id).classList.remove('active-tachus','active-ezee','active-daynet')
+    );
     // Equipment
     trEquip.ont = ''; trEquip.router = '';
     document.querySelectorAll('#tr-router-btns .equip-btn').forEach(b => b.classList.remove('active'));

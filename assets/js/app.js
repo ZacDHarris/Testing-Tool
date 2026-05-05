@@ -11,10 +11,9 @@ function goToTab(tabId) {
 
 
 // ── UPS PDF DOWNLOAD ──
-async function downloadFilledPDF(brand) {
-    const isTachus = brand === 'tachus';
-    const acct = document.getElementById(isTachus ? 'ter-t-acct' : 'ter-e-acct').value.trim();
-    const wo   = document.getElementById(isTachus ? 'ter-t-wo'   : 'ter-e-wo').value.trim();
+async function downloadFilledPDF() {
+    const acct = document.getElementById('ter-e-acct').value.trim();
+    const wo   = document.getElementById('ter-e-wo').value.trim();
     if (!acct && !wo) {
         alert('Please enter at least the Customer Account Number or Work Order Number.');
         return;
@@ -65,24 +64,10 @@ function switchTab(tab, btnEl) {
     btnEl.classList.add('active');
 }
 
-function switchEmailTab(tab) {
-    document.querySelectorAll('.email-sub-page').forEach(p => p.classList.remove('active'));
-    document.getElementById('sub-btn-tachus').classList.remove('active-tachus');
-    document.getElementById('sub-btn-ezee').classList.remove('active-ezee');
-    document.getElementById('email-sub-' + tab).classList.add('active');
-    if (tab === 'tachus') {
-        document.getElementById('sub-btn-tachus').classList.add('active-tachus');
-        switchEmailMiniTab('tachus', 'cancellation', document.getElementById('email-tachus-btn-cancellation'));
-    } else {
-        document.getElementById('sub-btn-ezee').classList.add('active-ezee');
-        switchEmailMiniTab('ezee', 'cancellation', document.getElementById('email-ezee-btn-cancellation'));
-    }
-}
-
 function switchEmailMiniTab(brand, slug, btnEl) {
-    document.querySelectorAll(`#email-sub-${brand} .email-mini-page`).forEach(p => p.classList.remove('active'));
-    document.querySelectorAll(`#email-sub-${brand} .email-mini-btn`).forEach(b => b.classList.remove('email-mini-btn-active'));
-    document.getElementById(`email-${brand}-${slug}`).classList.add('active');
+    document.querySelectorAll('#email-sub-ezee .email-mini-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('#email-sub-ezee .email-mini-btn').forEach(b => b.classList.remove('email-mini-btn-active'));
+    document.getElementById(`email-ezee-${slug}`).classList.add('active');
     btnEl.classList.add('email-mini-btn-active');
 }
 

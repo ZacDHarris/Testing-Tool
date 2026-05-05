@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="./assets/img/EzeeIcon.jpg">
+    <title>Ezee Fiber | Note Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+    <style>
+        /* ── Info Button: small circular "ⓘ" that replaces the old context panel banner ── */
+        .tab-info-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 20px 0;
+        }
+        .info-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid #FB612F;
+            color: #FB612F;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .info-btn:hover {
+            background: #FB612F;
+            color: white;
+            transform: scale(1.1);
+        }
+        /* NOC tabs use blue instead of orange */
+        .noc-sub-page .info-btn {
+            border-color: #0077C8;
+            color: #0077C8;
+        }
+        .noc-sub-page .info-btn:hover {
+            background: #0077C8;
+            color: white;
+        }
+        /* ── Info Modal: full context popup triggered by clicking the info button ── */
+        .info-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-modal-overlay.open { display: flex; }
+        .info-modal-box {
+            background: #1a2738;
+            border: 1px solid #2a3d54;
+            border-radius: 12px;
+            padding: 28px 28px 24px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        }
+        .info-modal-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #FB612F;
+            margin-bottom: 10px;
+        }
+        .info-modal-box.noc-style .info-modal-tag { color: #0077C8; }
+        .info-modal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-bottom: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .info-modal-body {
+            color: #94a3b8;
+            font-size: 0.88rem;
+            line-height: 1.75;
+            white-space: pre-wrap;
+        }
+        .info-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #4b5563;
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: color 0.15s, background 0.15s;
+        }
+        .info-modal-close:hover {
+            color: #e2e8f0;
+            background: #2a3d54;
+        }
+        /* ── Sidebar column: stacks the info button above the reference panel ── */
+        .sidebar-col {
+            width: 400px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: sticky;
+            top: 1.5rem;
+            align-self: flex-start;
+        }
+        /* Panel inside the column loses its own sticky/width (the wrapper handles it) */
+        .sidebar-col .note-info-panel {
+            position: static;
+            width: 100%;
+            flex-shrink: unset;
+            align-self: unset;
+        }
+        /* Button bar above the panel — left-aligned, flush with the panel edge */
+        .sidebar-col .tab-info-bar {
+            padding: 0;
+            justify-content: flex-start;
+        }
+        /* ── CGNAT IP Checker ── */
+        .cgnat-checker {
+            background: #0c1824;
+            border: 1px solid #1e3148;
+            border-radius: 10px;
+            padding: 16px 18px 18px;
+            margin-bottom: 1.25rem;
+        }
+        .cgnat-checker-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: #0077C8;
+            margin-bottom: 10px;
+        }
+        .cgnat-checker-row {
+            display: flex;
+            gap: 8px;
+        }
+        .cgnat-ip-input {
+            flex: 1;
+            padding: 0.6rem 0.9rem;
+            background: #1a2738;
+            border: 1.5px solid #2a3d54;
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            font-family: 'Courier New', monospace;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .cgnat-ip-input::placeholder { color: #4b6070; }
+        .cgnat-ip-input:focus {
+            border-color: #0077C8;
+            box-shadow: 0 0 0 3px rgba(0, 119, 200, 0.18);
+        }
+        .cgnat-check-btn {
+            padding: 0.6rem 1.25rem;
+            background: #0077C8;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+            letter-spacing: 0.02em;
+        }
+        .cgnat-check-btn:hover { background: #005fa3; }
+        .cgnat-check-result {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.25s ease, padding 0.2s ease, margin 0.2s ease;
+            border-radius: 6px;
+            margin-top: 0;
+            font-size: 0.83rem;
+        }
+        .cgnat-check-result.visible {
+            max-height: 260px;
+            margin-top: 10px;
+            padding: 10px 14px;
+        }
+        /* Confirmed CGNAT — the RFC 6598 shared space. Escalate to NOC. */
+        .cgnat-check-result.cgnat-cgnat {
+            background: rgba(220, 38, 38, 0.12);
+            border: 1px solid rgba(220, 38, 38, 0.35);
+            color: #fca5a5;
+        }
+        /* RFC 1918 private ranges — potential CGNAT or double-NAT. */
+        .cgnat-check-result.cgnat-private {
+            background: rgba(249, 115, 22, 0.12);
+            border: 1px solid rgba(249, 115, 22, 0.35);
+            color: #fdba74;
+        }
+        /* Problem states: APIPA, unspecified — device or DHCP issue. */
+        .cgnat-check-result.cgnat-warning {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.32);
+            color: #fde047;
+        }
+        /* Unusual / reserved ranges — not a real customer IP. */
+        .cgnat-check-result.cgnat-special {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.28);
+            color: #a5b4fc;
+        }
+        /* Publicly routable — no CGNAT present. */
+        .cgnat-check-result.cgnat-public {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.28);
+            color: #86efac;
+        }
+        /* Invalid input format. */
+        .cgnat-check-result.cgnat-invalid {
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.28);
+            color: #fde047;
+        }
+        .cgnat-result-status {
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 3px;
+        }
+        .cgnat-result-detail { opacity: 0.85; }
+    </style>
+</head>
+<body>
+
+    <!-- Top nav: jump between the three main pages -->
+    <nav class="tab-nav">
+        <button class="tab-btn" onclick="location.href='index.html'">Home</button>
+        <button class="tab-btn active" onclick="location.href='notegenerator.html'">Note Generator</button>
+        <button class="tab-btn" onclick="location.href='emailtemplate.html'">Email Templates</button>
+    </nav>
+
+    <!-- Page header — logo, title, and subtitle -->
+    <div class="header-wrapper">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="./assets/img/EzeeFiberLogo.png" alt="Ezee Fiber Logo">
+            </div>
+            <div class="header-text">
+                <div class="header-title">Internal Tools</div>
+                <div class="header-subtitle">Note Generator</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub-tab bar: switch between note types (Truck Roll, T2, Dispatch, NOC, etc.) -->
+    <nav class="note-sub-nav">
+        <button class="note-sub-btn active" id="note-btn-truckroll" onclick="switchNoteTab('truckroll', this)">Truck Roll Approval</button>
+        <button class="note-sub-btn" id="note-btn-harddown" onclick="switchNoteTab('harddown', this)">T2 Review</button>
+        <button class="note-sub-btn" id="note-btn-cancellation" onclick="switchNoteTab('cancellation', this)">Cancellation</button>
+        <button class="note-sub-btn" id="note-btn-dispatch" onclick="switchNoteTab('dispatch', this)">Dispatch</button>
+        <button class="note-sub-btn" id="note-btn-cecr" onclick="switchNoteTab('cecr', this)">CECR</button>
+        <span class="sub-nav-divider" aria-hidden="true"></span>
+        <div class="sub-nav-noc-group">
+            <span class="sub-nav-noc-label">NOC Ticketing</span>
+            <div class="sub-nav-noc-tabs">
+                <button class="note-sub-btn noc-sub-btn" id="noc-btn-commercial" onclick="switchNocTab('commercial', this)">Commercial Customer</button>
+                <button class="note-sub-btn noc-sub-btn" id="noc-btn-cgnat" onclick="switchNocTab('cgnat', this)">CGNAT Request</button>
+                <button class="note-sub-btn noc-sub-btn" id="noc-btn-outage" onclick="switchNocTab('outage', this)">Outage Informant</button>
+                <button class="note-sub-btn noc-sub-btn" id="noc-btn-jira" onclick="switchNocTab('jira', this)">Jira Escalation</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════════
+         TAB: Truck Roll Approval
+         ══════════════════════════════════════════════ -->
+    <div id="note-sub-truckroll" class="note-sub-page active">
+
+        <div class="note-with-sidebar">
+
+            <!-- Left sidebar — reference guide: probing questions and HOT escalation rules -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="Post in Teams chat: Truck Roll Dispatch Approval Requests"
+                            onclick="showInfoModal('Truck Roll Approval', 'This page should be used for messaging in the teams chat: &quot;Truck Roll Dispatch Approval Requests&quot;', false)"
+                            aria-label="Show context info for Truck Roll Approval">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel truckroll-panel">
+                <div class="info-panel-header">
+                    <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+                    <span class="info-panel-title">Truck Roll Reference</span>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Probing Questions</div>
+                    <ul class="info-panel-list">
+                        <li>When did the issue start?</li>
+                        <li>Is the issue happening all the time or intermittently?</li>
+                        <li>Is the issue affecting one device or multiple devices?</li>
+                        <li>Did anything change recently (power outage, moved equipment, new device)?</li>
+                        <li>Is the issue affecting one device or multiple devices?</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Router Probing Questions</div>
+                    <ul class="info-panel-list">
+                        <li>Are you connected using Wi-Fi or Ethernet?</li>
+                        <li>How far are you from the router right now?</li>
+                        <li>Does the issue happen in one room or throughout the home? → Different brands of routers?</li>
+                        <li>If extenders are there, how far apart are they? → Opposite ends of the home or too close?</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">HOT Escalations</div>
+                    <ul class="info-panel-list">
+                        <li>HOT Customer - A HOT customer meets any of the following</li>
+                        <li>Repeated issue and installed within the last 7 days</li>
+                        <li>2+ service tickets in the last 30 days</li>
+                        <li>Customer is at risk of disconnecting (threatens to cancel)</li>
+                        <li>Cut Drop Bury/Safety Hazard – The Fiber drop has been cut or is posing a safety hazard.</li>
+                        <li>Customer confirmed physical cut</li>
+                        <li>Another service company cut line in error</li>
+                        <li>Physical line can cause physical injury</li>
+                    </ul>
+                </div>
+            </div>
+            </div><!-- end sidebar-col -->
+
+            <!-- Right side — main form to fill out before generating the note -->
+            <div class="container">
+            <form id="supportForm">
+                <div class="form-grid">
+
+                    <!-- Which provider/brand this customer is on -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Provider</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <div class="provider-btn-group">
+                            <button type="button" class="provider-btn" id="tr-provider-tachus" onclick="setTrProvider('Tachus')">Tachus</button>
+                            <button type="button" class="provider-btn" id="tr-provider-ezee" onclick="setTrProvider('EzeeFiber')">EzeeFiber</button>
+                            <button type="button" class="provider-btn" id="tr-provider-daynet" onclick="setTrProvider('DayNet')">DayNet</button>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- Basic customer info -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Customer Details</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-name">Name</label>
+                        <input type="text" id="tr-name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-phone">Phone</label>
+                        <input type="text" id="tr-phone" placeholder="Enter phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-acct">Acct #</label>
+                        <input type="text" id="tr-acct" placeholder="Enter account #">
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-address">Address</label>
+                        <input type="text" id="tr-address" placeholder="Enter address">
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-node">Node</label>
+                        <input type="text" id="tr-node" placeholder="Enter node">
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- What the customer is reporting in their own words -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Issue Description</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <textarea id="tr-customerReporting" placeholder="Enter customer report" style="min-height:90px;"></textarea>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- ONT and router hardware info -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Equipment</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-ont-sn">ONT SN</label>
+                        <input type="text" id="tr-ont-sn" placeholder="Enter ONT serial number">
+                    </div>
+                    <div class="form-group">
+                        <label>Router</label>
+                        <div class="equip-btn-group" id="tr-router-btns">
+                            <button type="button" class="equip-btn" onclick="setEquip('router','EERO PRO6E',this)">EERO PRO6E</button>
+                            <button type="button" class="equip-btn" onclick="setEquip('router','EERO MAX7',this)">EERO MAX7</button>
+                            <button type="button" class="equip-btn" onclick="setEquip('router','EVO AP6700',this)">EVO AP6700</button>
+                            <button type="button" class="equip-btn" onclick="setEquip('router','TP-LINK P50',this)">TP-LINK P50</button>
+                            <button type="button" class="equip-btn" onclick="setEquip('router','TP-LINK PB70',this)">TP-LINK PB70</button>
+                            <button type="button" class="equip-btn" onclick="setEquip('router','TP-LINK P110',this)">TP-LINK P110</button>
+                            <button type="button" class="equip-btn" onclick="setEquip('router','Other',this)">Other</button>
+                        </div>
+                        <input type="text" id="tr-router-other" placeholder="Router model (if Other)" style="margin-top:0.5rem; display:none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-router-sn">Router SN</label>
+                        <input type="text" id="tr-router-sn" placeholder="Enter router serial number">
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- Diagnostics: alarms, speed test, light levels, interference -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Network &amp; WiFi</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-alarmCodes">Alarm Code(s)</label>
+                        <input type="text" id="tr-alarmCodes" placeholder="Enter alarm codes">
+                    </div>
+                    <div class="form-group">
+                        <label for="tr-speedTest">Speed Test (Down/Up)</label>
+                        <input type="text" id="tr-speedTest" placeholder="e.g. 850/900">
+                    </div>
+                    <div class="form-group">
+                        <label>Devices Disconnecting?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setYesNo('tr_devicesDisconnecting', true, event)">Yes</button>
+                            <button type="button" onclick="setYesNo('tr_devicesDisconnecting', false, event)">No</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Network Stable?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setYesNo('tr_networkStable', true, event)">Yes</button>
+                            <button type="button" onclick="setYesNo('tr_networkStable', false, event)">No</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Light Levels</label>
+                        <div style="display:flex;gap:0.5rem;">
+                            <input type="text" id="tr-lightLevels-ont" placeholder="ONT" style="flex:1;">
+                            <input type="text" id="tr-lightLevels-olt" placeholder="OLT" style="flex:1;">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>WiFi Interference?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setYesNo('tr_wifiInterference', true, event)">Yes</button>
+                            <button type="button" onclick="setYesNo('tr_wifiInterference', false, event)">No</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Construction in Area?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setYesNo('tr_constructionInArea', true, event)">Yes</button>
+                            <button type="button" onclick="setYesNo('tr_constructionInArea', false, event)">No</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Verified Head/Hub?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setYesNo('tr_verifiedHeadHub', true, event)">Yes</button>
+                            <button type="button" onclick="setYesNo('tr_verifiedHeadHub', false, event)">No</button>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- Steps taken during the call -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Troubleshooting Steps</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <div class="troubleshooting-grid" id="troubleshootingGrid"></div>
+
+                        <!-- Type and add a one-off custom step -->
+                        <div style="margin-top:1rem;">
+                            <label style="margin-bottom:0.4rem; font-size:0.8rem; color:#9ca3af;">Add Custom Step</label>
+                            <div class="custom-step-wrapper">
+                                <span class="custom-step-prefix">•</span>
+                                <input class="custom-step-input" type="text" id="tr-custom-step-input" placeholder="Type a custom troubleshooting step..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomStep();}">
+                                <button type="button" class="custom-step-add-btn" onclick="addCustomStep()">+ Add</button>
+                            </div>
+                            <div class="custom-steps-list" id="tr-custom-steps-list"></div>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- Who handled this call -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Agent Initials</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="tr-agentInitials" placeholder="Enter agent initials" style="max-width:220px;">
+                    </div>
+
+                </div>
+            </form>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generateNote()">Generate Note</button>
+                <button class="btn btn-secondary" onclick="resetForm()">Reset Form</button>
+            </div>
+
+            <div id="outputSection" class="output-section">
+                <div class="output-header">
+                    <h3>Generated Note</h3>
+                    <button class="btn btn-success" onclick="copyToClipboard()">
+                        <span id="copyIcon">📋</span>
+                        <span id="copyText">Copy to Dashboard</span>
+                    </button>
+                </div>
+                <div class="output-box">
+                    <textarea id="generatedNote" spellcheck="false"></textarea>
+                </div>
+            </div>
+            </div><!-- end container -->
+        </div><!-- end note-with-sidebar -->
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         TAB: T2 Review
+         ══════════════════════════════════════════════ -->
+    <div id="note-sub-harddown" class="note-sub-page">
+
+        <div class="note-with-sidebar">
+
+            <!-- Left sidebar — ONT probing questions and T2 reference notes -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="T2 escalation review — more context coming soon"
+                            onclick="showInfoModal('T2 Review', 'Placeholder - More Info coming soon.', false)"
+                            aria-label="Show context info for T2 Review">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel harddown-panel">
+                <div class="info-panel-header">
+                    <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+                    <span class="info-panel-title">T2 Review Reference</span>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">ONT Probing Questions</div>
+                    <ul class="info-panel-list">
+                        <li>Do you see any red or blinking lights on the ONT?</li>
+                        <li>Has the ONT lost power recently? → Check Alarms</li>
+                        <li>Is the ONT plugged directly into a wall outlet? → No Surge Protectors</li>
+                        <li>Are all cables securely connected to the ONT?</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Placeholder Section</div>
+                    <ul class="info-panel-list">
+                        <li>Placeholder</li>
+                        <li>Placeholder</li>
+                        <li>Placeholder</li>
+                    </ul>
+                </div>
+            </div>
+            </div><!-- end sidebar-col -->
+
+            <!-- Right side — form for generating the T2 escalation note -->
+            <div class="container">
+            <form id="hardDownForm">
+                <div class="form-grid">
+
+                    <!-- Which provider/brand this customer is on -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Provider</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <div class="provider-btn-group">
+                            <button type="button" class="provider-btn" id="hd-provider-tachus" onclick="setHdProvider('Tachus')">Tachus</button>
+                            <button type="button" class="provider-btn" id="hd-provider-ezee" onclick="setHdProvider('EzeeFiber')">EzeeFiber</button>
+                            <button type="button" class="provider-btn" id="hd-provider-daynet" onclick="setHdProvider('DayNet')">DayNet</button>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- Customer details for this escalation -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Customer Information</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-name">Name</label>
+                        <input type="text" id="hd-name" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-acct">Account #</label>
+                        <input type="text" id="hd-acct" placeholder="Enter account #">
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-address">Address</label>
+                        <input type="text" id="hd-address" placeholder="Enter address">
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-callbackContact">Callback Contact</label>
+                        <input type="text" id="hd-callbackContact" placeholder="Enter callback contact">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="hd-issueDescription">Issue Description</label>
+                        <textarea id="hd-issueDescription" placeholder="Describe the issue..." style="min-height:120px;"></textarea>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- Network diagnostics: node, ONT, router, alarms, light levels -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Network Information</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-node">Node</label>
+                        <input type="text" id="hd-node" placeholder="Enter node">
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-ontId">ONT ID</label>
+                        <input type="text" id="hd-ontId" placeholder="Enter ONT ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-routerId">Router ID</label>
+                        <input type="text" id="hd-routerId" placeholder="Enter router ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-alarms">Alarms</label>
+                        <input type="text" id="hd-alarms" placeholder="Enter alarms">
+                    </div>
+                    <div class="form-group">
+                        <label for="hd-lightLevels">Light Levels</label>
+                        <input type="text" id="hd-lightLevels" placeholder="Enter light levels">
+                    </div>
+                    <div class="form-group">
+                        <label>Verified Head/Hub?</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" onclick="setHdYesNo('hd_verifiedHeadHub', true, event)">Yes</button>
+                            <button type="button" onclick="setHdYesNo('hd_verifiedHeadHub', false, event)">No</button>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <!-- Steps already taken before escalating to T2 -->
+                    <div class="form-group full-width">
+                        <div class="section-label">Troubleshooting Steps</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <div class="troubleshooting-grid" id="t2TroubleshootingGrid"></div>
+                        <div style="margin-top:1rem;">
+                            <label style="margin-bottom:0.4rem; font-size:0.8rem; color:#9ca3af;">Add Custom Step</label>
+                            <div class="custom-step-wrapper">
+                                <span class="custom-step-prefix">•</span>
+                                <input class="custom-step-input" type="text" id="hd-custom-step-input" placeholder="Type a custom troubleshooting step..." onkeydown="if(event.key==='Enter'){event.preventDefault();addT2CustomStep();}">
+                                <button type="button" class="custom-step-add-btn" onclick="addT2CustomStep()">+ Add</button>
+                            </div>
+                            <div class="custom-steps-list" id="hd-custom-steps-list"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generateHardDown()">Generate Note</button>
+                <button class="btn btn-secondary" onclick="resetHardDown()">Reset Form</button>
+            </div>
+            <div id="hdOutputSection" class="output-section">
+                <div class="output-header">
+                    <h3>Generated Note</h3>
+                    <button class="btn btn-success" onclick="copyHardDown()">
+                        <span id="hdCopyIcon">📋</span>
+                        <span id="hdCopyText">Copy to Dashboard</span>
+                    </button>
+                </div>
+                <div class="output-box">
+                    <textarea id="hdGeneratedNote" spellcheck="false"></textarea>
+                </div>
+            </div>
+            </div><!-- end container -->
+        </div><!-- end note-with-sidebar -->
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         TAB: Cancellation
+         ══════════════════════════════════════════════ -->
+    <div id="note-sub-cancellation" class="note-sub-page">
+
+        <!-- Info button: hover for a quick tip, click for full context -->
+        <div class="tab-info-bar" style="justify-content:flex-start; padding: 1.5rem 0 0 1.5rem;">
+            <button class="info-btn"
+                    title="Cancellation note template — more context coming soon"
+                    onclick="showInfoModal('Cancellation', 'Placeholder - More Info coming soon.', false)"
+                    aria-label="Show context info for Cancellation">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="coming-soon-placeholder">
+            <div class="placeholder-mark">Cancellation</div>
+            <div class="placeholder-sub">Coming Soon</div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         TAB: Dispatch
+         ══════════════════════════════════════════════ -->
+    <div id="note-sub-dispatch" class="note-sub-page">
+
+        <div class="note-with-sidebar">
+
+            <!-- Left sidebar — Shenandoah customer notes and dispatch reference -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="Use for Dispatch Chat — dispatch only needs the action, not full call details"
+                            onclick="showInfoModal('Dispatch', 'This is used for messaging any Dispatch Chat, all this information will be used by the Dispatch team.\n\nPlease remember that dispatch does not need specific details related to the call — just what to do with the customer.', false)"
+                            aria-label="Show context info for Dispatch">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel">
+                <div class="info-panel-header">
+                    <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                    <span class="info-panel-title">Dispatch Reference</span>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Shenandoah Customers</div>
+                    <ul class="info-panel-list">
+                        <li>SHENANDOAH CUSTOMERS MUST BE SERVICES IN SALESFORCE</li>
+                        <li>Cases and Tasks must be create for these customer.</li>
+                        <li>Dispatch handles these tickets differently due to their unique requirements.</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Drop Bury Escalations</div>
+                    <ul class="info-panel-list">
+                        <li>As we continue migrating our Tachus customers into the Ezee systems, Dispatch has one request when sending Dropbury escalation emails.</li>
+                        <li>Refer to Drop Bury Escalations email template for more info</li>
+                        <li>Email: dropburyescalations@ezeefiber.com</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Placeholder</div>
+                    <ul class="info-panel-list">
+                        <li>Placeholder</li>
+                        <li>Placeholder</li>
+                    </ul>
+                </div>
+            </div>
+            </div><!-- end sidebar-col -->
+
+            <!-- Right side — dispatch form for generating the message -->
+            <div class="container">
+                <div class="dispatch-brand-row">
+                    <span class="dispatch-brand-label">Customer Type:</span>
+                    <button type="button" class="dispatch-brand-btn" id="dispatch-btn-tachus" onclick="setDispatchBrand('Tachus')">Tachus</button>
+                    <button type="button" class="dispatch-brand-btn" id="dispatch-btn-ezee" onclick="setDispatchBrand('Ezee')">EzeeFiber</button>
+                    <button type="button" class="dispatch-brand-btn" id="dispatch-btn-daynet" onclick="setDispatchBrand('DayNet')">DayNet</button>
+                    <span id="dispatch-brand-display" class="dispatch-brand-display"></span>
+                </div>
+                <form id="dispatchForm">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="dp-techRegion">Tech Region</label>
+                            <select id="dp-techRegion" class="tech-region-select">
+                                <option value="">— Select Tech Region —</option>
+                                <option value="ABQ">ABQ — Albuquerque</option>
+                                <option value="CAT">CAT — Commercial Activation Tachus</option>
+                                <option value="CHI">CHI — Chicago Illinois</option>
+                                <option value="CHO">CHO — Commercial Houston</option>
+                                <option value="CNM">CNM — Commercial New Mexico</option>
+                                <option value="COM">COM — Commercial</option>
+                                <option value="CW1">CW1 — Carlton Woods Jun1</option>
+                                <option value="DAY">DAY — Daynet</option>
+                                <option value="DEL">DEL — Deleted Addresses</option>
+                                <option value="DET">DET — Detroit Michigan</option>
+                                <option value="EST">EST — East</option>
+                                <option value="GEM">GEM — GEM</option>
+                                <option value="INT">INT — Instant On No Tech Needed</option>
+                                <option value="KNT">KNT — Kent Washington</option>
+                                <option value="MID">MID — Mid</option>
+                                <option value="NET">NET — North East Tachus</option>
+                                <option value="NOR">NOR — North</option>
+                                <option value="PRE">PRE — Pre-Order</option>
+                                <option value="SAL">SAL — Salem Oregon</option>
+                                <option value="SFE">SFE — Santa Fe NM</option>
+                                <option value="SOU">SOU — South</option>
+                                <option value="TAM">TAM — SMB TAM Legacy Build Areas</option>
+                                <option value="VAN">VAN — Minnehaha Vancouver WA</option>
+                                <option value="WHS">WHS — Wholesale</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dp-customerName">Customer Name</label>
+                            <input type="text" id="dp-customerName" placeholder="Enter customer name">
+                        </div>
+                        <div class="form-group">
+                            <label for="dp-address">Address</label>
+                            <input type="text" id="dp-address" placeholder="Enter address">
+                        </div>
+                        <div class="form-group">
+                            <label for="dp-accountNumber">Account #</label>
+                            <input type="text" id="dp-accountNumber" placeholder="Enter account #" style="max-width: 220px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="dp-woNumber">WO #</label>
+                            <input type="text" id="dp-woNumber" placeholder="Enter WO #" style="max-width: 220px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="dp-WOType">WO Type</label>
+                            <select id="dp-WOType" class="wo-type-select">
+                                <option value="">— Select WO Type —</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="dp-customerReporting">Issue Description</label>
+                            <textarea id="dp-customerReporting" placeholder="Describe the issue..."></textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generateDispatch()">Generate Note</button>
+                    <button class="btn btn-secondary" onclick="resetDispatch()">Reset Form</button>
+                </div>
+                <div id="dpOutputSection" class="output-section">
+                    <div class="output-header">
+                        <h3>Generated Note</h3>
+                        <button class="btn btn-success" onclick="copyDispatch()">
+                            <span id="dpCopyIcon">📋</span>
+                            <span id="dpCopyText">Copy to Dashboard</span>
+                        </button>
+                    </div>
+                    <div class="output-box">
+                        <textarea id="dpGeneratedNote" spellcheck="false"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         TAB: CECR (Cable Excavation & Construction Report)
+         ══════════════════════════════════════════════ -->
+    <div id="note-sub-cecr" class="note-sub-page">
+
+        <div class="note-with-sidebar">
+
+            <!-- Left sidebar — CECR guidelines, drop bury info, and 811 escalation notes -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="CECR escalation — assign to Contractor or Drop Bury"
+                            onclick="showInfoModal('CECR', 'Placeholder - More Info coming soon.', false)"
+                            aria-label="Show context info for CECR">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel cecr-panel">
+                <div class="info-panel-header">
+                    <span class="info-panel-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+                    <span class="info-panel-title">CECR Reference</span>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Probing Questions</div>
+                    <ul class="info-panel-list">
+                        <li>Ask Questions → Who, what, when, and where</li>
+                        <li>Who caused: Construction, Drop Bury, or Installation Team</li>
+                        <li>When did this happen?</li>
+                        <li>Placeholder</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">CECR Guidelines</div>
+                    <ul class="info-panel-list">
+                        <li>All tickets are to be assigned to either: Contractor or Drop Bury</li>
+                        <li>If we are not in the area: Advise the customer to call 811</li>
+                        <li>811 can provide construction work details for their area</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Drop Bury Issues</div>
+                    <ul class="info-panel-list">
+                        <li>Email dropburyescalation@ezeefiber.com and refer to the Drop Bury Email template</li>
+                        <li>Do not include the customer in the email. Internal use only.</li>
+                    </ul>
+                </div>
+            </div>
+            </div><!-- end sidebar-col -->
+
+            <!-- Right side — form for generating the CECR note -->
+            <div class="container">
+                <form id="cecrForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cecr-phone">Phone</label>
+                            <input type="text" id="cecr-phone" placeholder="Enter phone" style="max-width: 220px;">
+                        </div>
+                        <div class="form-group">
+                            <label for="cecr-address">Address</label>
+                            <input type="text" id="cecr-address" placeholder="Enter address">
+                        </div>
+                        <div class="form-group">
+                            <label for="cecr-ticketId">Ticket ID</label>
+                            <input type="text" id="cecr-ticketId" placeholder="Enter ticket ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="cecr-customerName">Customer Name</label>
+                            <input type="text" id="cecr-customerName" placeholder="Enter customer name">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Priority Level</label>
+                            <div class="priority-row">
+                                <button type="button" class="priority-btn" id="priority-btn-1" onclick="setCecrPriority(1)">1</button>
+                                <button type="button" class="priority-btn" id="priority-btn-2" onclick="setCecrPriority(2)">2</button>
+                                <button type="button" class="priority-btn" id="priority-btn-3" onclick="setCecrPriority(3)">3</button>
+                                <button type="button" class="priority-btn" id="priority-btn-4" onclick="setCecrPriority(4)">4</button>
+                                <span id="cecr-priority-display" class="cecr-priority-display"></span>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="cecr-customerReport">Customer Report</label>
+                            <textarea id="cecr-customerReport" placeholder="Enter customer report" style="min-height: 140px;"></textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generateCecr()">Generate Note</button>
+                    <button class="btn btn-secondary" onclick="resetCecr()">Reset Form</button>
+                </div>
+                <div id="cecrOutputSection" class="output-section">
+                    <div class="output-header">
+                        <h3>Generated Note</h3>
+                        <button class="btn btn-success" onclick="copyCecr()">
+                            <span id="cecrCopyIcon">&#128203;</span>
+                            <span id="cecrCopyText">Copy to Dashboard</span>
+                        </button>
+                    </div>
+                    <div class="output-box">
+                        <textarea id="cecrGeneratedNote" spellcheck="false"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: Commercial Customer
+         ══════════════════════════════════════════════ -->
+    <div id="noc-sub-commercial" class="note-sub-page noc-sub-page">
+
+        <div class="note-with-sidebar">
+
+            <!-- Left sidebar — NOC probing questions and escalation guidelines -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="NOC ticketing for commercial hard-down customers"
+                            onclick="showInfoModal('Commercial Customer', 'Placeholder - More Info coming soon.', true)"
+                            aria-label="Show context info for Commercial Customer">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel noc-panel">
+                <div class="info-panel-header">
+                    <span class="info-panel-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    </span>
+                    <span class="info-panel-title">NOC Reference</span>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">NOC Probing Questions</div>
+                    <ul class="info-panel-list">
+                        <li>When did this issue happen?</li>
+                        <li>Did anything in the network change? → Adding Devices, Switches, or Access Point Routers</li>
+                        <li>What troubleshooting has already been done? → Document, document, document.</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">NOC Escalation Guidelines</div>
+                    <ul class="info-panel-list">
+                        <li>For HARD DOWN commercial inquiries, TSRs will continue to create a Jira ticket when the inquiry is received by the contact center and forwarded to NOC.</li>
+                        <li>Provide the customer with the Jira ticket number and clearly set the expectation that a NOC technician will contact them within the one-hour SLA.</li>
+                        <li>TSRs may also provide the NOC contact number if needed: <strong>281-407-0050</strong></li>
+                    </ul>
+                </div>
+            </div>
+            </div><!-- end sidebar-col -->
+
+            <!-- Right side — form for generating the commercial customer note -->
+            <div class="container">
+                <form id="commercialForm">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <div class="section-label">Commercial Customer Details</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nc-businessName">Business Name</label>
+                            <input type="text" id="nc-businessName" placeholder="Enter business name">
+                        </div>
+                        <div class="form-group">
+                            <label for="nc-callBack">Call Back Number</label>
+                            <input type="text" id="nc-callBack" placeholder="Enter call back number">
+                        </div>
+                        <div class="form-group">
+                            <label for="nc-poc">Point of Contact (Caller's Name)</label>
+                            <input type="text" id="nc-poc" placeholder="Enter caller's name">
+                        </div>
+                        <div class="form-group">
+                            <label for="nc-timeIssue">Time Issue Started</label>
+                            <input type="text" id="nc-timeIssue" placeholder="e.g. 2:30 PM today">
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <!-- Custom steps the agent took during the call -->
+                        <div class="form-group full-width">
+                            <div class="section-label">Troubleshooting Steps</div>
+                        </div>
+                        <div class="form-group full-width">
+                            <div style="margin-top:0.5rem;">
+                                <label style="margin-bottom:0.4rem; font-size:0.8rem; color:#9ca3af;">Add Custom Step</label>
+                                <div class="custom-step-wrapper">
+                                    <span class="custom-step-prefix">•</span>
+                                    <input class="custom-step-input" type="text" id="nc-custom-step-input" placeholder="Type a custom troubleshooting step..." onkeydown="if(event.key==='Enter'){event.preventDefault();addNocCommercialCustomStep();}">
+                                    <button type="button" class="custom-step-add-btn" onclick="addNocCommercialCustomStep()">+ Add</button>
+                                </div>
+                                <div class="custom-steps-list" id="nc-custom-steps-list"></div>
+                            </div>
+                        </div>
+
+                        <hr class="section-divider">
+
+                        <div class="form-group full-width">
+                            <label for="nc-customerReporting">Issue Description</label>
+                            <textarea id="nc-customerReporting" placeholder="Describe the issue..." style="min-height:100px;"></textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generateCommercial()">Generate Note</button>
+                    <button class="btn btn-secondary" onclick="resetCommercial()">Reset Form</button>
+                </div>
+                <div id="ncOutputSection" class="output-section">
+                    <div class="output-header">
+                        <h3>Generated Note</h3>
+                        <button class="btn btn-success" onclick="copyCommercial()">
+                            <span id="ncCopyIcon">📋</span>
+                            <span id="ncCopyText">Copy to Dashboard</span>
+                        </button>
+                    </div>
+                    <div class="output-box">
+                        <textarea id="ncGeneratedNote" spellcheck="false"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: CGNAT Request
+         ══════════════════════════════════════════════ -->
+    <div id="noc-sub-cgnat" class="note-sub-page noc-sub-page">
+
+        <div class="note-with-sidebar">
+
+            <!-- Left sidebar — CGNAT identification guide and common symptoms -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="NOC request to move a customer off CGNAT to a public IP"
+                            onclick="showInfoModal('CGNAT Request', 'Placeholder - More Info coming soon.', true)"
+                            aria-label="Show context info for CGNAT Request">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel cgnat-panel">
+                <div class="info-panel-header">
+                    <span class="info-panel-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </span>
+                    <span class="info-panel-title">CGNAT Reference</span>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Identification: Private IP</div>
+                    <ul class="info-panel-list">
+                        <li>To confirm CGNAT, review the customer's router IP. If it falls in a private range, the customer is not on a public IP.</li>
+                        <li><strong>100.64.0.0 – 100.127.255.255</strong></li>
+                        <li><strong>10.0.0.0 – 10.255.255.255</strong></li>
+                        <li>Example: Router IP 100.115.26.47 → Indicates private IP under CGNAT</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Common CGNAT Symptoms</div>
+                    <ul class="info-panel-list">
+                        <li>Inability to host/join online multiplayer games</li>
+                        <li>Non-functional port forwarding despite correct setup</li>
+                        <li>Cannot access home devices remotely (IP cameras, smart home)</li>
+                        <li>VPN services not connecting or inconsistent</li>
+                        <li>Router IP is in a private range (100.x.x.x or 10.x.x.x)</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Escalation</div>
+                    <ul class="info-panel-list">
+                        <li>If one or more symptoms are reported and a private IP is confirmed, escalate as outlined.</li>
+                    </ul>
+                </div>
+            </div>
+            </div><!-- end sidebar-col -->
+
+            <!-- Right side — form for generating the CGNAT escalation note -->
+            <div class="container">
+
+                <!-- IP checker: paste any IP to instantly see if it's CGNAT/private or public -->
+                <div class="cgnat-checker">
+                    <div class="cgnat-checker-label">IP Address Checker</div>
+                    <div class="cgnat-checker-row">
+                        <input type="text"
+                               id="cgnat-ip-input"
+                               class="cgnat-ip-input"
+                               placeholder="e.g. 100.115.26.47"
+                               maxlength="15"
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();checkCgnatIp();}"
+                               oninput="clearCgnatResult()">
+                        <button type="button" class="cgnat-check-btn" onclick="checkCgnatIp()">Check IP</button>
+                    </div>
+                    <div id="cgnat-check-result" class="cgnat-check-result">
+                        <div class="cgnat-result-status" id="cgnat-result-status"></div>
+                        <div class="cgnat-result-detail" id="cgnat-result-detail"></div>
+                    </div>
+                </div>
+
+                <form id="cgnatForm">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <div class="section-label">CGNAT Escalation – Public IP Request</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cg-customerName">Customer Name</label>
+                            <input type="text" id="cg-customerName" placeholder="Enter customer name">
+                        </div>
+                        <div class="form-group">
+                            <label for="cg-ontId">ONT ID</label>
+                            <input type="text" id="cg-ontId" placeholder="Enter ONT ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="cg-macAddress">MAC Address</label>
+                            <input type="text" id="cg-macAddress" placeholder="e.g. 00:1A:2B:3C:4D:5E">
+                        </div>
+                        <div class="form-group">
+                            <label for="cg-currentIp">Current Learned IP</label>
+                            <input type="text" id="cg-currentIp" placeholder="e.g. 100.115.26.47">
+                        </div>
+                        <div class="form-group">
+                            <label for="cg-serviceArea">Service Area</label>
+                            <select id="cg-serviceArea" class="tech-region-select">
+                                <option value="">— Select Service Area —</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cg-servicePackage">Service Package</label>
+                            <select id="cg-servicePackage" class="tech-region-select">
+                                <option value="">— Select Package —</option>
+                                <option value="1 Gig">1 Gig</option>
+                                <option value="2 Gig">2 Gig</option>
+                                <option value="5 Gig">5 Gig</option>
+                                <option value="10 Gig">10 Gig</option>
+                                <option value="Commercial 1 Gig">Commercial 1 Gig</option>
+                                <option value="Commercial 2 Gig">Commercial 2 Gig</option>
+                                <option value="Commercial 5 Gig">Commercial 5 Gig</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="cg-installAddress">Installation Address</label>
+                            <input type="text" id="cg-installAddress" placeholder="Enter installation address">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="cg-issueDesc">Issue Description</label>
+                            <textarea id="cg-issueDesc" placeholder="Describe the issue..." style="min-height:80px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Service/Device Affected?</label>
+                            <div class="yes-no-buttons">
+                                <button type="button" onclick="setCgnatYesNo('cgnat_serviceDevice', true, event)">Yes</button>
+                                <button type="button" onclick="setCgnatYesNo('cgnat_serviceDevice', false, event)">No</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>IPv6 Compatibility?</label>
+                            <div class="yes-no-buttons">
+                                <button type="button" onclick="setCgnatYesNo('cgnat_ipv6', true, event)">Yes</button>
+                                <button type="button" onclick="setCgnatYesNo('cgnat_ipv6', false, event)">No</button>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Router Type</label>
+                            <div class="equip-btn-group" id="cgnat-router-btns">
+                                <button type="button" class="equip-btn" onclick="setCgnatRouter('EERO PRO6E', this)">EERO PRO6E</button>
+                                <button type="button" class="equip-btn" onclick="setCgnatRouter('EERO MAX7', this)">EERO MAX7</button>
+                                <button type="button" class="equip-btn" onclick="setCgnatRouter('EERO PRO7', this)">EERO PRO7</button>
+                                <button type="button" class="equip-btn" onclick="setCgnatRouter('Third Party', this)">Third Party</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cg-preferredTime">Preferred Time for Change</label>
+                            <input type="text" id="cg-preferredTime" placeholder="e.g. After 6 PM weekdays">
+                        </div>
+                    </div>
+                </form>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generateCgnat()">Generate Note</button>
+                    <button class="btn btn-secondary" onclick="resetCgnat()">Reset Form</button>
+                </div>
+                <div id="cgOutputSection" class="output-section">
+                    <div class="output-header">
+                        <h3>Generated Note</h3>
+                        <button class="btn btn-success" onclick="copyCgnat()">
+                            <span id="cgCopyIcon">📋</span>
+                            <span id="cgCopyText">Copy to Dashboard</span>
+                        </button>
+                    </div>
+                    <div class="output-box">
+                        <textarea id="cgGeneratedNote" spellcheck="false"></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: Outage Informant
+         ══════════════════════════════════════════════ -->
+    <div id="noc-sub-outage" class="note-sub-page noc-sub-page">
+
+        <div class="note-with-sidebar">
+
+            <!-- Left sidebar — NOC outage reference and escalation guidelines -->
+            <div class="sidebar-col">
+                <!-- Info button: hover for a quick tip, click for full context -->
+                <div class="tab-info-bar">
+                    <button class="info-btn"
+                            title="Report an outage area to the NOC team"
+                            onclick="showInfoModal('Outage Informant', 'Placeholder - More Info coming soon.', true)"
+                            aria-label="Show context info for Outage Informant">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="note-info-panel outage-panel">
+                <div class="info-panel-header">
+                    <span class="info-panel-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </span>
+                    <span class="info-panel-title">Outage Reference</span>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">NOC Probing Questions</div>
+                    <ul class="info-panel-list">
+                        <li>When did this issue happen?</li>
+                        <li>Did anything in the network change? → Adding Devices, Switches, or Access Point Routers</li>
+                        <li>What troubleshooting has already been done? → Document, document, document.</li>
+                    </ul>
+                </div>
+                <div class="info-panel-section">
+                    <div class="info-panel-section-title">Escalation Guidelines</div>
+                    <ul class="info-panel-list">
+                        <li>For HARD DOWN commercial inquiries, TSRs will continue to create a Jira ticket when received and forward to NOC.</li>
+                        <li>Provide the customer with the Jira ticket number and set expectation: NOC technician will contact within the one-hour SLA.</li>
+                        <li>NOC contact number: <strong>281-407-0050</strong></li>
+                    </ul>
+                </div>
+            </div>
+            </div><!-- end sidebar-col -->
+
+            <!-- Right side — outage form (supports image upload) -->
+            <div class="container">
+                <form id="outageForm">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <div class="section-label">Outage Details</div>
+                        </div>
+
+                        <!-- Image uploader for relevant outage photos -->
+                        <div class="form-group full-width">
+                            <label>Relevant Outage Images</label>
+                            <div class="outage-upload-area">
+                                <label for="outage-image-input" class="outage-upload-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    Upload Images
+                                </label>
+                                <input type="file" id="outage-image-input" accept="image/*" multiple style="display:none;" onchange="handleOutageImageUpload(event)">
+                                <span class="outage-upload-hint">PNG, JPG, GIF accepted • Multiple files OK</span>
+                            </div>
+                            <div id="outage-image-previews" class="outage-image-previews"></div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="oi-address">Customer Address</label>
+                            <input type="text" id="oi-address" placeholder="Enter customer address">
+                        </div>
+                        <div class="form-group">
+                            <label for="oi-cabinet">Cabinet/PON</label>
+                            <input type="text" id="oi-cabinet" placeholder="Enter cabinet or PON">
+                        </div>
+                        <div class="form-group">
+                            <label for="oi-affected">Estimated Affected Customers</label>
+                            <input type="text" id="oi-affected" placeholder="e.g. 15">
+                        </div>
+                        <div class="form-group">
+                            <label>Construction Reported?</label>
+                            <div class="yes-no-buttons">
+                                <button type="button" onclick="setOutageYesNo('oi_constructionReported', true, event)">Yes</button>
+                                <button type="button" onclick="setOutageYesNo('oi_constructionReported', false, event)">No</button>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="oi-customerReporting">Issue Description</label>
+                            <textarea id="oi-customerReporting" placeholder="Describe the issue..." style="min-height:100px;"></textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="generateOutage()">Generate Note</button>
+                    <button class="btn btn-secondary" onclick="resetOutage()">Reset Form</button>
+                </div>
+                <div id="oiOutputSection" class="output-section">
+                    <div class="output-header">
+                        <h3>Generated Note</h3>
+                        <button class="btn btn-success" onclick="copyOutage()">
+                            <span id="oiCopyIcon">📋</span>
+                            <span id="oiCopyText">Copy to Dashboard</span>
+                        </button>
+                    </div>
+                    <div class="output-box outage-output-box">
+                        <div id="oiGeneratedNote" class="outage-rich-output" contenteditable="true" spellcheck="false"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         NOC TAB: Jira Escalation
+         ══════════════════════════════════════════════ -->
+    <div id="noc-sub-jira" class="note-sub-page noc-sub-page">
+
+        <!-- Info button: hover for a quick tip, click for full context -->
+        <div class="tab-info-bar" style="justify-content:flex-start; padding: 1.5rem 0 0 1.5rem;">
+            <button class="info-btn"
+                    title="NOC Jira escalation — coming soon"
+                    onclick="showInfoModal('Jira Escalation', 'Placeholder - More Info coming soon.', true)"
+                    aria-label="Show context info for Jira Escalation">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="coming-soon-placeholder">
+            <div class="placeholder-mark" style="color:#0077C8;">Jira Escalation</div>
+            <div class="placeholder-sub">Coming Soon</div>
+        </div>
+    </div>
+
+    <!-- Hidden stub section — kept for reference only, not displayed to users -->
+    <div id="x-noc-stub" style="display:none!important;">
+
+        <!-- These are stubs for reference — the live NOC pages are above this block -->
+        <div id="noc-sub-commercial-stub" class="note-sub-page noc-sub-page active">
+            <div class="note-with-sidebar">
+
+                <!-- Left sidebar stub — reference only -->
+                <div class="note-info-panel noc-panel">
+                    <div class="info-panel-header">
+                        <span class="info-panel-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        </span>
+                        <span class="info-panel-title">NOC Reference</span>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">NOC Probing Questions</div>
+                        <ul class="info-panel-list">
+                            <li>When did this issue happen?</li>
+                            <li>Did anything in the network change? → Adding Devices, Switches, or Access Point Routers</li>
+                            <li>What troubleshooting has already been done? → Document, document, document.</li>
+                        </ul>
+                    </div>
+                    <div class="info-panel-section">
+                        <div class="info-panel-section-title">NOC Escalation Guidelines</div>
+                        <ul class="info-panel-list">
+                            <li>For HARD DOWN commercial inquiries, TSRs will continue to create a Jira ticket when the inquiry is received by the contact center and forwarded to NOC.</li>
+                            <li>Provide the customer with the Jira ticket number and clearly set the expectation that a NOC technician will contact them within the one-hour SLA.</li>
+                            <li>TSRs may also provide the NOC contact number if needed: <strong>281-407-0050</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right side stub — form placeholder only -->
+                <div class="container">
+                    <form>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <div class="section-label">Commercial Customer Details</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Sticky notes panel — floats on the right edge, auto-saves to browser storage -->
+    <div class="sticky-notes-tab" id="sticky-notes-tab">
+        <button class="sticky-notes-toggle" onclick="toggleNotesPanel()" title="Toggle Notes">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notes
+        </button>
+        <div class="sticky-notes-panel" id="sticky-notes-panel">
+            <div class="sticky-notes-inner">
+                <div class="sticky-notes-header">
+                    <span class="sticky-notes-title"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>My Notes</span>
+                    <div class="sticky-notes-actions">
+                        <button class="sticky-notes-copy" id="notes-copy-btn" onclick="copyNotes()">Copy</button>
+                        <button class="sticky-notes-clear" onclick="clearNotes()">Clear</button>
+                    </div>
+                </div>
+                <textarea class="sticky-notes-textarea" id="sticky-notes-area" placeholder="Type notes here... They'll be saved automatically."></textarea>
+                <div class="sticky-notes-footer">Auto-saved to this browser</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info modal: pops up when you click a tab's info button -->
+    <div id="info-modal-overlay" class="info-modal-overlay" onclick="closeInfoModal()">
+        <div id="info-modal-box" class="info-modal-box" onclick="event.stopPropagation()">
+            <button class="info-modal-close" onclick="closeInfoModal()" aria-label="Close info panel">×</button>
+            <div class="info-modal-tag">Tab Context</div>
+            <div class="info-modal-title" id="info-modal-title"></div>
+            <div class="info-modal-body" id="info-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Script loading — order matters: data files first, then helpers, features, and init last -->
+    <script>
+        /* ── CGNAT IP Checker — uses IP_RANGES from data/ip-ranges.js ── */
+        function ipToInt(a, b, c, d) {
+            return ((a << 24) | (b << 16) | (c << 8) | d) >>> 0;
+        }
+
+        var CATEGORY_PREFIX = {
+            cgnat:   '⚠ CGNAT Detected — ',
+            private: '⚠ Private IP — ',
+            warning: '⚠ Problem Address — ',
+            special: 'ⓘ Special / Reserved — '
+        };
+
+        function checkCgnatIp() {
+            var raw      = document.getElementById('cgnat-ip-input').value.trim();
+            var resultBox = document.getElementById('cgnat-check-result');
+            var statusEl  = document.getElementById('cgnat-result-status');
+            var detailEl  = document.getElementById('cgnat-result-detail');
+
+            resultBox.className = 'cgnat-check-result visible';
+
+            // Validate: four numeric octets 0–255, no leading zeros
+            var parts = raw.split('.');
+            var valid = parts.length === 4 && parts.every(function(p) {
+                var n = parseInt(p, 10);
+                return p !== '' && !isNaN(n) && n >= 0 && n <= 255 && String(n) === p;
+            });
+
+            if (!valid) {
+                resultBox.classList.add('cgnat-invalid');
+                statusEl.textContent = 'Invalid IP address';
+                detailEl.textContent = 'Enter a valid IPv4 address — four numbers separated by dots, each between 0 and 255 (e.g. 100.115.26.47).';
+                return;
+            }
+
+            var a = +parts[0], b = +parts[1], c = +parts[2], d = +parts[3];
+            var ipInt = ipToInt(a, b, c, d);
+
+            var match = null;
+            for (var i = 0; i < IP_RANGES.length; i++) {
+                var r = IP_RANGES[i];
+                var s = ipToInt(r.start[0], r.start[1], r.start[2], r.start[3]);
+                var e = ipToInt(r.end[0],   r.end[1],   r.end[2],   r.end[3]);
+                if (ipInt >= s && ipInt <= e) { match = r; break; }
+            }
+
+            if (!match) {
+                resultBox.classList.add('cgnat-public');
+                statusEl.textContent = '✓ Public Internet IP';
+                detailEl.textContent = raw + ' is a publicly routable address — no CGNAT detected. Port forwarding, VPNs, and remote access should work normally, assuming no firewall restrictions on the customer\'s router.';
+                return;
+            }
+
+            resultBox.classList.add('cgnat-' + match.category);
+            statusEl.textContent = (CATEGORY_PREFIX[match.category] || '') + match.label + ' (' + match.cidr + ')';
+            detailEl.textContent = match.description;
+        }
+
+        function clearCgnatResult() {
+            var resultBox = document.getElementById('cgnat-check-result');
+            resultBox.className = 'cgnat-check-result';
+            document.getElementById('cgnat-result-status').textContent = '';
+            document.getElementById('cgnat-result-detail').textContent = '';
+        }
+
+        function showInfoModal(title, body, isNoc) {
+            document.getElementById('info-modal-title').textContent = title;
+            document.getElementById('info-modal-body').textContent = body;
+            var box = document.getElementById('info-modal-box');
+            isNoc ? box.classList.add('noc-style') : box.classList.remove('noc-style');
+            document.getElementById('info-modal-overlay').classList.add('open');
+        }
+        function closeInfoModal() {
+            document.getElementById('info-modal-overlay').classList.remove('open');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeInfoModal();
+        });
+    </script>
+    <script src="./data/oui-db.js"></script>
+    <script src="./data/tech-regions.js"></script>
+    <script src="./data/wo-type.js"></script>
+    <script src="./data/ip-ranges.js"></script>
+    <script src="./assets/js/helpers.js"></script>
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/truckroll.js"></script>
+    <script src="./assets/js/harddown.js"></script>
+    <script src="./assets/js/dispatch.js"></script>
+    <script src="./assets/js/cecr.js"></script>
+    <script src="./assets/js/notes.js"></script>
+    <script src="./assets/js/noc.js"></script>
+    <script src="./assets/js/init.js"></script>
+
+</body>
+</html>

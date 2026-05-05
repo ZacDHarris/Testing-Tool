@@ -23,8 +23,9 @@ body {
     color: #e8edf2;
 }
 
-/* ── TECH REGION SELECT ── */
-.tech-region-select {
+/* ── TECH REGION SELECT / WO TYPE SELECT ── */
+.tech-region-select,
+.wo-type-select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #2a3d54;
@@ -42,19 +43,22 @@ body {
     padding-right: 2rem;
 }
 
-.tech-region-select:focus {
+.tech-region-select:focus,
+.wo-type-select:focus {
     outline: none;
     border-color: #FB612F;
     box-shadow: 0 0 0 3px rgba(251, 97, 47, 0.2);
 }
 
-.tech-region-select option {
+.tech-region-select option,
+.wo-type-select option {
     background-color: #1a2535;
     color: #FBFBFB;
     font-family: 'Courier New', monospace;
 }
 
-.tech-region-select option:first-child {
+.tech-region-select option:first-child,
+.wo-type-select option:first-child {
     color: #75787B;
     font-family: inherit;
 }
@@ -612,14 +616,15 @@ textarea {
 .context-panel {
     background: #0c1520;
     border-bottom: 2px solid #1a2535;
-    padding: 0.875rem 1.5rem 1rem;
+    padding: 0.5rem 1rem 0.75rem;
+    max-width: 600px;
 }
 
 .context-panel-header {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .context-panel-title {
@@ -640,10 +645,10 @@ textarea {
     border-radius: 6px;
     color: #8da0b3;
     font-family: 'Nunito Sans', sans-serif;
-    font-size: 0.875rem;
-    padding: 0.75rem 1rem;
-    line-height: 1.7;
-    min-height: 56px;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    line-height: 1.6;
+    min-height: auto;
     white-space: pre-wrap;
 }
 
@@ -735,6 +740,13 @@ textarea {
     border-color: #FB612F;
     color: white;
     box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+}
+
+.provider-btn.active-daynet {
+    background: #0077C8;
+    border-color: #0077C8;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 119, 200, 0.4);
 }
 
 /* ── EQUIPMENT BUTTONS ── */
@@ -886,6 +898,70 @@ textarea {
     color: #FB612F;
 }
 
+/* ── MULTI-ROUTER ENTRIES ── */
+.router-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.router-entry {
+    background: #0f1923;
+    border: 1px solid #243a52;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.router-entry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.router-entry-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #FB612F;
+}
+
+.router-remove-btn {
+    background: transparent;
+    border: 1px solid #4b5563;
+    border-radius: 4px;
+    color: #9bacc4;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+.router-remove-btn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+
+.router-add-btn {
+    background: transparent;
+    border: 1px dashed #FB612F;
+    border-radius: 6px;
+    color: #FB612F;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.25rem;
+    transition: background 0.15s, color 0.15s;
+}
+.router-add-btn:hover {
+    background: rgba(251,97,47,0.1);
+}
+
 /* ── CECR PRIORITY BUTTONS ── */
 .priority-row {
     display: flex;
@@ -967,6 +1043,13 @@ textarea {
     border-color: #FB612F;
     color: white;
     box-shadow: 0 2px 8px rgba(251, 97, 47, 0.4);
+}
+
+.dispatch-brand-btn.active-daynet {
+    background: #0077C8;
+    border-color: #0077C8;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 119, 200, 0.4);
 }
 
 .dispatch-brand-display {
@@ -1652,13 +1735,13 @@ textarea {
 .note-with-sidebar {
     display: flex;
     align-items: flex-start;
-    gap: 1.25rem;
+    gap: 0.5rem;
     padding: 1.5rem;
     background: #0f1923;
 }
 
 .note-info-panel {
-    width: 290px;
+    width: 400px;
     flex-shrink: 0;
     background: #0c1520;
     border: 2px solid #FB612F;
@@ -1724,7 +1807,7 @@ textarea {
 }
 
 .info-panel-title {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 800;
     color: white;
     font-family: 'Plus Jakarta Sans', 'Nunito Sans', sans-serif;
@@ -1733,7 +1816,7 @@ textarea {
 }
 
 .info-panel-section {
-    padding: 1rem 1.1rem;
+    padding: 1rem 1.25rem;
     border-bottom: 1px solid #152030;
 }
 
@@ -1742,7 +1825,7 @@ textarea {
 }
 
 .info-panel-section-title {
-    font-size: 0.76rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1764,9 +1847,9 @@ textarea {
 }
 
 .info-panel-list li {
-    font-size: 0.8rem;
-    color: #75787B;
-    line-height: 1.45;
+    font-size: 0.875rem;
+    color: #9bacc4;
+    line-height: 1.6;
     padding-left: 0.85rem;
     position: relative;
 }
@@ -1775,8 +1858,8 @@ textarea {
     content: '•';
     position: absolute;
     left: 0;
-    color: #2a3d54;
-    font-size: 0.65rem;
+    color: #4a6a8a;
+    font-size: 0.7rem;
     top: 0.1rem;
 }
 

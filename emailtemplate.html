@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="./assets/img/EzeeIcon.jpg">
+    <title>Ezee Fiber | Email Templates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;0,6..12,900;1,6..12,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body>
+
+    <!-- ── TAB NAVIGATION ── -->
+    <nav class="tab-nav">
+        <button class="tab-btn" onclick="location.href='index.html'">Home</button>
+        <button class="tab-btn" onclick="location.href='notegenerator.html'">Note Generator</button>
+        <button class="tab-btn active" onclick="location.href='emailtemplate.html'">Email Templates</button>
+    </nav>
+
+    <!-- Page header — logo, title, and subtitle -->
+    <div class="header-wrapper">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="./assets/img/EzeeFiberLogo.png" alt="Ezee Fiber Logo">
+            </div>
+            <div class="header-text">
+                <div class="header-title">Internal Tools</div>
+                <div class="header-subtitle">Email Templates</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── PAGE: EMAIL TEMPLATES ── -->
+    <div class="email-page">
+        <!-- EzeeFiber Email Templates -->
+        <div id="email-sub-ezee" class="email-sub-page active">
+            <nav class="email-mini-nav email-mini-nav-ezee">
+                <button class="email-mini-btn email-mini-btn-active" id="email-ezee-btn-cancellation" onclick="switchEmailMiniTab('ezee', 'cancellation', this)">Equipment Return</button>
+                <button class="email-mini-btn" id="email-ezee-btn-raf" onclick="switchEmailMiniTab('ezee', 'raf', this)">Refer a Friend</button>
+                <button class="email-mini-btn" id="email-ezee-btn-requesting-pictures" onclick="switchEmailMiniTab('ezee', 'requesting-pictures', this)">Requesting Pictures</button>
+                <button class="email-mini-btn" id="email-ezee-btn-wifi-security-key" onclick="switchEmailMiniTab('ezee', 'wifi-security-key', this)">WiFi Security Key</button>
+                <button class="email-mini-btn" id="email-ezee-btn-portal-password-reset" onclick="switchEmailMiniTab('ezee', 'portal-password-reset', this)">Customer Portal Password Reset</button>
+                <button class="email-mini-btn" id="email-ezee-btn-lifetime-pricing" onclick="switchEmailMiniTab('ezee', 'lifetime-pricing', this)">Lifetime Pricing Declaration</button>
+                <button class="email-mini-btn" id="email-ezee-btn-construction-case" onclick="switchEmailMiniTab('ezee', 'construction-case', this)">Construction Case</button>
+                <button class="email-mini-btn" id="email-ezee-btn-outage" onclick="switchEmailMiniTab('ezee', 'outage', this)">Outage</button>
+            </nav>
+            <div class="email-mini-content">
+                <div id="email-ezee-cancellation" class="email-mini-page active">
+                    <div class="email-template-form">
+                        <div class="etf-fields">
+                            <div class="form-group">
+                                <label for="ter-e-name">Customer Name</label>
+                                <input type="text" id="ter-e-name" placeholder="Enter customer name">
+                            </div>
+                            <div class="form-group">
+                                <label for="ter-e-modem">Modem SN</label>
+                                <input type="text" id="ter-e-modem" placeholder="Enter modem serial number">
+                            </div>
+                            <div class="router-entries" id="ter-e-router-entries">
+                                <div class="router-entry" data-router-type="">
+                                    <div class="router-entry-header">
+                                        <span class="router-entry-label">Router 1</span>
+                                        <button type="button" class="router-remove-btn" style="display:none" onclick="removeRouterRow(this, 'ter-e')">✕ Remove</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Router Type</label>
+                                        <div class="router-type-grid">
+                                            <button type="button" class="router-type-btn" onclick="setRouterType('EERO PRO6E', this)">EERO PRO6E</button>
+                                            <button type="button" class="router-type-btn" onclick="setRouterType('EERO MAX7', this)">EERO MAX7</button>
+                                            <button type="button" class="router-type-btn" onclick="setRouterType('EVO AP6700', this)">EVO AP6700</button>
+                                            <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK P50', this)">TP-LINK P50</button>
+                                            <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK PB70', this)">TP-LINK PB70</button>
+                                            <button type="button" class="router-type-btn" onclick="setRouterType('TP-LINK P110', this)">TP-LINK P110</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Router SN</label>
+                                        <input type="text" class="router-sn-input" placeholder="Enter router serial number">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="router-add-btn" onclick="addRouterRow('ter-e')">+ Add Router</button>
+                            <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateEquipReturn()">Generate Email</button>
+                        </div>
+                        <div class="etf-output-wrap">
+                            <div class="output-header">
+                                <h3>Email Output</h3>
+                                <button class="btn btn-success" onclick="copyEquipReturn()">
+                                    <span id="ter-e-copy-icon">&#128203;</span>
+                                    <span id="ter-e-copy-text">Copy</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="resetEmailTemplate('ter-e-output', ['ter-e-name','ter-e-modem'], 'ter-e')" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                            </div>
+                            <div class="output-box">
+                                <textarea id="ter-e-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                            </div>
+                            <div class="ups-label-section">
+                                <div class="ups-label-header">
+                                    <span class="ups-label-title">📦 UPS Return Label Generator</span>
+                                </div>
+                                <div class="ups-label-fields">
+                                    <div class="ups-field-group">
+                                        <label for="ter-e-acct">Customer Account Number</label>
+                                        <input type="text" id="ter-e-acct" placeholder="Enter account number">
+                                    </div>
+                                    <div class="ups-field-group">
+                                        <label for="ter-e-wo">Work Order Number</label>
+                                        <input type="text" id="ter-e-wo" placeholder="Enter work order number">
+                                    </div>
+                                    <button class="btn ups-download-btn" onclick="downloadFilledPDF()">⬇️ Download Filled Return Label PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="email-ezee-raf" class="email-mini-page">
+                    <div class="email-template-form raf-form">
+                        <div class="etf-fields">
+                            <div class="form-group">
+                                <label for="eraf-name">Customer Name</label>
+                                <input type="text" id="eraf-name" placeholder="Enter customer name">
+                            </div>
+                            <div class="form-group">
+                                <label for="eraf-link">RAF Link</label>
+                                <input type="text" id="eraf-link" placeholder="Enter referral link" style="width:100%;">
+                            </div>
+                            <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateRAF()">Generate Email</button>
+                        </div>
+                        <div class="etf-output-wrap">
+                            <div class="output-header">
+                                <h3>Email Output</h3>
+                                <button class="btn btn-success" onclick="copyRAF()">
+                                    <span id="eraf-copy-icon">&#128203;</span>
+                                    <span id="eraf-copy-text">Copy</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="resetEmailTemplate('eraf-output', ['eraf-name','eraf-link'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                            </div>
+                            <img src="./assets/img/RAF1.png" class="raf-img-preview" alt="Refer a Friend header">
+                            <div class="output-box">
+                                <textarea id="eraf-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                            </div>
+                            <img src="./assets/img/RAF2.png" class="raf-img-preview" alt="Refer a Friend footer">
+                        </div>
+                    </div>
+                </div>
+                <div id="email-ezee-requesting-pictures" class="email-mini-page">
+                    <div class="email-template-form">
+                        <div class="etf-fields">
+                            <div class="form-group">
+                                <label for="erp-name">Customer Name</label>
+                                <input type="text" id="erp-name" placeholder="Enter customer name">
+                            </div>
+                            <div class="form-group">
+                                <label for="erp-ticket">Ticket ID</label>
+                                <input type="text" id="erp-ticket" placeholder="Enter ticket ID">
+                            </div>
+                            <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateReqPic()">Generate Email</button>
+                        </div>
+                        <div class="etf-output-wrap">
+                            <div class="output-header">
+                                <h3>Email Output</h3>
+                                <button class="btn btn-success" onclick="copyReqPic()">
+                                    <span id="erp-copy-icon">&#128203;</span>
+                                    <span id="erp-copy-text">Copy</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="resetEmailTemplate('erp-output', ['erp-name','erp-ticket'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                            </div>
+                            <div class="output-box">
+                                <textarea id="erp-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="email-ezee-wifi-security-key" class="email-mini-page">
+                    <div class="email-template-form">
+                        <div class="etf-fields">
+                            <div class="form-group">
+                                <label for="ewsk-name">Customer First Name</label>
+                                <input type="text" id="ewsk-name" placeholder="Enter first name">
+                            </div>
+                            <button class="btn btn-primary etf-generate-btn" style="background:#FB612F;" onclick="generateWifiKey()">Generate Email</button>
+                        </div>
+                        <div class="etf-output-wrap">
+                            <div class="output-header">
+                                <h3>Email Output</h3>
+                                <button class="btn btn-success" onclick="copyWifiKey()">
+                                    <span id="ewsk-copy-icon">&#128203;</span>
+                                    <span id="ewsk-copy-text">Copy</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="resetEmailTemplate('ewsk-output', ['ewsk-name'], null)" style="padding:0.5rem 1rem;font-size:0.85rem;">↺ Reset</button>
+                            </div>
+                            <div class="output-box">
+                                <textarea id="ewsk-output" spellcheck="false" placeholder="Fill in the fields and click Generate Email..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="email-ezee-portal-password-reset" class="email-mini-page">
+                    <div class="email-template-placeholder">
+                        <div class="coming-soon-placeholder">
+                            <div class="placeholder-mark" style="color:#FB612F;">Customer Portal Password Reset</div>
+                            <div class="placeholder-sub">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="email-ezee-lifetime-pricing" class="email-mini-page">
+                    <div class="email-template-placeholder">
+                        <div class="coming-soon-placeholder">
+                            <div class="placeholder-mark" style="color:#FB612F;">Lifetime Pricing Declaration</div>
+                            <div class="placeholder-sub">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="email-ezee-construction-case" class="email-mini-page">
+                    <div class="email-template-placeholder">
+                        <div class="coming-soon-placeholder">
+                            <div class="placeholder-mark" style="color:#FB612F;">Construction Case</div>
+                            <div class="placeholder-sub">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="email-ezee-outage" class="email-mini-page">
+                    <div class="email-template-placeholder">
+                        <div class="coming-soon-placeholder">
+                            <div class="placeholder-mark" style="color:#FB612F;">Outage</div>
+                            <div class="placeholder-sub">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── STICKY NOTES PANEL ── -->
+    <div class="sticky-notes-tab" id="sticky-notes-tab">
+        <button class="sticky-notes-toggle" onclick="toggleNotesPanel()" title="Toggle Notes">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notes
+        </button>
+        <div class="sticky-notes-panel" id="sticky-notes-panel">
+            <div class="sticky-notes-inner">
+                <div class="sticky-notes-header">
+                    <span class="sticky-notes-title"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FB612F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>My Notes</span>
+                    <div class="sticky-notes-actions">
+                        <button class="sticky-notes-copy" id="notes-copy-btn" onclick="copyNotes()">Copy</button>
+                        <button class="sticky-notes-clear" onclick="clearNotes()">Clear</button>
+                    </div>
+                </div>
+                <textarea class="sticky-notes-textarea" id="sticky-notes-area" placeholder="Type notes here... They'll be saved automatically."></textarea>
+                <div class="sticky-notes-footer">Auto-saved to this browser</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         SCRIPTS
+         ══════════════════════════════════════════════ -->
+    <script src="./assets/js/app.js"></script>
+    <script src="./assets/js/email.js"></script>
+    <script src="./assets/js/notes.js"></script>
+    <script>
+        const stickyArea = document.getElementById('sticky-notes-area');
+        const saved = localStorage.getItem('ef_sticky_notes');
+        if (saved) stickyArea.value = saved;
+        stickyArea.addEventListener('input', () => localStorage.setItem('ef_sticky_notes', stickyArea.value));
+        switchEmailMiniTab('ezee', 'cancellation', document.getElementById('email-ezee-btn-cancellation'));
+    </script>
+
+</body>
+</html>
